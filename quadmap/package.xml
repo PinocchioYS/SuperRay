@@ -1,0 +1,20 @@
+<package>
+  <name>quadmap</name>
+  <version>1.0.0</version>
+  <description>The QuadMap library implements a 2D occupancy grid mapping approach, providing data structures and mapping algorithms in C++. The map implementation is based on a quadtree. </description>
+
+  <author email="youngsun.kwon@kaist.ac.kr">Youngsun Kwon</author>
+  <maintainer email="youngsun.kwon@kaist.ac.kr">Youngsun Kwon</maintainer>
+  <license>BSD</license>
+
+  <url type="website">http://sglab.kaist.ac.kr</url>
+  <url type="bugtracker">https://github.com/PinocchioYS/SuperRay/issues</url>
+  
+  <run_depend>catkin</run_depend>
+  <buildtool_depend>cmake</buildtool_depend>
+  
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+  
+</package>
