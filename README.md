@@ -10,8 +10,8 @@ You can see the detailed information of super ray based updates at [here](http:/
 
 License
 -------
-SuperRay: [NEW BSD License](superray/LICENSE.txt)
-OctoMap: [New BSD License](octomap/LICENSE.txt)
+* SuperRay: [NEW BSD License](superray/LICENSE.txt)
+* OctoMap: [New BSD License](octomap/LICENSE.txt)
 
 BUILD
 -----
