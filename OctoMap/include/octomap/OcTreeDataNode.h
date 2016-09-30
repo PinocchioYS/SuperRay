@@ -37,128 +37,97 @@
 
 #include "octomap_types.h"
 #include "assert.h"
-#include <bitset>
 
 namespace octomap {
 
-	class AbstractOcTreeNode {
+  class AbstractOcTreeNode {
 
 
-	};
+  };
+  
+  // forward declaration for friend in OcTreeDataNode
+  template<typename NODE,typename I> class OcTreeBaseImpl;
 
-	/**
-	 * Basic node in the OcTree that can hold arbitrary data of type T in value.
-	 * This is the base class for nodes used in an OcTree. The used implementation
-	 * for occupancy mapping is in OcTreeNode.#
-	 * \tparam T data to be stored in the node (e.g. a float for probabilities)
-	 *
-	 * Note: If you derive a class (directly or indirectly) from OcTreeDataNode,
-	 * you have to implement (at least) the following functions to avoid slicing
-	 * errors and memory-related bugs:
-	 * createChild(), getChild(), getChild() const, expandNode()
-	 * See ColorOcTreeNode in ColorOcTree.h for an example.
-	 */
-	template<typename T> class OcTreeDataNode : public AbstractOcTreeNode {
+  /**
+   * Basic node in the OcTree that can hold arbitrary data of type T in value.
+   * This is the base class for nodes used in an OcTree. The used implementation
+   * for occupancy mapping is in OcTreeNode.#
+   * \tparam T data to be stored in the node (e.g. a float for probabilities)
+   * 
+   * Note: If you derive a class (directly or indirectly) from OcTreeDataNode, 
+   * you have to implement (at least) the following functions to avoid slicing
+   * errors and memory-related bugs:
+   * createChild(), getChild(), getChild() const, expandNode() 
+   * See ColorOcTreeNode in ColorOcTree.h for an example. 
+   */
+  template<typename T> class OcTreeDataNode: public AbstractOcTreeNode {
+    template<typename NODE, typename I>
+    friend class OcTreeBaseImpl;
 
-	public:
+  public:
 
-		OcTreeDataNode();
-		OcTreeDataNode(T initVal);
-		/// Copy constructor, performs a recursive deep-copy of all children
-		OcTreeDataNode(const OcTreeDataNode& rhs);
+    OcTreeDataNode();
+    OcTreeDataNode(T initVal);
+    
+    /// Copy constructor, performs a recursive deep-copy of all children 
+    /// including node data in "value"
+    OcTreeDataNode(const OcTreeDataNode& rhs);
 
-		~OcTreeDataNode();
+    /// Delete only own members. 
+    /// OcTree maintains tree structure and must have deleted children already
+    ~OcTreeDataNode();
 
-		/// Equals operator, compares if the stored value is identical
-		bool operator==(const OcTreeDataNode& rhs) const;
-
-
-		// -- children  ----------------------------------
-
-
-		/// initialize i-th child, allocate children array if needed
-		bool createChild(unsigned int i);
-
-		/// Safe test to check of the i-th child exists,
-		/// first tests if there are any children.
-		/// \return true if the i-th child exists
-		bool childExists(unsigned int i) const;
-
-		/// \return a pointer to the i-th child of the node. The child needs to exist.
-		OcTreeDataNode<T>* getChild(unsigned int i);
-
-		/// \return a const pointer to the i-th child of the node. The child needs to exist.
-		const OcTreeDataNode<T>* getChild(unsigned int i) const;
-
-		/// \return true if the node has at least one child
-		bool hasChildren() const;
-
-		/// A node is collapsible if all children exist, don't have children of their own
-		/// and have the same occupancy value
-		bool collapsible() const;
-
-		/// Deletes the i-th child of the node
-		void deleteChild(unsigned int i);
-
-		// -- pruning of children  -----------------------
+    /// Copy the payload (data in "value") from rhs into this node
+    /// Opposed to copy ctor, this does not clone the children as well
+    void copyData(const OcTreeDataNode& from);
+    
+    /// Equals operator, compares if the stored value is identical
+    bool operator==(const OcTreeDataNode& rhs) const;
+    
+    
+    
 
 
-		/**
-		 * Prunes a node when it is collapsible
-		 * @return true if pruning was successful
-		 */
-		bool pruneNode();
+    // -- children  ----------------------------------
 
-		/**
-		 * Expands a node (reverse of pruning): All children are created and
-		 * their occupancy probability is set to the node's value.
-		 *
-		 * You need to verify that this is indeed a pruned node (i.e. not a
-		 * leaf at the lowest level)
-		 *
-		 */
-		void expandNode();
+    /// Test whether the i-th child exists. 
+    /// @deprecated Replaced by tree->nodeChildExists(...)
+    /// \return true if the i-th child exists
+    OCTOMAP_DEPRECATED(bool childExists(unsigned int i) const);
 
-		/// @return value stored in the node
-		T getValue() const{ return value; };
-		/// sets value to be stored in the node
-		void setValue(T v) { value = v; };
+    /// @deprecated Replaced by tree->nodeHasChildren(...)
+    /// \return true if the node has at least one child
+    OCTOMAP_DEPRECATED(bool hasChildren() const);
 
-		// file IO:
+    /// @return value stored in the node
+    T getValue() const{return value;};
+    /// sets value to be stored in the node
+    void setValue(T v) {value = v;};
 
-		/**
-		 * Read node from binary stream (incl. float value),
-		 * recursively continue with all children.
-		 *
-		 * @param s
-		 * @return
-		 */
-		std::istream& readValue(std::istream &s);
+    // file IO:
 
-		/**
-		 * Write node to binary stream (incl float value),
-		 * recursively continue with all children.
-		 * This preserves the complete state of the node.
-		 *
-		 * @param s
-		 * @return
-		 */
-		std::ostream& writeValue(std::ostream &s) const;
+    /// Read node payload (data only) from binary stream
+    std::istream& readData(std::istream &s);
+
+    /// Write node payload (data only) to binary stream
+    std::ostream& writeData(std::ostream &s) const;
 
 
-		/// Make the templated data type available from the outside
-		typedef T DataType;
+    /// Make the templated data type available from the outside
+    typedef T DataType;
 
 
-	protected:
-		void allocChildren();
+  protected:
+    void allocChildren();
 
-		/// pointer to array of children, may be NULL
-		OcTreeDataNode<T>** children;
-		/// stored data (payload)
-		T value;
+    /// pointer to array of children, may be NULL
+    /// @note The tree class manages this pointer, the array, and the memory for it!
+    /// The children of a node are always enforced to be the same type as the node
+    AbstractOcTreeNode** children;
+    /// stored data (payload)
+    T value;
 
-	};
+  };
 
 
 } // end namespace

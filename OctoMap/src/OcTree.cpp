@@ -33,18 +33,22 @@
 
 #include <octomap/OcTree.h>
 
+
 namespace octomap {
 
-	OcTree::OcTree(double resolution)
+	OcTree::OcTree(double resolution) 
 		: OccupancyOcTreeBase<OcTreeNode>(resolution) {
-			ocTreeMemberInit.ensureLinking();
-		};
+		ocTreeMemberInit.ensureLinking();
+	};
 
-	OcTree::OcTree(std::string _filename)
-		: OccupancyOcTreeBase<OcTreeNode>(0.1)  { // resolution will be set according to tree file
-			readBinary(_filename);
-		}
+  OcTree::OcTree(std::string _filename)
+    : OccupancyOcTreeBase<OcTreeNode> (0.1)  { // resolution will be set according to tree file
+    readBinary(_filename);
+  }
 
-	OcTree::StaticMemberInitializer OcTree::ocTreeMemberInit;
+  OcTree::StaticMemberInitializer OcTree::ocTreeMemberInit;
+
+  
+
 
 } // namespace

@@ -1,0 +1,25 @@
+<package>
+  <name>superray</name>
+  <version>1.0.0</version>
+  <description> SuperRay is a library for efficiently updating occupancy map representation with point clouds. The update approach based on super ray shows high performance without compromising representation accuracy. The implementation of this library is based on OctoMap Library.  
+</description>
+
+  <author email="youngsun.kwon@kaist.ac.kr">Youngsun Kwon</author>
+  <maintainer email="youngsun.kwon@kaist.ac.kr">Youngsun Kwon</maintainer>
+  <license>BSD</license>
+
+  <url type="website">http://sglab.kaist.ac.kr/projects/SuperRay</url>
+  <url type="bugtracker">https://github.com/PinocchioYS/SuperRay/issues</url>
+
+  <build_depend>octomap</build_depend>
+
+  <run_depend>octomap</run_depend>  
+  <run_depend>catkin</run_depend>
+
+  <buildtool_depend>cmake</buildtool_depend>
+  
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+  
+</package>
