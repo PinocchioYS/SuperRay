@@ -31,70 +31,70 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef OCTOMAP_OCTREE_H
-#define OCTOMAP_OCTREE_H
+#ifndef QUADMAP_QUADTREE_H
+#define QUADMAP_QUADTREE_H
 
 
-#include "OccupancyOcTreeBase.h"
-#include "OcTreeNode.h"
+#include "OccupancyQuadTreeBase.h"
+#include "QuadTreeNode.h"
 #include "ScanGraph.h"
 
-namespace octomap {
+namespace quadmap {
 
-  /**
-   * octomap main map data structure, stores 3D occupancy grid map in an OcTree.
-   * Basic functionality is implemented in OcTreeBase.
-   *
-   */
-  class OcTree : public OccupancyOcTreeBase <OcTreeNode> {
+	/**
+	 * octomap main map data structure, stores 3D occupancy grid map in an OcTree.
+	 * Basic functionality is implemented in OcTreeBase.
+	 *
+	 */
+	class QuadTree : public OccupancyQuadTreeBase <QuadTreeNode> {
 
-  public:
-    /// Default constructor, sets resolution of leafs
-    OcTree(double resolution);
+	public:
+		/// Default constructor, sets resolution of leafs
+		QuadTree(double resolution);
 
-    /**
-     * Reads an OcTree from a binary file 
-    * @param _filename
-     *
-     */
-    OcTree(std::string _filename);
+		/**
+		 * Reads an OcTree from a binary file
+		 * @param _filename
+		 *
+		 */
+		QuadTree(std::string _filename);
 
-    virtual ~OcTree(){};
+		virtual ~QuadTree(){};
 
-    /// virtual constructor: creates a new object of same type
-    /// (Covariant return type requires an up-to-date compiler)
-    OcTree* create() const {return new OcTree(resolution); }
+		/// virtual constructor: creates a new object of same type
+		/// (Covariant return type requires an up-to-date compiler)
+		QuadTree* create() const { return new QuadTree(resolution); }
 
-    std::string getTreeType() const {return "OcTree";}
+		std::string getTreeType() const { return "QuadTree"; }
 
 
-  protected:
-    /**
-     * Static member object which ensures that this OcTree's prototype
-     * ends up in the classIDMapping only once. You need this as a 
-     * static member in any derived octree class in order to read .ot
-     * files through the AbstractOcTree factory. You should also call
-     * ensureLinking() once from the constructor.
-     */
-    class StaticMemberInitializer{
-    public:
-      StaticMemberInitializer() {
-        OcTree* tree = new OcTree(0.1);
-        tree->clearKeyRays();
-        AbstractOcTree::registerTreeType(tree);
-      }
+	protected:
+		/**
+		 * Static member object which ensures that this OcTree's prototype
+		 * ends up in the classIDMapping only once. You need this as a
+		 * static member in any derived octree class in order to read .ot
+		 * files through the AbstractOcTree factory. You should also call
+		 * ensureLinking() once from the constructor.
+		 */
+		class StaticMemberInitializer{
+		public:
+			StaticMemberInitializer() {
+				QuadTree* tree = new QuadTree(0.1);
+				tree->clearKeyRays();
+				AbstractQuadTree::registerTreeType(tree);
+			}
 
-	    /**
-	     * Dummy function to ensure that MSVC does not drop the
-	     * StaticMemberInitializer, causing this tree failing to register.
-	     * Needs to be called from the constructor of this octree.
-	     */
-	    void ensureLinking() {};
-    };
+			/**
+			 * Dummy function to ensure that MSVC does not drop the
+			 * StaticMemberInitializer, causing this tree failing to register.
+			 * Needs to be called from the constructor of this octree.
+			 */
+			void ensureLinking() {};
+		};
 
-    /// to ensure static initialization (only once)
-    static StaticMemberInitializer ocTreeMemberInit;
-  };
+		/// to ensure static initialization (only once)
+		static StaticMemberInitializer quadTreeMemberInit;
+	};
 
 } // end namespace
 

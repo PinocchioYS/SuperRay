@@ -31,109 +31,109 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace octomap {
+namespace quadmap {
 
-  template <typename T>
-  OcTreeDataNode<T>::OcTreeDataNode()
-   : children(NULL)
-  {
+	template <typename T>
+	QuadTreeDataNode<T>::QuadTreeDataNode()
+		: children(NULL)
+	{
 
-  }
+	}
 
-  template <typename T>
-  OcTreeDataNode<T>::OcTreeDataNode(T initVal)
-   : children(NULL), value(initVal)
-  {
+	template <typename T>
+	QuadTreeDataNode<T>::QuadTreeDataNode(T initVal)
+		: children(NULL), value(initVal)
+	{
 
-  }
+	}
 
-  template <typename T>
-  OcTreeDataNode<T>::OcTreeDataNode(const OcTreeDataNode<T>& rhs)
-   : children(NULL), value(rhs.value)
-  {
-    if (rhs.children != NULL){
-      allocChildren();
-      for (unsigned i = 0; i<8; ++i){
-        if (rhs.children[i] != NULL)
-          children[i] = new OcTreeDataNode<T>(*(static_cast<OcTreeDataNode<T>*>(rhs.children[i])));
+	template <typename T>
+	QuadTreeDataNode<T>::QuadTreeDataNode(const QuadTreeDataNode<T>& rhs)
+		: children(NULL), value(rhs.value)
+	{
+		if (rhs.children != NULL){
+			allocChildren();
+			for (unsigned i = 0; i < 4; ++i){
+				if (rhs.children[i] != NULL)
+					children[i] = new QuadTreeDataNode<T>(*(static_cast<QuadTreeDataNode<T>*>(rhs.children[i])));
 
-      }
-    }
-  }
-  
-  template <typename T>
-  OcTreeDataNode<T>::~OcTreeDataNode()
-  {
-    // Delete only own members. OcTree maintains tree structure and must have deleted 
-    // children already
-    assert(children == NULL);
-  }
-  
-  template <typename T>
-  void OcTreeDataNode<T>::copyData(const OcTreeDataNode<T>& from){
-    value = from.value;     
-  }
+			}
+		}
+	}
 
-  template <typename T>
-  bool OcTreeDataNode<T>::operator== (const OcTreeDataNode<T>& rhs) const{
-    return rhs.value == value;
-  }
+	template <typename T>
+	QuadTreeDataNode<T>::~QuadTreeDataNode()
+	{
+		// Delete only own members. QuadTree maintains tree structure and must have deleted 
+		// children already
+		assert(children == NULL);
+	}
 
-  // ============================================================
-  // =  children          =======================================
-  // ============================================================
+	template <typename T>
+	void QuadTreeDataNode<T>::copyData(const QuadTreeDataNode<T>& from){
+		value = from.value;
+	}
 
+	template <typename T>
+	bool QuadTreeDataNode<T>::operator== (const QuadTreeDataNode<T>& rhs) const{
+		return rhs.value == value;
+	}
 
-  template <typename T>
-  bool OcTreeDataNode<T>::childExists(unsigned int i) const {
-    assert(i < 8);
-    if ((children != NULL) && (children[i] != NULL))
-      return true;
-    else
-      return false;
-  }
-  
-  template <typename T>
-  bool OcTreeDataNode<T>::hasChildren() const {
-    if (children == NULL)
-      return false;
-    for (unsigned int i = 0; i<8; i++){
-      // fast check, we know children != NULL
-      if (children[i] != NULL)
-        return true;
-    }
-    return false;
-  }
+	// ============================================================
+	// =  children          =======================================
+	// ============================================================
 
 
-  // ============================================================
-  // =  File IO           =======================================
-  // ============================================================
+	template <typename T>
+	bool QuadTreeDataNode<T>::childExists(unsigned int i) const {
+		assert(i < 4);
+		if ((children != NULL) && (children[i] != NULL))
+			return true;
+		else
+			return false;
+	}
 
-  template <typename T>
-  std::istream& OcTreeDataNode<T>::readData(std::istream &s) {
-    s.read((char*) &value, sizeof(value));
-    return s;
-  }
+	template <typename T>
+	bool QuadTreeDataNode<T>::hasChildren() const {
+		if (children == NULL)
+			return false;
+		for (unsigned int i = 0; i < 4; i++){
+			// fast check, we know children != NULL
+			if (children[i] != NULL)
+				return true;
+		}
+		return false;
+	}
 
 
-  template <typename T>
-  std::ostream& OcTreeDataNode<T>::writeData(std::ostream &s) const{
-    s.write((const char*) &value, sizeof(value));
-    return s;
-  }
+	// ============================================================
+	// =  File IO           =======================================
+	// ============================================================
+
+	template <typename T>
+	std::istream& QuadTreeDataNode<T>::readData(std::istream &s) {
+		s.read((char*)&value, sizeof(value));
+		return s;
+	}
 
 
-  // ============================================================
-  // =  private methodes  =======================================
-  // ============================================================
-  template <typename T>
-  void OcTreeDataNode<T>::allocChildren() {
-    children = new AbstractOcTreeNode*[8];
-    for (unsigned int i=0; i<8; i++) {
-      children[i] = NULL;
-    }
-  }
+	template <typename T>
+	std::ostream& QuadTreeDataNode<T>::writeData(std::ostream &s) const{
+		s.write((const char*)&value, sizeof(value));
+		return s;
+	}
+
+
+	// ============================================================
+	// =  private methodes  =======================================
+	// ============================================================
+	template <typename T>
+	void QuadTreeDataNode<T>::allocChildren() {
+		children = new AbstractQuadTreeNode*[4];
+		for (unsigned int i = 0; i < 4; i++) {
+			children[i] = NULL;
+		}
+	}
 
 
 } // end namespace

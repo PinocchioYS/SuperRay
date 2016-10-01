@@ -31,107 +31,106 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef OCTOMAP_OCTREE_DATA_NODE_H
-#define OCTOMAP_OCTREE_DATA_NODE_H
+#ifndef QUADMAP_QUADTREE_DATA_NODE_H
+#define QUADMAP_QUADTREE_DATA_NODE_H
 
-
-#include "octomap_types.h"
+#include "quadmap_types.h"
 #include "assert.h"
 
-namespace octomap {
+namespace quadmap {
 
-  class AbstractOcTreeNode {
-
-
-  };
-  
-  // forward declaration for friend in OcTreeDataNode
-  template<typename NODE,typename I> class OcTreeBaseImpl;
-
-  /**
-   * Basic node in the OcTree that can hold arbitrary data of type T in value.
-   * This is the base class for nodes used in an OcTree. The used implementation
-   * for occupancy mapping is in OcTreeNode.#
-   * \tparam T data to be stored in the node (e.g. a float for probabilities)
-   * 
-   * Note: If you derive a class (directly or indirectly) from OcTreeDataNode, 
-   * you have to implement (at least) the following functions to avoid slicing
-   * errors and memory-related bugs:
-   * createChild(), getChild(), getChild() const, expandNode() 
-   * See ColorOcTreeNode in ColorOcTree.h for an example. 
-   */
-  template<typename T> class OcTreeDataNode: public AbstractOcTreeNode {
-    template<typename NODE, typename I>
-    friend class OcTreeBaseImpl;
-
-  public:
-
-    OcTreeDataNode();
-    OcTreeDataNode(T initVal);
-    
-    /// Copy constructor, performs a recursive deep-copy of all children 
-    /// including node data in "value"
-    OcTreeDataNode(const OcTreeDataNode& rhs);
-
-    /// Delete only own members. 
-    /// OcTree maintains tree structure and must have deleted children already
-    ~OcTreeDataNode();
-
-    /// Copy the payload (data in "value") from rhs into this node
-    /// Opposed to copy ctor, this does not clone the children as well
-    void copyData(const OcTreeDataNode& from);
-    
-    /// Equals operator, compares if the stored value is identical
-    bool operator==(const OcTreeDataNode& rhs) const;
-    
-    
-    
+	class AbstractQuadTreeNode {
 
 
-    // -- children  ----------------------------------
+	};
 
-    /// Test whether the i-th child exists. 
-    /// @deprecated Replaced by tree->nodeChildExists(...)
-    /// \return true if the i-th child exists
-    OCTOMAP_DEPRECATED(bool childExists(unsigned int i) const);
+	// forward declaration for friend in QuadTreeDataNode
+	template<typename NODE, typename I> class QuadTreeBaseImpl;
 
-    /// @deprecated Replaced by tree->nodeHasChildren(...)
-    /// \return true if the node has at least one child
-    OCTOMAP_DEPRECATED(bool hasChildren() const);
+	/**
+	 * Basic node in the QuadTree that can hold arbitrary data of type T in value.
+	 * This is the base class for nodes used in an QuadTree. The used implementation
+	 * for occupancy mapping is in QuadTreeNode.#
+	 * \tparam T data to be stored in the node (e.g. a float for probabilities)
+	 *
+	 * Note: If you derive a class (directly or indirectly) from QuadTreeDataNode,
+	 * you have to implement (at least) the following functions to avoid slicing
+	 * errors and memory-related bugs:
+	 * createChild(), getChild(), getChild() const, expandNode()
+	 * See ColorQuadTreeNode in ColorQuadTree.h for an example.
+	 */
+	template<typename T> class QuadTreeDataNode : public AbstractQuadTreeNode {
+		template<typename NODE, typename I>
+		friend class QuadTreeBaseImpl;
 
-    /// @return value stored in the node
-    T getValue() const{return value;};
-    /// sets value to be stored in the node
-    void setValue(T v) {value = v;};
+	public:
 
-    // file IO:
+		QuadTreeDataNode();
+		QuadTreeDataNode(T initVal);
 
-    /// Read node payload (data only) from binary stream
-    std::istream& readData(std::istream &s);
+		/// Copy constructor, performs a recursive deep-copy of all children 
+		/// including node data in "value"
+		QuadTreeDataNode(const QuadTreeDataNode& rhs);
 
-    /// Write node payload (data only) to binary stream
-    std::ostream& writeData(std::ostream &s) const;
+		/// Delete only own members. 
+		/// QuadTree maintains tree structure and must have deleted children already
+		~QuadTreeDataNode();
+
+		/// Copy the payload (data in "value") from rhs into this node
+		/// Opposed to copy ctor, this does not clone the children as well
+		void copyData(const QuadTreeDataNode& from);
+
+		/// Equals operator, compares if the stored value is identical
+		bool operator==(const QuadTreeDataNode& rhs) const;
 
 
-    /// Make the templated data type available from the outside
-    typedef T DataType;
 
 
-  protected:
-    void allocChildren();
 
-    /// pointer to array of children, may be NULL
-    /// @note The tree class manages this pointer, the array, and the memory for it!
-    /// The children of a node are always enforced to be the same type as the node
-    AbstractOcTreeNode** children;
-    /// stored data (payload)
-    T value;
+		// -- children  ----------------------------------
 
-  };
+		/// Test whether the i-th child exists. 
+		/// @deprecated Replaced by tree->nodeChildExists(...)
+		/// \return true if the i-th child exists
+		QUADMAP_DEPRECATED(bool childExists(unsigned int i) const);
+
+		/// @deprecated Replaced by tree->nodeHasChildren(...)
+		/// \return true if the node has at least one child
+		QUADMAP_DEPRECATED(bool hasChildren() const);
+
+		/// @return value stored in the node
+		T getValue() const{ return value; };
+		/// sets value to be stored in the node
+		void setValue(T v) { value = v; };
+
+		// file IO:
+
+		/// Read node payload (data only) from binary stream
+		std::istream& readData(std::istream &s);
+
+		/// Write node payload (data only) to binary stream
+		std::ostream& writeData(std::ostream &s) const;
+
+
+		/// Make the templated data type available from the outside
+		typedef T DataType;
+
+
+	protected:
+		void allocChildren();
+
+		/// pointer to array of children, may be NULL
+		/// @note The tree class manages this pointer, the array, and the memory for it!
+		/// The children of a node are always enforced to be the same type as the node
+		AbstractQuadTreeNode** children;
+		/// stored data (payload)
+		T value;
+
+	};
 
 
 } // end namespace
 
-#include "octomap/OcTreeDataNode.hxx"
+#include "quadmap/QuadTreeDataNode.hxx"
 
 #endif

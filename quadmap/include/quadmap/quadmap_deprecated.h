@@ -31,19 +31,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef OCTOMAP_DEPRECATED_H
-#define OCTOMAP_DEPRECATED_H
+#ifndef QUADMAP_DEPRECATED_H
+#define QUADMAP_DEPRECATED_H
 
 // define multi-platform deprecation mechanism
-#ifndef OCTOMAP_DEPRECATED
-  #ifdef __GNUC__
-    #define OCTOMAP_DEPRECATED(func) func __attribute__ ((deprecated))
-  #elif defined(_MSC_VER)
-    #define OCTOMAP_DEPRECATED(func) __declspec(deprecated) func
-  #else
-    #pragma message("WARNING: You need to implement OCTOMAP_DEPRECATED for this compiler")
-    #define OCTOMAP_DEPRECATED(func) func
-  #endif
+#ifndef QUADMAP_DEPRECATED
+#ifdef __GNUC__
+#define QUADMAP_DEPRECATED(func) func __attribute__ ((deprecated))
+#elif defined(_MSC_VER)
+#define QUADMAP_DEPRECATED(func) __declspec(deprecated) func
+#else
+#pragma message("WARNING: You need to implement QUADMAP_DEPRECATED for this compiler")
+#define QUADMAP_DEPRECATED(func) func
+#endif
 #endif
 
 #endif

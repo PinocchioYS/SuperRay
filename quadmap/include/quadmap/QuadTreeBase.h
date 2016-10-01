@@ -31,27 +31,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef OCTOMAP_OCTREE_BASE_H
-#define OCTOMAP_OCTREE_BASE_H
+#ifndef QUADMAP_QUADTREE_BASE_H
+#define QUADMAP_QUADTREE_BASE_H
 
 
-#include "OcTreeBaseImpl.h"
-#include "AbstractOcTree.h"
+#include "QuadTreeBaseImpl.h"
+#include "AbstractQuadTree.h"
 
 
-namespace octomap {
-  template <class NODE>
-  class OcTreeBase : public OcTreeBaseImpl<NODE,AbstractOcTree> {
-  public:
-    OcTreeBase<NODE>(double res) : OcTreeBaseImpl<NODE,AbstractOcTree>(res) {};
+namespace quadmap {
+	template <class NODE>
+	class QuadTreeBase : public QuadTreeBaseImpl<NODE, AbstractQuadTree> {
+	public:
+		QuadTreeBase<NODE>(double res) : QuadTreeBaseImpl<NODE, AbstractQuadTree>(res) {};
 
-    /// virtual constructor: creates a new object of same type
-    /// (Covariant return type requires an up-to-date compiler)
-    OcTreeBase<NODE>* create() const {return new OcTreeBase<NODE>(this->resolution); }
-    std::string getTreeType() const {return "OcTreeBase";}
-  };
+		/// virtual constructor: creates a new object of same type
+		/// (Covariant return type requires an up-to-date compiler)
+		QuadTreeBase<NODE>* create() const { return new QuadTreeBase<NODE>(this->resolution); }
+		std::string getTreeType() const { return "QuadTreeBase"; }
+	};
 
-  };
+};
 
 
 #endif

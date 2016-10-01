@@ -31,24 +31,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <octomap/OcTree.h>
+#include <quadmap/QuadTree.h>
 
 
-namespace octomap {
+namespace quadmap {
 
-	OcTree::OcTree(double resolution) 
-		: OccupancyOcTreeBase<OcTreeNode>(resolution) {
-		ocTreeMemberInit.ensureLinking();
-	};
+	QuadTree::QuadTree(double resolution)
+		: OccupancyQuadTreeBase<QuadTreeNode>(resolution) {
+			quadTreeMemberInit.ensureLinking();
+		};
 
-  OcTree::OcTree(std::string _filename)
-    : OccupancyOcTreeBase<OcTreeNode> (0.1)  { // resolution will be set according to tree file
-    readBinary(_filename);
-  }
+	QuadTree::QuadTree(std::string _filename)
+		: OccupancyQuadTreeBase<QuadTreeNode>(0.1)  { // resolution will be set according to tree file
+			readBinary(_filename);
+		}
 
-  OcTree::StaticMemberInitializer OcTree::ocTreeMemberInit;
+	QuadTree::StaticMemberInitializer QuadTree::quadTreeMemberInit;
 
-  
+
 
 
 } // namespace

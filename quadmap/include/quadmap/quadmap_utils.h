@@ -31,25 +31,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef OCTOMAP_UTILS_H_
-#define OCTOMAP_UTILS_H_
+#ifndef QUADMAP_UTILS_H_
+#define QUADMAP_UTILS_H_
 
 #include <math.h>
 
-namespace octomap{
+namespace quadmap{
 
-  /// compute log-odds from probability:
-  inline float logodds(double probability){
-    return (float) log(probability/(1-probability));
-  }
+	/// compute log-odds from probability:
+	inline float logodds(double probability){
+		return (float)log(probability / (1 - probability));
+	}
 
-  /// compute probability from logodds:
-  inline double probability(double logodds){
-    return 1. - ( 1. / (1. + exp(logodds)));
+	/// compute probability from logodds:
+	inline double probability(double logodds){
+		return 1. - (1. / (1. + exp(logodds)));
 
-  }
+	}
 }
 
 
 
-#endif /* OCTOMAP_UTILS_H_ */
+#endif /* QUADMAP_UTILS_H_ */

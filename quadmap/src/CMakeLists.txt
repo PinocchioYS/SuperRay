@@ -3,11 +3,11 @@ SET (quadmap_SRCS
   AbstractOccupancyQuadTree.cpp
   Pointcloud.cpp
   ScanGraph.cpp
-  CountingQuadTree.cpp
+#  CountingQuadTree.cpp
   QuadTree.cpp
   QuadTreeNode.cpp
-  QuadTreeStamped.cpp
-  ColorQuadTree.cpp
+#  QuadTreeStamped.cpp
+#  ColorQuadTree.cpp
   )
 
 # dynamic and static libs, see CMake FAQ:
