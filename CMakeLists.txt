@@ -5,5 +5,6 @@ ENABLE_TESTING()  # enable CTest environment of subprojects
 
 ADD_SUBDIRECTORY( octomap )
 ADD_SUBDIRECTORY( quadmap )
+ADD_SUBDIRECTORY( gridmap2D )
 ADD_SUBDIRECTORY( superray )
 
