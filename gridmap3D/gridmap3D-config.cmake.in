@@ -1,0 +1,32 @@
+# ===================================================================================
+#  The GridMap3D CMake configuration file
+#
+#             ** File generated automatically, do not modify **
+#
+#  Usage from an external project:
+#    In your CMakeLists.txt, add these lines:
+#
+#    FIND_PACKAGE(gridmap3D REQUIRED )
+#    INCLUDE_DIRECTORIES(${GRIDMAP3D_INCLUDE_DIRS})
+#    TARGET_LINK_LIBRARIES(MY_TARGET_NAME ${GRIDMAP3D_LIBRARIES})
+#
+#
+#    This file will define the following variables:
+#      - GRIDMAP3D_LIBRARIES      : The list of libraries to links against.
+#      - GRIDMAP3D_LIBRARY_DIRS   : The directory where lib files are. Calling
+#                                 LINK_DIRECTORIES with this path is NOT needed.
+#      - GRIDMAP3D_INCLUDE_DIRS   : The GridMap3D include directories.
+#
+# ===================================================================================
+
+@PACKAGE_INIT@
+
+set_and_check(GRIDMAP3D_INCLUDE_DIRS "@PACKAGE_GRIDMAP3D_INCLUDE_DIRS@")
+set_and_check(GRIDMAP3D_LIBRARY_DIRS "@PACKAGE_GRIDMAP3D_LIB_DIR@")
+ 
+
+# Set library names
+set(GRIDMAP3D_LIBRARIES 
+  "@PACKAGE_GRIDMAP3D_LIB_DIR@/@GRIDMAP3D_LIBRARY@"
+  "@PACKAGE_GRIDMAP3D_LIB_DIR@/@GRIDMATH3D_LIBRARY@"
+)

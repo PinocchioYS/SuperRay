@@ -1,32 +1,32 @@
 # ===================================================================================
-#  The QuadMap CMake configuration file
+#  The GridMap2D CMake configuration file
 #
 #             ** File generated automatically, do not modify **
 #
 #  Usage from an external project:
 #    In your CMakeLists.txt, add these lines:
 #
-#    FIND_PACKAGE(quadmap REQUIRED )
-#    INCLUDE_DIRECTORIES(${QUADMAP_INCLUDE_DIRS})
-#    TARGET_LINK_LIBRARIES(MY_TARGET_NAME ${QUADMAP_LIBRARIES})
+#    FIND_PACKAGE(gridmap2D REQUIRED )
+#    INCLUDE_DIRECTORIES(${GRIDMAP2D_INCLUDE_DIRS})
+#    TARGET_LINK_LIBRARIES(MY_TARGET_NAME ${GRIDMAP2D_LIBRARIES})
 #
 #
 #    This file will define the following variables:
-#      - QUADMAP_LIBRARIES      : The list of libraries to links against.
-#      - QUADMAP_LIBRARY_DIRS   : The directory where lib files are. Calling
+#      - GRIDMAP2D_LIBRARIES      : The list of libraries to links against.
+#      - GRIDMAP2D_LIBRARY_DIRS   : The directory where lib files are. Calling
 #                                 LINK_DIRECTORIES with this path is NOT needed.
-#      - QUADMAP_INCLUDE_DIRS   : The QuadMap include directories.
+#      - GRIDMAP2D_INCLUDE_DIRS   : The QuadMap include directories.
 #
 # ===================================================================================
 
 @PACKAGE_INIT@
 
-set_and_check(QUADMAP_INCLUDE_DIRS "@PACKAGE_QUADMAP_INCLUDE_DIRS@")
-set_and_check(QUADMAP_LIBRARY_DIRS "@PACKAGE_QUADMAP_LIB_DIR@")
+set_and_check(GRIDMAP2D_INCLUDE_DIRS "@PACKAGE_GRIDMAP2D_INCLUDE_DIRS@")
+set_and_check(GRIDMAP2D_LIBRARY_DIRS "@PACKAGE_GRIDMAP2D_LIB_DIR@")
  
 
 # Set library names
-set(QUADMAP_LIBRARIES 
-  "@PACKAGE_QUADMAP_LIB_DIR@/@QUADMAP_LIBRARY@"
-  "@PACKAGE_QUADMAP_LIB_DIR@/@QUADMATH_LIBRARY@"
+set(GRIDMAP2D_LIBRARIES 
+  "@PACKAGE_GRIDMAP2D_LIB_DIR@/@GRIDMAP2D_LIBRARY@"
+  "@PACKAGE_GRIDMAP2D_LIB_DIR@/@GRIDMATH2D_LIBRARY@"
 )
