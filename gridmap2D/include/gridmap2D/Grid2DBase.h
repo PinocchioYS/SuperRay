@@ -46,7 +46,7 @@ namespace gridmap2D {
 		/// virtual constructor: creates a new object of same type
 		/// (Covariant return type requires an up-to-date compiler)
 		Grid2DBase<NODE>* create() const { return new Grid2DBase<NODE>(this->resolution); }
-		std::string getTreeType() const { return "Grid2DBase"; }
+		std::string getGridType() const { return "Grid2DBase"; }
 	};
 
 };
