@@ -53,11 +53,8 @@ namespace quadmap {
 
 	public:
 
-		ScanNode(Pointcloud* _scan, pose3d _pose, unsigned int _id)
-			: scan(_scan), pose(_pose), id(_id) {}
-		ScanNode()
-			: scan(NULL) {}
-
+		ScanNode(Pointcloud* _scan, pose3d _pose, unsigned int _id) : scan(_scan), pose(_pose), id(_id) {}
+		ScanNode() : scan(NULL) {}
 		~ScanNode();
 
 		bool operator == (const ScanNode& other) {
@@ -71,9 +68,8 @@ namespace quadmap {
 		std::istream& readPoseASCII(std::istream &s);
 
 		Pointcloud* scan;
-		pose3d pose; ///< 6D pose from which the scan was performed
+		pose3d pose; ///< 3D pose from which the scan was performed
 		unsigned int id;
-
 	};
 
 	/**
@@ -83,8 +79,7 @@ namespace quadmap {
 
 	public:
 
-		ScanEdge(ScanNode* _first, ScanNode* _second, pose3d _constraint)
-			: first(_first), second(_second), constraint(_constraint), weight(1.0) { }
+		ScanEdge(ScanNode* _first, ScanNode* _second, pose3d _constraint) : first(_first), second(_second), constraint(_constraint), weight(1.0) { }
 		ScanEdge() {}
 
 		bool operator == (const ScanEdge& other) {
@@ -108,7 +103,7 @@ namespace quadmap {
 
 	/**
 	 * A ScanGraph is a collection of ScanNodes, connected by ScanEdges.
-	 * Each ScanNode contains a 3D scan performed from a pose.
+	 * Each ScanNode contains a 2D scan performed from a 3D pose.
 	 *
 	 */
 	class ScanGraph {
@@ -202,15 +197,15 @@ namespace quadmap {
 
 		/**
 		 * Reads in a ScanGraph from a "plain" ASCII file of the form
-		 * NODE x y z R P Y
-		 * x y z
-		 * x y z
-		 * x y z
-		 * NODE x y z R P Y
+		 * NODE x y Y
+		 * x y 
+		 * x y 
+		 * x y 
+		 * NODE x y Y
 		 * x y z
 		 *
-		 * Lines starting with the NODE keyword contain the 6D pose of a scan node,
-		 * all 3D point following until the next NODE keyword (or end of file) are
+		 * Lines starting with the NODE keyword contain the 3D pose of a scan node,
+		 * all 2D point following until the next NODE keyword (or end of file) are
 		 * inserted into that scan node as pointcloud in its local coordinate frame
 		 *
 		 * @param s input stream to read from
@@ -220,11 +215,9 @@ namespace quadmap {
 		void readPlainASCII(const std::string& filename);
 
 	protected:
-
 		std::vector<ScanNode*> nodes;
 		std::vector<ScanEdge*> edges;
 	};
-
 }
 
 

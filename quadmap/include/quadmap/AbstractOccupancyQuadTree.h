@@ -45,7 +45,7 @@
 namespace quadmap {
 
 	/**
-	 * Interface class for all octree types that store occupancy. This serves
+	 * Interface class for all quadtree types that store occupancy. This serves
 	 * as a common base class e.g. for polymorphism and contains common code
 	 * for reading and writing binary trees.
 	 */
@@ -57,23 +57,23 @@ namespace quadmap {
 		//-- IO
 
 		/**
-		 * Writes OcTree to a binary file using writeBinary().
-		 * The OcTree is first converted to the maximum likelihood estimate and pruned.
+		 * Writes QuadTree to a binary file using writeBinary().
+		 * The QuadTree is first converted to the maximum likelihood estimate and pruned.
 		 * @return success of operation
 		 */
 		bool writeBinary(const std::string& filename);
 
 		/**
-		 * Writes compressed maximum likelihood OcTree to a binary stream.
-		 * The OcTree is first converted to the maximum likelihood estimate and pruned
+		 * Writes compressed maximum likelihood QuadTree to a binary stream.
+		 * The QuadTree is first converted to the maximum likelihood estimate and pruned
 		 * for maximum compression.
 		 * @return success of operation
 		 */
 		bool writeBinary(std::ostream &s);
 
 		/**
-		 * Writes OcTree to a binary file using writeBinaryConst().
-		 * The OcTree is not changed, in particular not pruned first.
+		 * Writes QuadTree to a binary file using writeBinaryConst().
+		 * The QuadTree is not changed, in particular not pruned first.
 		 * Files will be smaller when the tree is pruned first or by using
 		 * writeBinary() instead.
 		 * @return success of operation
@@ -81,31 +81,31 @@ namespace quadmap {
 		bool writeBinaryConst(const std::string& filename) const;
 
 		/**
-		 * Writes the maximum likelihood OcTree to a binary stream (const variant).
+		 * Writes the maximum likelihood QuadTree to a binary stream (const variant).
 		 * Files will be smaller when the tree is pruned first or by using
 		 * writeBinary() instead.
 		 * @return success of operation
 		 */
 		bool writeBinaryConst(std::ostream &s) const;
 
-		/// Writes the actual data, implemented in OccupancyOcTreeBase::writeBinaryData()
+		/// Writes the actual data, implemented in OccupancyQuadTreeBase::writeBinaryData()
 		virtual std::ostream& writeBinaryData(std::ostream &s) const = 0;
 
 		/**
-		 * Reads an OcTree from an input stream.
+		 * Reads a QuadTree from an input stream.
 		 * Existing nodes of the tree are deleted before the tree is read.
 		 * @return success of operation
 		 */
 		bool readBinary(std::istream &s);
 
 		/**
-		 * Reads OcTree from a binary file.
+		 * Reads QuadTree from a binary file.
 		 * Existing nodes of the tree are deleted before the tree is read.
 		 * @return success of operation
 		 */
 		bool readBinary(const std::string& filename);
 
-		/// Reads the actual data, implemented in OccupancyOcTreeBase::readBinaryData()
+		/// Reads the actual data, implemented in OccupancyQuadTreeBase::readBinaryData()
 		virtual std::istream& readBinaryData(std::istream &s) = 0;
 
 		// -- occupancy queries
@@ -147,9 +147,9 @@ namespace quadmap {
 
 		/**
 		 * Manipulate log_odds value of voxel directly.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls udpateNode() with it.
+		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls udpateNode() with it.
 		 *
-		 * @param value 3d coordinate of the NODE that is to be updated
+		 * @param value 2d coordinate of the NODE that is to be updated
 		 * @param log_odds_update value to be added (+) to log_odds value of node
 		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
@@ -170,9 +170,9 @@ namespace quadmap {
 
 		/**
 		 * Integrate occupancy measurement.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls udpateNode() with it.
+		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls udpateNode() with it.
 		 *
-		 * @param value 3d coordinate of the NODE that is to be updated
+		 * @param value 2d coordinate of the NODE that is to be updated
 		 * @param occupied true if the node was measured occupied, else false
 		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.

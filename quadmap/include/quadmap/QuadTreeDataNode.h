@@ -49,7 +49,7 @@ namespace quadmap {
 
 	/**
 	 * Basic node in the QuadTree that can hold arbitrary data of type T in value.
-	 * This is the base class for nodes used in an QuadTree. The used implementation
+	 * This is the base class for nodes used in a QuadTree. The used implementation
 	 * for occupancy mapping is in QuadTreeNode.#
 	 * \tparam T data to be stored in the node (e.g. a float for probabilities)
 	 *
@@ -57,7 +57,6 @@ namespace quadmap {
 	 * you have to implement (at least) the following functions to avoid slicing
 	 * errors and memory-related bugs:
 	 * createChild(), getChild(), getChild() const, expandNode()
-	 * See ColorQuadTreeNode in ColorQuadTree.h for an example.
 	 */
 	template<typename T> class QuadTreeDataNode : public AbstractQuadTreeNode {
 		template<typename NODE, typename I>
@@ -77,26 +76,13 @@ namespace quadmap {
 		~QuadTreeDataNode();
 
 		/// Copy the payload (data in "value") from rhs into this node
-		/// Opposed to copy ctor, this does not clone the children as well
+		/// Opposed to copy constructor, this does not clone the children as well
 		void copyData(const QuadTreeDataNode& from);
 
 		/// Equals operator, compares if the stored value is identical
 		bool operator==(const QuadTreeDataNode& rhs) const;
 
-
-
-
-
 		// -- children  ----------------------------------
-
-		/// Test whether the i-th child exists. 
-		/// @deprecated Replaced by tree->nodeChildExists(...)
-		/// \return true if the i-th child exists
-		QUADMAP_DEPRECATED(bool childExists(unsigned int i) const);
-
-		/// @deprecated Replaced by tree->nodeHasChildren(...)
-		/// \return true if the node has at least one child
-		QUADMAP_DEPRECATED(bool hasChildren() const);
 
 		/// @return value stored in the node
 		T getValue() const{ return value; };
@@ -110,7 +96,6 @@ namespace quadmap {
 
 		/// Write node payload (data only) to binary stream
 		std::ostream& writeData(std::ostream &s) const;
-
 
 		/// Make the templated data type available from the outside
 		typedef T DataType;

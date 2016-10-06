@@ -118,7 +118,7 @@ namespace quadmap {
 			return true;
 		}
 		else {
-			QUADMAP_ERROR_STR("Binary file does not contain an QuadTree!");
+			QUADMAP_ERROR_STR("Binary file does not contain a QuadTree!");
 			return false;
 		}
 	}

@@ -61,7 +61,6 @@ namespace quadmap {
 	}
 
 	std::istream& ScanNode::readBinary(std::istream &s) {
-
 		this->scan = new Pointcloud();
 		this->scan->readBinary(s);
 
@@ -77,7 +76,7 @@ namespace quadmap {
 		s << " " << this->id;  // export pose for human editor
 		s << " ";
 		this->pose.trans().write(s);
-		s << " " << 1 << pose.rot();
+		s << " " << 1 << " " << pose.rot();
 		s << std::endl;
 		return s;
 	}
@@ -434,6 +433,7 @@ namespace quadmap {
 	std::istream& ScanGraph::readPlainASCII(std::istream& s){
 		std::string currentLine;
 		ScanNode* currentNode = NULL;
+		int scan_id = 0;
 		while (true){
 			getline(s, currentLine);
 			if (s.good() && !s.eof()){
@@ -455,6 +455,7 @@ namespace quadmap {
 
 					currentNode = new ScanNode();
 					currentNode->scan = new Pointcloud();
+					currentNode->id = scan_id++;
 
 					float x, y, rot;
 					std::string tmp;
@@ -566,28 +567,11 @@ namespace quadmap {
 			(*it)->constraint = (first->pose).inv() * second->pose;
 		}
 
-		// constraints and nodes are inconsistent, rewire graph
-		//     for (unsigned int i=0; i<this->edges.size(); i++) delete edges[i];
-		//     this->edges.clear();
-
-
-		//     ScanGraph::iterator first_it = this->begin();
-		//     ScanGraph::iterator second_it = first_it+1;
-
-		//     for ( ; second_it != this->end(); first_it++, second_it++) {
-		//       ScanNode* first = (*first_it);
-		//       ScanNode* second = (*second_it);
-		//       octomath::Pose6D c =  (first->pose).inv() * second->pose;
-		//       this->addEdge(first, second, c);
-		//     }
-
-
 		return s;
 	}
 
 
 	void ScanGraph::cropEachScan(point2d lowerBound, point2d upperBound) {
-
 		for (ScanGraph::iterator it = this->begin(); it != this->end(); it++) {
 			((*it)->scan)->crop(lowerBound, upperBound);
 		}
@@ -595,8 +579,6 @@ namespace quadmap {
 
 
 	void ScanGraph::crop(point2d lowerBound, point2d upperBound) {
-
-
 		// for all node in graph...
 		for (ScanGraph::iterator it = this->begin(); it != this->end(); it++) {
 			pose3d scan_pose = (*it)->pose;

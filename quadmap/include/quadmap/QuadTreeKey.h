@@ -130,7 +130,7 @@ namespace quadmap {
 
 	/**
 	 * Data structrure to efficiently track changed nodes as a combination of
-	 * OcTreeKeys and a bool flag (to denote newly created nodes)
+	 * QuadTreeKeys and a bool flag (to denote newly created nodes)
 	 *
 	 */
 	typedef unordered_ns::unordered_map<QuadTreeKey, bool, QuadTreeKey::KeyHash> KeyBoolMap;
@@ -181,11 +181,11 @@ namespace quadmap {
 	};
 
 	/**
-	 * Computes the key of a child node while traversing the octree, given
+	 * Computes the key of a child node while traversing the quadtree, given
 	 * child index and current key
 	 *
 	 * @param[in] pos index of child node (0..3)
-	 * @param[in] center_offset_key constant offset of octree keys
+	 * @param[in] center_offset_key constant offset of quadtree keys
 	 * @param[in] parent_key current (parent) key
 	 * @param[out] child_key  computed child key
 	 */

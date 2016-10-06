@@ -31,8 +31,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "octomap_types.h"
+#include "quadmap_types.h"
 #include "Pointcloud.h"
 #include "ScanGraph.h"
-#include "OcTree.h"
+#include "QuadTree.h"
 

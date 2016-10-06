@@ -77,31 +77,7 @@ namespace quadmap {
 		virtual void clear() = 0;
 
 		//-- Iterator tree access
-
-		// default iterator is leaf_iterator
-		//    class leaf_iterator;
-		//    class tree_iterator;
-		//    class leaf_bbx_iterator;
-		//    typedef leaf_iterator iterator;
 		class iterator_base;
-		//    /// @return beginning of the tree as leaf iterator
-		//virtual iterator_base begin(unsigned char maxDepth=0) const = 0;
-		//    /// @return end of the tree as leaf iterator
-		//    virtual const iterator end() const = 0;
-		//    /// @return beginning of the tree as leaf iterator
-		//    virtual leaf_iterator begin_leafs(unsigned char maxDepth=0) const = 0;
-		//    /// @return end of the tree as leaf iterator
-		//    virtual const leaf_iterator end_leafs() const = 0;
-		//    /// @return beginning of the tree as leaf iterator in a bounding box
-		//    virtual leaf_bbx_iterator begin_leafs_bbx(const OcTreeKey& min, const OcTreeKey& max, unsigned char maxDepth=0) const = 0;
-		//    /// @return beginning of the tree as leaf iterator in a bounding box
-		//    virtual leaf_bbx_iterator begin_leafs_bbx(const point3d& min, const point3d& max, unsigned char maxDepth=0) const = 0;
-		//    /// @return end of the tree as leaf iterator in a bounding box
-		//    virtual const leaf_bbx_iterator end_leafs_bbx() const = 0;
-		//    /// @return beginning of the tree as iterator to all nodes (incl. inner)
-		//    virtual tree_iterator begin_tree(unsigned char maxDepth=0) const = 0;
-		//    /// @return end of the tree as iterator to all nodes (incl. inner)
-		//    const tree_iterator end_tree() const = 0;
 
 		/// Write file header and complete tree to file (serialization)
 		bool write(const std::string& filename) const;
@@ -109,35 +85,35 @@ namespace quadmap {
 		bool write(std::ostream& s) const;
 
 		/**
-		 * Creates a certain OcTree (factory pattern)
+		 * Creates a certain QuadTree (factory pattern)
 		 *
-		 * @param id unique ID of OcTree
-		 * @param res resolution of OcTree
-		 * @return pointer to newly created OcTree (empty). NULL if the ID is unknown!
+		 * @param id unique ID of QuadTree
+		 * @param res resolution of QuadTree
+		 * @return pointer to newly created QuadTree (empty). NULL if the ID is unknown!
 		 */
 		static AbstractQuadTree* createTree(const std::string id, double res);
 
 		/**
 		 * Read the file header, create the appropriate class and deserialize.
-		 * This creates a new octree which you need to delete yourself. If you
-		 * expect or requre a specific kind of octree, use dynamic_cast afterwards:
+		 * This creates a new quadtree which you need to delete yourself. If you
+		 * expect or requre a specific kind of quadtree, use dynamic_cast afterwards:
 		 * @code
-		 * AbstractOcTree* tree = AbstractOcTree::read("filename.ot");
-		 * OcTree* octree = dynamic_cast<OcTree*>(tree);
+		 * AbstractQuadTree* tree = AbstractQuadTree::read("filename.ot");
+		 * QuadTree* quadtree = dynamic_cast<QuadTree*>(tree);
 		 *
 		 * @endcode
 		 */
 		static AbstractQuadTree* read(const std::string& filename);
 
 		/// Read the file header, create the appropriate class and deserialize.
-		/// This creates a new octree which you need to delete yourself.
+		/// This creates a new quadtree which you need to delete yourself.
 		static AbstractQuadTree* read(std::istream &s);
 
 		/**
 		 * Read all nodes from the input stream (without file header),
 		 * for this the tree needs to be already created.
 		 * For general file IO, you
-		 * should probably use AbstractOcTree::read() instead.
+		 * should probably use AbstractQuadTree::read() instead.
 		 */
 		virtual std::istream& readData(std::istream &s) = 0;
 

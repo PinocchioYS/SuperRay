@@ -60,7 +60,7 @@ namespace quadmap {
 		double mean = 0;
 		uint8_t c = 0;
 		if (children != NULL){
-			for (unsigned int i = 0; i<4; i++) {
+			for (unsigned int i = 0; i < 4; i++) {
 				if (children[i] != NULL) {
 					mean += static_cast<QuadTreeNode*>(children[i])->getOccupancy(); // TODO check if works generally
 					++c;
@@ -78,7 +78,7 @@ namespace quadmap {
 		float max = -std::numeric_limits<float>::max();
 
 		if (children != NULL){
-			for (unsigned int i = 0; i<4; i++) {
+			for (unsigned int i = 0; i < 4; i++) {
 				if (children[i] != NULL) {
 					float l = static_cast<QuadTreeNode*>(children[i])->getLogOdds(); // TODO check if works generally
 					if (l > max)

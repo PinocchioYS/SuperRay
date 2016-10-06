@@ -35,7 +35,6 @@
 #define QUADMATH_POSE3D_H
 
 #include "Vector2.h"
-// #include "Quaternion.h"
 
 namespace quadmath {
 
@@ -73,18 +72,21 @@ namespace quadmath {
 		 * @return the translational component of this pose
 		 */
 		inline Vector2& trans() { return translation; }
+
 		/*!
 		 * \brief Rotational component
 		 *
 		 * @return the rotational component of this pose
 		 */
 		inline double& rot() { return rotation; }
+
 		/*!
 		 * \brief Translational component
 		 *
 		 * @return the translational component of this pose
 		 */
 		const Vector2& trans() const { return translation; }
+
 		/*!
 		 * \brief Rotational component
 		 * @return the rotational component of this pose

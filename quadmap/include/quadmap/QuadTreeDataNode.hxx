@@ -84,16 +84,16 @@ namespace quadmap {
 	// ============================================================
 
 
-	template <typename T>
+	/*template <typename T>
 	bool QuadTreeDataNode<T>::childExists(unsigned int i) const {
 		assert(i < 4);
 		if ((children != NULL) && (children[i] != NULL))
 			return true;
 		else
 			return false;
-	}
+	}*/
 
-	template <typename T>
+	/*template <typename T>
 	bool QuadTreeDataNode<T>::hasChildren() const {
 		if (children == NULL)
 			return false;
@@ -103,7 +103,7 @@ namespace quadmap {
 				return true;
 		}
 		return false;
-	}
+	}*/
 
 
 	// ============================================================

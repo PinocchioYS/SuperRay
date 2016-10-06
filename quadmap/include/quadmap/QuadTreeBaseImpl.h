@@ -50,7 +50,7 @@ namespace quadmap {
 	class AbstractQuadTreeNode;
 
 	/**
-	 * OcTree base class, to be used with with any kind of OcTreeDataNode.
+	 * QuadTree base class, to be used with with any kind of QuadTreeDataNode.
 	 *
 	 * This tree implementation currently has a maximum depth of 16
 	 * nodes. For this reason, coordinates values have to be, e.g.,
@@ -94,7 +94,7 @@ namespace quadmap {
 		 */
 		void swapContent(QuadTreeBaseImpl<NODE, INTERFACE>& rhs);
 
-		/// Comparison between two octrees, all meta data, all
+		/// Comparison between two quadtrees, all meta data, all
 		/// nodes, and the structure must be identical
 		bool operator== (const QuadTreeBaseImpl<NODE, INTERFACE>& rhs) const;
 
@@ -170,7 +170,7 @@ namespace quadmap {
 
 		/**
 		 * \return Pointer to the root node of the tree. This pointer
-		 * should not be modified or deleted externally, the OcTree
+		 * should not be modified or deleted externally, the QuadTree
 		 * manages its memory itself. In an empty tree, root is NULL.
 		 */
 		inline NODE* getRoot() const { return root; }
@@ -221,7 +221,7 @@ namespace quadmap {
 		void clear();
 
 		/**
-		 * Lossless compression of the octree: A node will replace all of its eight
+		 * Lossless compression of the quadtree: A node will replace all of its eight
 		 * children if they have identical values. You usually don't have to call
 		 * prune() after a regular occupancy update, updateNode() incrementally
 		 * prunes all affected nodes.
@@ -237,13 +237,13 @@ namespace quadmap {
 		/// \return The number of nodes in the tree
 		virtual inline size_t size() const { return tree_size; }
 
-		/// \return Memory usage of the complete octree in bytes (may vary between architectures)
+		/// \return Memory usage of the complete quadtree in bytes (may vary between architectures)
 		virtual size_t memoryUsage() const;
 
-		/// \return Memory usage of a single octree node
+		/// \return Memory usage of a single quadtree node
 		virtual inline size_t memoryUsageNode() const { return sizeof(NODE); };
 
-		/// \return Memory usage of a full grid of the same size as the OcTree in bytes (for comparison)
+		/// \return Memory usage of a full grid of the same size as the QuadTree in bytes (for comparison)
 		/// \note this can be larger than the adressable memory - size_t may not be enough to hold it!
 		unsigned long long memoryFullGrid() const;
 
@@ -412,7 +412,7 @@ namespace quadmap {
 		key_type adjustKeyAtDepth(key_type key, unsigned int depth) const;
 
 		/**
-		 * Converts a 2D coordinate into a 2D OcTreeKey, with boundary checking.
+		 * Converts a 2D coordinate into a 2D QuadTreeKey, with boundary checking.
 		 *
 		 * @param coord 2d coordinate of a point
 		 * @param key values that will be computed, an array of fixed size 2.
@@ -421,7 +421,7 @@ namespace quadmap {
 		bool coordToKeyChecked(const point2d& coord, QuadTreeKey& key) const;
 
 		/**
-		 * Converts a 2D coordinate into a 2D OcTreeKey at a certain depth, with boundary checking.
+		 * Converts a 2D coordinate into a 2D QuadTreeKey at a certain depth, with boundary checking.
 		 *
 		 * @param coord 2d coordinate of a point
 		 * @param depth level of the key from the top
@@ -431,7 +431,7 @@ namespace quadmap {
 		bool coordToKeyChecked(const point2d& coord, unsigned depth, QuadTreeKey& key) const;
 
 		/**
-		 * Converts a 2D coordinate into a 2D OcTreeKey, with boundary checking.
+		 * Converts a 2D coordinate into a 2D QuadTreeKey, with boundary checking.
 		 *
 		 * @param x
 		 * @param y

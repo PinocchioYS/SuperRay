@@ -23,6 +23,9 @@ TARGET_LINK_LIBRARIES(octomap octomath)
 
 ADD_SUBDIRECTORY( testing )
 
+ADD_EXECUTABLE(test test.cpp)
+TARGET_LINK_LIBRARIES(test octomap)
+
 ADD_EXECUTABLE(graph2tree graph2tree.cpp)
 TARGET_LINK_LIBRARIES(graph2tree octomap)
 

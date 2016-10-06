@@ -48,13 +48,6 @@ namespace quadmath {
 		return *this;
 	}
 
-	//   void Vector3::read(unsigned char * src, unsigned int size){
-	//     memcpy(&data[0],src, sizeof(double));
-	//     memcpy(&data[1],src, sizeof(double));
-	//     memcpy(&data[2],src, sizeof(double));
-	//   }
-
-
 	std::istream& Vector2::read(std::istream &s) {
 		int temp;
 		s >> temp; // should be 2
@@ -71,8 +64,6 @@ namespace quadmath {
 		return s;
 	}
 
-
-
 	std::istream& Vector2::readBinary(std::istream &s) {
 		int temp;
 		s.read((char*)&temp, sizeof(temp));
@@ -84,7 +75,6 @@ namespace quadmath {
 		return s;
 	}
 
-
 	std::ostream& Vector2::writeBinary(std::ostream &s) const {
 		int temp = 2;
 		s.write((char*)&temp, sizeof(temp));
@@ -95,7 +85,6 @@ namespace quadmath {
 		}
 		return s;
 	}
-
 
 	std::ostream& operator<<(std::ostream& out, quadmath::Vector2 const& v) {
 		return out << '(' << v.x() << ' ' << v.y() << ')';

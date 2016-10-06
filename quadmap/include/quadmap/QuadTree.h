@@ -21,7 +21,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OW NER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -42,8 +42,8 @@
 namespace quadmap {
 
 	/**
-	 * octomap main map data structure, stores 3D occupancy grid map in an OcTree.
-	 * Basic functionality is implemented in OcTreeBase.
+	 * quadmap main map data structure, stores 2D occupancy grid map in an QuadTree.
+	 * Basic functionality is implemented in QuadTreeBase.
 	 *
 	 */
 	class QuadTree : public OccupancyQuadTreeBase <QuadTreeNode> {
@@ -53,7 +53,7 @@ namespace quadmap {
 		QuadTree(double resolution);
 
 		/**
-		 * Reads an OcTree from a binary file
+		 * Reads an QuadTree from a binary file
 		 * @param _filename
 		 *
 		 */
@@ -70,10 +70,10 @@ namespace quadmap {
 
 	protected:
 		/**
-		 * Static member object which ensures that this OcTree's prototype
+		 * Static member object which ensures that this QuadTree's prototype
 		 * ends up in the classIDMapping only once. You need this as a
-		 * static member in any derived octree class in order to read .ot
-		 * files through the AbstractOcTree factory. You should also call
+		 * static member in any derived quadtree class in order to read .ot
+		 * files through the AbstractQuadTree factory. You should also call
 		 * ensureLinking() once from the constructor.
 		 */
 		class StaticMemberInitializer{
@@ -87,7 +87,7 @@ namespace quadmap {
 			/**
 			 * Dummy function to ensure that MSVC does not drop the
 			 * StaticMemberInitializer, causing this tree failing to register.
-			 * Needs to be called from the constructor of this octree.
+			 * Needs to be called from the constructor of this quadtree.
 			 */
 			void ensureLinking() {};
 		};

@@ -1,6 +1,6 @@
 
-#ADD_EXECUTABLE(test_raycasting test_raycasting.cpp)
-#TARGET_LINK_LIBRARIES(test_raycasting octomap)
+ADD_EXECUTABLE(test test.cpp)
+TARGET_LINK_LIBRARIES(test quadmap)
 
 #ADD_EXECUTABLE(test_iterators test_iterators.cpp)
 #TARGET_LINK_LIBRARIES(test_iterators octomap)

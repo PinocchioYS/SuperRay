@@ -34,7 +34,6 @@
 
 #include <quadmap/AbstractQuadTree.h>
 #include <quadmap/QuadTree.h>
-// #include <quadmap/CountingQuadTree.h>
 
 
 namespace quadmap {

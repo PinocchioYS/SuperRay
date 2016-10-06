@@ -18,7 +18,7 @@ SET_TARGET_PROPERTIES(gridmap2D-static PROPERTIES OUTPUT_NAME "gridmap2D")
 
 TARGET_LINK_LIBRARIES(gridmap2D gridmath2D)
 
-#ADD_SUBDIRECTORY( testing )
+ADD_SUBDIRECTORY( testing )
 
 #ADD_EXECUTABLE(graph2tree graph2tree.cpp)
 #TARGET_LINK_LIBRARIES(graph2tree octomap)

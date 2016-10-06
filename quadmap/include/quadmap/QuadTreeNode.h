@@ -42,22 +42,19 @@
 namespace quadmap {
 
 	/**
-	 * Nodes to be used in OcTree. They represent 3d occupancy grid cells.
+	 * Nodes to be used in QuadTree. They represent 2d occupancy grid cells.
 	 * "value" stores their log-odds occupancy.
 	 *
-	 * Note: If you derive a class (directly or indirectly) from OcTreeNode or
-	 * OcTreeDataNode, you have to implement (at least) the following functions:
+	 * Note: If you derive a class (directly or indirectly) from QuadTreeNode or
+	 * QuadTreeDataNode, you have to implement (at least) the following functions:
 	 * createChild(), getChild(), getChild() const, expandNode() to avoid slicing
 	 * errors and memory-related bugs.
-	 * See ColorOcTreeNode in ColorOcTree.h for an example.
-	 *
 	 */
 	class QuadTreeNode : public QuadTreeDataNode<float> {
 
 	public:
 		QuadTreeNode();
 		~QuadTreeNode();
-
 
 		// -- node occupancy  ----------------------------
 
@@ -86,7 +83,6 @@ namespace quadmap {
 
 		/// adds p to the node's logOdds value (with no boundary / threshold checking!)
 		void addValue(const float& p);
-
 
 	protected:
 		// "value" stores log odds occupancy probability

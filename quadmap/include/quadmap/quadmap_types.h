@@ -40,7 +40,6 @@
 
 #include <quadmap/math/Vector2.h>
 #include <quadmap/math/Pose3D.h>
-#include <quadmap/quadmap_deprecated.h>
 
 namespace quadmap {
 

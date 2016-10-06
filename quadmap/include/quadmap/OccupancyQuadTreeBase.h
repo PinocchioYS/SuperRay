@@ -110,7 +110,7 @@ namespace quadmap {
 		* @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
 		* @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		*   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
-		* @param discretize whether the scan is discretized first into octree key cells (default: false).
+		* @param discretize whether the scan is discretized first into quadtree key cells (default: false).
 		*   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.*
 		*/
 		virtual void insertPointCloud(const Pointcloud& scan, const point2d& sensor_origin, const pose3d& frame_origin,
@@ -125,7 +125,7 @@ namespace quadmap {
 		* @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
 		* @param lazy_eval whether the tree is left 'dirty' after the update (default: false).
 		*   This speeds up the insertion by not updating inner nodes, but you need to call updateInnerOccupancy() when done.
-		* @param discretize whether the scan is discretized first into octree key cells (default: false).
+		* @param discretize whether the scan is discretized first into quadtree key cells (default: false).
 		*   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.
 		*/
 		virtual void insertPointCloud(const ScanNode& scan, double maxrange = -1., bool lazy_eval = false, bool discretize = false);
@@ -146,9 +146,9 @@ namespace quadmap {
 
 		/**
 		 * Set log_odds value of voxel to log_odds_value. This only works if key is at the lowest
-		 * octree level
+		 * quadtree level
 		 *
-		 * @param key OcTreeKey of the NODE that is to be updated
+		 * @param key QuadTreeKey of the NODE that is to be updated
 		 * @param log_odds_value value to be set as the log_odds value of the node
 		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
@@ -158,9 +158,9 @@ namespace quadmap {
 
 		/**
 		 * Set log_odds value of voxel to log_odds_value.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls setNodeValue() with it.
+		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls setNodeValue() with it.
 		 *
-		 * @param value 3d coordinate of the NODE that is to be updated
+		 * @param value 2d coordinate of the NODE that is to be updated
 		 * @param log_odds_value value to be set as the log_odds value of the node
 		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
@@ -170,11 +170,10 @@ namespace quadmap {
 
 		/**
 		 * Set log_odds value of voxel to log_odds_value.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls setNodeValue() with it.
+		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls setNodeValue() with it.
 		 *
 		 * @param x
 		 * @param y
-		 * @param z
 		 * @param log_odds_value value to be set as the log_odds value of the node
 		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
@@ -184,9 +183,9 @@ namespace quadmap {
 
 		/**
 		 * Manipulate log_odds value of a voxel by changing it by log_odds_update (relative).
-		 * This only works if key is at the lowest octree level
+		 * This only works if key is at the lowest quadtree level
 		 *
-		 * @param key OcTreeKey of the NODE that is to be updated
+		 * @param key QuadTreeKey of the NODE that is to be updated
 		 * @param log_odds_update value to be added (+) to log_odds value of node
 		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
@@ -196,9 +195,9 @@ namespace quadmap {
 
 		/**
 		 * Manipulate log_odds value of a voxel by changing it by log_odds_update (relative).
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls updateNode() with it.
+		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls updateNode() with it.
 		 *
-		 * @param value 3d coordinate of the NODE that is to be updated
+		 * @param value 2d coordinate of the NODE that is to be updated
 		 * @param log_odds_update value to be added (+) to log_odds value of node
 		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
@@ -208,11 +207,10 @@ namespace quadmap {
 
 		/**
 		 * Manipulate log_odds value of a voxel by changing it by log_odds_update (relative).
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls updateNode() with it.
+		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls updateNode() with it.
 		 *
 		 * @param x
 		 * @param y
-		 * @param z
 		 * @param log_odds_update value to be added (+) to log_odds value of node
 		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
@@ -223,7 +221,7 @@ namespace quadmap {
 		/**
 		 * Integrate occupancy measurement.
 		 *
-		 * @param key OcTreeKey of the NODE that is to be updated
+		 * @param key QuadTreeKey of the NODE that is to be updated
 		 * @param occupied true if the node was measured occupied, else false
 		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
@@ -233,9 +231,9 @@ namespace quadmap {
 
 		/**
 		 * Integrate occupancy measurement.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls udpateNode() with it.
+		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls udpateNode() with it.
 		 *
-		 * @param value 3d coordinate of the NODE that is to be updated
+		 * @param value 2d coordinate of the NODE that is to be updated
 		 * @param occupied true if the node was measured occupied, else false
 		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
@@ -245,11 +243,10 @@ namespace quadmap {
 
 		/**
 		 * Integrate occupancy measurement.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls udpateNode() with it.
+		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls udpateNode() with it.
 		 *
 		 * @param x
 		 * @param y
-		 * @param z
 		 * @param occupied true if the node was measured occupied, else false
 		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
@@ -281,7 +278,7 @@ namespace quadmap {
 		virtual bool insertRay(const point2d& origin, const point2d& end, double maxrange = -1.0, bool lazy_eval = false);
 
 		/**
-		 * Performs raycasting in 3d, similar to computeRay(). Can be called in parallel e.g. with OpenMP
+		 * Performs raycasting in 2d, similar to computeRay(). Can be called in parallel e.g. with OpenMP
 		 * for a speedup.
 		 *
 		 * A ray is cast from 'origin' with a given direction, the first non-free
@@ -296,7 +293,7 @@ namespace quadmap {
 		 * @param[out] end returns the center of the last cell on the ray. If the function returns true, it is occupied.
 		 * @param[in] ignoreUnknownCells whether unknown cells are ignored (= treated as free). If false (default), the raycast aborts when an unknown cell is hit and returns false.
 		 * @param[in] maxRange Maximum range after which the raycast is aborted (<= 0: no limit, default)
-		 * @return true if an occupied cell was hit, false if the maximum range or octree bounds are reached, or if an unknown node was hit.
+		 * @return true if an occupied cell was hit, false if the maximum range or quadtree bounds are reached, or if an unknown node was hit.
 		 */
 		virtual bool castRay(const point2d& origin, const point2d& direction, point2d& end,
 			bool ignoreUnknownCells = false, double maxRange = -1.0) const;
@@ -314,18 +311,6 @@ namespace quadmap {
 		 */
 		virtual bool getRayIntersection(const point2d& origin, const point2d& direction, const point2d& center,
 			point2d& intersection, double delta = 0.0) const;
-
-		/**
-		 * Performs a step of the marching cubes surface reconstruction algorithm
-		 * to retreive the normal of the triangles that fall in the cube
-		 * formed by the voxels located at the vertex of a given voxel.
-		 *
-		 * @param[in] voxel for which retreive the normals
-		 * @param[out] triangles normals
-		 * @param[in] unknownStatus consider unknown cells as free (false) or occupied (default, true).
-		 * @return True if the input voxel is known in the occupancy grid, and false if it is unknown.
-		 */
-		// bool getNormals(const point2d& point, std::vector<point2d>& normals, bool unknownStatus = true) const;
 
 		//-- set BBX limit (limits tree updates to this bounding box)
 
@@ -356,7 +341,7 @@ namespace quadmap {
 
 		/**
 		 * Iterator to traverse all keys of changed nodes.
-		 * you need to enableChangeDetection() first. Here, an OcTreeKey always
+		 * you need to enableChangeDetection() first. Here, an QuadTreeKey always
 		 * refers to a node at the lowest tree level (its size is the minimum tree resolution)
 		 */
 		KeyBoolMap::const_iterator changedKeysBegin() const { return changed_keys.begin(); }
@@ -369,7 +354,7 @@ namespace quadmap {
 
 
 		/**
-		 * Helper for insertPointCloud(). Computes all octree nodes affected by the point cloud
+		 * Helper for insertPointCloud(). Computes all quadtree nodes affected by the point cloud
 		 * integration at once. Here, occupied nodes have a preference over free
 		 * ones.
 		 *
@@ -386,9 +371,9 @@ namespace quadmap {
 
 
 		/**
-		 * Helper for insertPointCloud(). Computes all octree nodes affected by the point cloud
+		 * Helper for insertPointCloud(). Computes all quadtree nodes affected by the point cloud
 		 * integration at once. Here, occupied nodes have a preference over free
-		 * ones. This function first discretizes the scan with the octree grid, which results
+		 * ones. This function first discretizes the scan with the quadtree grid, which results
 		 * in fewer raycasts (=speedup) but a slightly different result than computeUpdate().
 		 *
 		 * @param scan point cloud measurement to be integrated
@@ -429,7 +414,7 @@ namespace quadmap {
 		 * all leaves as either free or occupied.
 		 *
 		 * @param s
-		 * @param node OcTreeNode to write out, will recurse to all children
+		 * @param node QuadTreeNode to write out, will recurse to all children
 		 * @return
 		 */
 		std::ostream& writeBinaryNode(std::ostream &s, const NODE* node) const;

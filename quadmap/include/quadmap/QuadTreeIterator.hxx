@@ -49,7 +49,7 @@ public:
 	 * Constructor of the iterator. Initializes the iterator with the default
 	 * constructor (= end() iterator) if tree is empty or NULL.
 	 *
-	 * @param tree OcTreeBaseImpl on which the iterator is used on
+	 * @param tree QuadTreeBaseImpl on which the iterator is used on
 	 * @param depth Maximum depth to traverse the tree. 0 (default): unlimited
 	 */
 	iterator_base(QuadTreeBaseImpl<NodeType, INTERFACE> const* tree, uint8_t depth = 0)
@@ -98,19 +98,19 @@ public:
 		return *this;
 	};
 
-	/// Ptr operator will return the current node in the octree which the
+	/// Ptr operator will return the current node in the quadtree which the
 	/// iterator is referring to
 	NodeType const* operator->() const { return stack.top().node; }
 
-	/// Ptr operator will return the current node in the octree which the
+	/// Ptr operator will return the current node in the quadtree which the
 	/// iterator is referring to
 	NodeType* operator->() { return stack.top().node; }
 
-	/// Return the current node in the octree which the
+	/// Return the current node in the quadtree which the
 	/// iterator is referring to
 	const NodeType& operator*() const { return *(stack.top().node); }
 
-	/// Return the current node in the octree which the
+	/// Return the current node in the quadtree which the
 	/// iterator is referring to
 	NodeType& operator*() { return *(stack.top().node); }
 
@@ -134,10 +134,10 @@ public:
 	/// return depth of the current node
 	unsigned getDepth() const { return unsigned(stack.top().depth); }
 
-	/// @return the OcTreeKey of the current node
+	/// @return the QuadTreeKey of the current node
 	const QuadTreeKey& getKey() const { return stack.top().key; }
 
-	/// @return the OcTreeKey of the current node, for nodes with depth != maxDepth
+	/// @return the QuadTreeKey of the current node, for nodes with depth != maxDepth
 	QuadTreeKey getIndexKey() const {
 		return computeIndexKey(tree->getTreeDepth() - stack.top().depth, stack.top().key);
 	}
