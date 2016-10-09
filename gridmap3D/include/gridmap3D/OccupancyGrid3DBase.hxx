@@ -75,46 +75,6 @@ namespace gridmap3D {
 	}
 
 	template <class NODE>
-	void OccupancyGrid3DBase<NODE>::insertPointCloud(const ScanNode& scan, double maxrange, bool discretize) {
-		// performs transformation to data and sensor origin first
-		Pointcloud& cloud = *(scan.scan);
-		pose6d frame_origin = scan.pose;
-		point3d sensor_origin = frame_origin.inv().transform(scan.pose.trans());
-		insertPointCloud(cloud, sensor_origin, frame_origin, maxrange, discretize);
-	}
-
-
-	template <class NODE>
-	void OccupancyGrid3DBase<NODE>::insertPointCloud(const Pointcloud& scan, const gridmap3D::point3d& sensor_origin,
-		double maxrange, bool discretize) {
-
-		KeySet free_cells, occupied_cells;
-		if (discretize)
-			computeDiscreteUpdate(scan, sensor_origin, free_cells, occupied_cells, maxrange);
-		else
-			computeUpdate(scan, sensor_origin, free_cells, occupied_cells, maxrange);
-
-		// insert data into tree  -----------------------
-		for (KeySet::iterator it = free_cells.begin(); it != free_cells.end(); ++it) {
-			updateNode(*it, false);
-		}
-		for (KeySet::iterator it = occupied_cells.begin(); it != occupied_cells.end(); ++it) {
-			updateNode(*it, true);
-		}
-	}
-
-	template <class NODE>
-	void OccupancyGrid3DBase<NODE>::insertPointCloud(const Pointcloud& pc, const point3d& sensor_origin, const pose6d& frame_origin,
-		double maxrange, bool discretize) {
-		// performs transformation to data and sensor origin first
-		Pointcloud transformed_scan(pc);
-		transformed_scan.transform(frame_origin);
-		point3d transformed_sensor_origin = frame_origin.transform(sensor_origin);
-		insertPointCloud(transformed_scan, transformed_sensor_origin, maxrange, discretize);
-	}
-
-
-	template <class NODE>
 	void OccupancyGrid3DBase<NODE>::insertPointCloudRays(const Pointcloud& pc, const point3d& origin, double maxrange) {
 		if (pc.size() < 1)
 			return;
@@ -143,128 +103,6 @@ namespace gridmap3D {
 				}
 			}
 
-		}
-	}
-
-	template <class NODE>
-	void OccupancyGrid3DBase<NODE>::computeDiscreteUpdate(const Pointcloud& scan, const gridmap3D::point3d& origin,
-		KeySet& free_cells, KeySet& occupied_cells,
-		double maxrange)
-	{
-		Pointcloud discretePC;
-		discretePC.reserve(scan.size());
-		KeySet endpoints;
-
-		for (int i = 0; i < (int)scan.size(); ++i) {
-			Grid3DKey k = this->coordToKey(scan[i]);
-			std::pair<KeySet::iterator, bool> ret = endpoints.insert(k);
-			if (ret.second){ // insertion took place => k was not in set
-				discretePC.push_back(this->keyToCoord(k));
-			}
-		}
-
-		computeUpdate(discretePC, origin, free_cells, occupied_cells, maxrange);
-	}
-
-
-	template <class NODE>
-	void OccupancyGrid3DBase<NODE>::computeUpdate(const Pointcloud& scan, const gridmap3D::point3d& origin,
-		KeySet& free_cells, KeySet& occupied_cells,
-		double maxrange)
-	{
-
-
-
-#ifdef _OPENMP
-		omp_set_num_threads(this->keyrays.size());
-#pragma omp parallel for schedule(guided)
-#endif
-		for (int i = 0; i < (int)scan.size(); ++i) {
-			const point3d& p = scan[i];
-			unsigned threadIdx = 0;
-#ifdef _OPENMP
-			threadIdx = omp_get_thread_num();
-#endif
-			KeyRay* keyray = &(this->keyrays.at(threadIdx));
-
-
-			if (!use_bbx_limit) { // no BBX specified
-				if ((maxrange < 0.0) || ((p - origin).norm() <= maxrange)) { // is not maxrange meas.
-					// free cells
-					if (this->computeRayKeys(origin, p, *keyray)){
-#ifdef _OPENMP
-#pragma omp critical (free_insert)
-#endif
-						{
-							free_cells.insert(keyray->begin(), keyray->end());
-						}
-					}
-					// occupied endpoint
-					Grid3DKey key;
-					if (this->coordToKeyChecked(p, key)){
-#ifdef _OPENMP
-#pragma omp critical (occupied_insert)
-#endif
-						{
-							occupied_cells.insert(key);
-						}
-					}
-				}
-				else { // user set a maxrange and length is above
-					point3d direction = (p - origin).normalized();
-					point3d new_end = origin + direction * (float)maxrange;
-					if (this->computeRayKeys(origin, new_end, *keyray)){
-#ifdef _OPENMP
-#pragma omp critical (free_insert)
-#endif
-						{
-							free_cells.insert(keyray->begin(), keyray->end());
-						}
-					}
-				} // end if maxrange
-			}
-			else { // BBX was set
-				// endpoint in bbx and not maxrange?
-				if (inBBX(p) && ((maxrange < 0.0) || ((p - origin).norm() <= maxrange)))  {
-
-					// occupied endpoint
-					Grid3DKey key;
-					if (this->coordToKeyChecked(p, key)){
-#ifdef _OPENMP
-#pragma omp critical (occupied_insert)
-#endif
-						{
-							occupied_cells.insert(key);
-						}
-					}
-
-					// update freespace, break as soon as bbx limit is reached
-					if (this->computeRayKeys(origin, p, *keyray)){
-						for (KeyRay::reverse_iterator rit = keyray->rbegin(); rit != keyray->rend(); rit++) {
-							if (inBBX(*rit)) {
-#ifdef _OPENMP
-#pragma omp critical (free_insert)
-#endif
-								{
-									free_cells.insert(*rit);
-								}
-							}
-							else break;
-						}
-					} // end if compute ray
-				} // end if in BBX and not maxrange
-			} // end bbx case
-
-		} // end for all points, end of parallel OMP loop
-
-		// prefer occupied cells over free ones (and make sets disjunct)
-		for (KeySet::iterator it = free_cells.begin(), end = free_cells.end(); it != end;){
-			if (occupied_cells.find(*it) != occupied_cells.end()){
-				it = free_cells.erase(it);
-			}
-			else {
-				++it;
-			}
 		}
 	}
 
@@ -370,163 +208,6 @@ namespace gridmap3D {
 		return updateNode(key, occupied);
 	}
 
-	/*template <class NODE>
-	NODE* OccupancyQuadTreeBase<NODE>::updateNodeRecurs(NODE* node, bool node_just_created, const QuadTreeKey& key,
-		unsigned int depth, const float& log_odds_update, bool lazy_eval) {
-		bool created_node = false;
-
-		assert(node);
-
-		// follow down to last level
-		if (depth < this->tree_depth) {
-			unsigned int pos = computeChildIdx(key, this->tree_depth - 1 - depth);
-			if (!this->nodeChildExists(node, pos)) {
-				// child does not exist, but maybe it's a pruned node?
-				if (!this->nodeHasChildren(node) && !node_just_created) {
-					// current node does not have children AND it is not a new node 
-					// -> expand pruned node
-					this->expandNode(node);
-				}
-				else {
-					// not a pruned node, create requested child
-					this->createNodeChild(node, pos);
-					created_node = true;
-				}
-			}
-
-			if (lazy_eval)
-				return updateNodeRecurs(this->getNodeChild(node, pos), created_node, key, depth + 1, log_odds_update, lazy_eval);
-			else {
-				NODE* retval = updateNodeRecurs(this->getNodeChild(node, pos), created_node, key, depth + 1, log_odds_update, lazy_eval);
-				// prune node if possible, otherwise set own probability
-				// note: combining both did not lead to a speedup!
-				if (this->pruneNode(node)){
-					// return pointer to current parent (pruned), the just updated node no longer exists
-					retval = node;
-				}
-				else{
-					node->updateOccupancyChildren();
-				}
-
-				return retval;
-			}
-		}
-
-		// at last level, update node, end of recursion
-		else {
-			if (use_change_detection) {
-				bool occBefore = this->isNodeOccupied(node);
-				updateNodeLogOdds(node, log_odds_update);
-
-				if (node_just_created){  // new node
-					changed_keys.insert(std::pair<QuadTreeKey, bool>(key, true));
-				}
-				else if (occBefore != this->isNodeOccupied(node)) {  // occupancy changed, track it
-					KeyBoolMap::iterator it = changed_keys.find(key);
-					if (it == changed_keys.end())
-						changed_keys.insert(std::pair<QuadTreeKey, bool>(key, false));
-					else if (it->second == false)
-						changed_keys.erase(it);
-				}
-			}
-			else {
-				updateNodeLogOdds(node, log_odds_update);
-			}
-			return node;
-		}
-	}*/
-
-	// TODO: mostly copy of updateNodeRecurs => merge code or general tree modifier / traversal
-	/*template <class NODE>
-	NODE* OccupancyQuadTreeBase<NODE>::setNodeValueRecurs(NODE* node, bool node_just_created, const QuadTreeKey& key,
-		unsigned int depth, const float& log_odds_value, bool lazy_eval) {
-		bool created_node = false;
-
-		assert(node);
-
-		// follow down to last level
-		if (depth < this->tree_depth) {
-			unsigned int pos = computeChildIdx(key, this->tree_depth - 1 - depth);
-			if (!this->nodeChildExists(node, pos)) {
-				// child does not exist, but maybe it's a pruned node?
-				if (!this->nodeHasChildren(node) && !node_just_created) {
-					// current node does not have children AND it is not a new node
-					// -> expand pruned node
-					this->expandNode(node);
-				}
-				else {
-					// not a pruned node, create requested child
-					this->createNodeChild(node, pos);
-					created_node = true;
-				}
-			}
-
-			if (lazy_eval)
-				return setNodeValueRecurs(this->getNodeChild(node, pos), created_node, key, depth + 1, log_odds_value, lazy_eval);
-			else {
-				NODE* retval = setNodeValueRecurs(this->getNodeChild(node, pos), created_node, key, depth + 1, log_odds_value, lazy_eval);
-				// prune node if possible, otherwise set own probability
-				// note: combining both did not lead to a speedup!
-				if (this->pruneNode(node)){
-					// return pointer to current parent (pruned), the just updated node no longer exists
-					retval = node;
-				}
-				else{
-					node->updateOccupancyChildren();
-				}
-
-				return retval;
-			}
-		}
-
-		// at last level, update node, end of recursion
-		else {
-			if (use_change_detection) {
-				bool occBefore = this->isNodeOccupied(node);
-				node->setLogOdds(log_odds_value);
-
-				if (node_just_created){  // new node
-					changed_keys.insert(std::pair<QuadTreeKey, bool>(key, true));
-				}
-				else if (occBefore != this->isNodeOccupied(node)) {  // occupancy changed, track it
-					KeyBoolMap::iterator it = changed_keys.find(key);
-					if (it == changed_keys.end())
-						changed_keys.insert(std::pair<QuadTreeKey, bool>(key, false));
-					else if (it->second == false)
-						changed_keys.erase(it);
-				}
-			}
-			else {
-				node->setLogOdds(log_odds_value);
-			}
-			return node;
-		}
-	}*/
-
-	/*template <class NODE>
-	void OccupancyQuadTreeBase<NODE>::updateInnerOccupancy(){
-		if (this->root)
-			this->updateInnerOccupancyRecurs(this->root, 0);
-	}*/
-
-	/*template <class NODE>
-	void OccupancyQuadTreeBase<NODE>::updateInnerOccupancyRecurs(NODE* node, unsigned int depth){
-		assert(node);
-
-		// only recurse and update for inner nodes:
-		if (this->nodeHasChildren(node)){
-			// return early for last level:
-			if (depth < this->tree_depth){
-				for (unsigned int i = 0; i < 4; i++) {
-					if (this->nodeChildExists(node, i)) {
-						updateInnerOccupancyRecurs(this->getNodeChild(node, i), depth + 1);
-					}
-				}
-			}
-			node->updateOccupancyChildren();
-		}
-	}*/
-
 	template <class NODE>
 	void OccupancyGrid3DBase<NODE>::toMaxLikelihood() {
 		if (this->gridmap == NULL)
@@ -536,25 +217,6 @@ namespace gridmap3D {
 			nodeToMaxLikelihood(cell->second);
 		}
 	}
-
-	/*template <class NODE>
-	void OccupancyQuadTreeBase<NODE>::toMaxLikelihoodRecurs(NODE* node, unsigned int depth,
-		unsigned int max_depth) {
-
-		assert(node);
-
-		if (depth < max_depth) {
-			for (unsigned int i = 0; i < 4; i++) {
-				if (this->nodeChildExists(node, i)) {
-					toMaxLikelihoodRecurs(this->getNodeChild(node, i), depth + 1, max_depth);
-				}
-			}
-		}
-
-		else { // max level reached
-			nodeToMaxLikelihood(node);
-		}
-	}*/
 
 /*	template <class NODE>
 	bool OccupancyQuadTreeBase<NODE>::getNormals(const point3d& point, std::vector<point3d>& normals,
@@ -649,7 +311,7 @@ namespace gridmap3D {
 	bool OccupancyGrid3DBase<NODE>::castRay(const point3d& origin, const point3d& directionP, point3d& end,
 		bool ignoreUnknown, double maxRange) const {
 
-		/// ----------  see OcTreeBase::computeRayKeys  -----------
+		/// ----------  see Grid3DBase::computeRayKeys  -----------
 
 		// Initialization phase -------------------------------------------------------
 		Grid3DKey current_key;
@@ -700,8 +362,8 @@ namespace gridmap3D {
 			}
 		}
 
-		if (step[0] == 0 && step[1] == 0){
-			GRIDMAP3D_ERROR("Raycasting in direction (0,0) is not possible!");
+		if (step[0] == 0 && step[1] == 0 && step[2] == 0){
+			GRIDMAP3D_ERROR("Raycasting in direction (0,0,0) is not possible!");
 			return false;
 		}
 
@@ -934,135 +596,7 @@ namespace gridmap3D {
 		return bbx_min + obj_bounds;
 	}
 
-	// -- I/O  -----------------------------------------
-
-	template <class NODE>
-	std::istream& OccupancyGrid3DBase<NODE>::readBinaryData(std::istream &s){
-		// tree needs to be newly created or cleared externally
-		// Implement readBinaryData() - To do.
-		/*if (this->root) {
-			QUADMAP_ERROR_STR("Trying to read into an existing tree.");
-			return s;
-		}
-
-		this->root = new NODE();
-		this->readBinaryNode(s, this->root);
-		this->size_changed = true;
-		this->tree_size = QuadTreeBaseImpl<NODE, AbstractOccupancyQuadTree>::calcNumNodes();  // compute number of nodes    */
-		return s;
-	}
-
-	template <class NODE>
-	std::ostream& OccupancyGrid3DBase<NODE>::writeBinaryData(std::ostream &s) const{
-		// Implement writeBinaryData() - To do.
-		/*QUADMAP_DEBUG("Writing %zu nodes to output stream...", this->size());
-		if (this->root)
-			this->writeBinaryNode(s, this->root);*/
-		return s;
-	}
-
-	template <class NODE>
-	std::istream& OccupancyGrid3DBase<NODE>::readBinaryNode(std::istream &s, NODE* node){
-
-		// Implement readBinaryNode() - To do.
-		/*assert(node);
-
-		char child1to4_char;
-		s.read((char*)&child1to4_char, sizeof(char));
-
-		std::bitset<8> child1to4((unsigned long long) child1to4_char);
-
-		//     std::cout << "read:  "
-		//        << child1to4.to_string<char,std::char_traits<char>,std::allocator<char> >() << " "
-		//        << child5to8.to_string<char,std::char_traits<char>,std::allocator<char> >() << std::endl;
-
-
-		// inner nodes default to occupied
-		node->setLogOdds(this->clamping_thres_max);
-
-		for (unsigned int i = 0; i < 4; i++) {
-			if ((child1to4[i * 2] == 1) && (child1to4[i * 2 + 1] == 0)) {
-				// child is free leaf
-				this->createNodeChild(node, i);
-				this->getNodeChild(node, i)->setLogOdds(this->clamping_thres_min);
-			}
-			else if ((child1to4[i * 2] == 0) && (child1to4[i * 2 + 1] == 1)) {
-				// child is occupied leaf
-				this->createNodeChild(node, i);
-				this->getNodeChild(node, i)->setLogOdds(this->clamping_thres_max);
-			}
-			else if ((child1to4[i * 2] == 1) && (child1to4[i * 2 + 1] == 1)) {
-				// child has children
-				this->createNodeChild(node, i);
-				this->getNodeChild(node, i)->setLogOdds(-200.); // child is unkown, we leave it uninitialized
-			}
-		}
-
-		// read children's children and set the label
-		for (unsigned int i = 0; i < 4; i++) {
-			if (this->nodeChildExists(node, i)) {
-				NODE* child = this->getNodeChild(node, i);
-				if (fabs(child->getLogOdds() + 200.) < 1e-3) {
-					readBinaryNode(s, child);
-					child->setLogOdds(child->getMaxChildLogOdds());
-				}
-			} // end if child exists
-		} // end for children*/
-
-		return s;
-	}
-
-	template <class NODE>
-	std::ostream& OccupancyGrid3DBase<NODE>::writeBinaryNode(std::ostream &s, const NODE* node) const{
-
-		// Implement writeBinaryNode() - To do.
-		/*assert(node);
-
-		// 2 bits for each children, 8 children per node -> 16 bits
-		std::bitset<8> child1to4;
-
-		// 10 : child is free node
-		// 01 : child is occupied node
-		// 00 : child is unkown node
-		// 11 : child has children
-
-
-		// speedup: only set bits to 1, rest is init with 0 anyway,
-		//          can be one logic expression per bit
-
-		for (unsigned int i = 0; i < 4; i++) {
-			if (this->nodeChildExists(node, i)) {
-				const NODE* child = this->getNodeChild(node, i);
-				if (this->nodeHasChildren(child))  { child1to4[i * 2] = 1; child1to4[i * 2 + 1] = 1; }
-				else if (this->isNodeOccupied(child)) { child1to4[i * 2] = 0; child1to4[i * 2 + 1] = 1; }
-				else                            { child1to4[i * 2] = 1; child1to4[i * 2 + 1] = 0; }
-			}
-			else {
-				child1to4[i * 2] = 0; child1to4[i * 2 + 1] = 0;
-			}
-		}
-
-		//     std::cout << "wrote: "
-		//        << child1to4.to_string<char,std::char_traits<char>,std::allocator<char> >() << " "
-		//        << child5to8.to_string<char,std::char_traits<char>,std::allocator<char> >() << std::endl;
-
-		char child1to4_char = (char)child1to4.to_ulong();
-
-		s.write((char*)&child1to4_char, sizeof(char));
-
-		// write children's children
-		for (unsigned int i = 0; i < 4; i++) {
-			if (this->nodeChildExists(node, i)) {
-				const NODE* child = this->getNodeChild(node, i);
-				if (this->nodeHasChildren(child)) {
-					writeBinaryNode(s, child);
-				}
-			}
-		}*/
-
-		return s;
-	}
-
+	
 	//-- Occupancy queries on nodes:
 
 	template <class NODE>

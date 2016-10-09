@@ -46,7 +46,7 @@ namespace gridmap3D {
 	Grid3DNode::Grid3DNode()
 		: Grid3DDataNode<float>(0.0)
 	{
-		}
+	}
 
 	Grid3DNode::~Grid3DNode(){
 	}

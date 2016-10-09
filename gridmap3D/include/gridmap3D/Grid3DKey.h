@@ -66,9 +66,9 @@ namespace gridmap3D {
 	typedef uint16_t key_type;
 
 	/**
-	 * QuadTreeKey is a container class for internal key addressing. The keys count the
+	 * Grid3DKey is a container class for internal key addressing. The keys count the
 	 * number of cells (voxels) from the origin as discrete address of a voxel.
-	 * @see QuadTreeBaseImpl::coordToKey() and QuadTreeBaseImpl::keyToCoord() for conversions.
+	 * @see Grid3DBaseImpl::coordToKey() and Grid3DBaseImpl::keyToCoord() for conversions.
 	 */
 	class Grid3DKey {
 
@@ -91,7 +91,7 @@ namespace gridmap3D {
 		}
 
 		bool operator!= (const Grid3DKey& other) const {
-			return((k[0] != other[0]) || (k[1] != other[1]) || (k[2] != other[2]));
+			return ((k[0] != other[0]) || (k[1] != other[1]) || (k[2] != other[2]));
 		}
 
 		Grid3DKey& operator=(const Grid3DKey& other){
@@ -133,7 +133,7 @@ namespace gridmap3D {
 
 	/**
 	 * Data structrure to efficiently track changed nodes as a combination of
-	 * OcTreeKeys and a bool flag (to denote newly created nodes)
+	 * Grid3DKeys and a bool flag (to denote newly created nodes)
 	 *
 	 */
 	typedef unordered_ns::unordered_map<Grid3DKey, bool, Grid3DKey::KeyHash> KeyBoolMap;

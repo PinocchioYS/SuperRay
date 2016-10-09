@@ -1,6 +1,6 @@
 
 ADD_EXECUTABLE(test test.cpp)
-TARGET_LINK_LIBRARIES(test quadmap)
+TARGET_LINK_LIBRARIES(test gridmap2D)
 
 #ADD_EXECUTABLE(test_iterators test_iterators.cpp)
 #TARGET_LINK_LIBRARIES(test_iterators octomap)

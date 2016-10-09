@@ -44,20 +44,15 @@ namespace gridmap3D {
 
 	};
 
-	// forward declaration for friend in QuadTreeDataNode
+	// forward declaration for friend in Grid3DDataNode
 	template<typename NODE, typename I> class Grid3DBaseImpl;
 
 	/**
-	 * Basic node in the QuadTree that can hold arbitrary data of type T in value.
-	 * This is the base class for nodes used in an QuadTree. The used implementation
-	 * for occupancy mapping is in QuadTreeNode.#
+	 * Basic node in the Grid3D that can hold arbitrary data of type T in value.
+	 * This is the base class for nodes used in a Grid3D. The used implementation
+	 * for occupancy mapping is in Grid3DNode.#
 	 * \tparam T data to be stored in the node (e.g. a float for probabilities)
 	 *
-	 * Note: If you derive a class (directly or indirectly) from QuadTreeDataNode,
-	 * you have to implement (at least) the following functions to avoid slicing
-	 * errors and memory-related bugs:
-	 * createChild(), getChild(), getChild() const, expandNode()
-	 * See ColorQuadTreeNode in ColorQuadTree.h for an example.
 	 */
 	template<typename T> class Grid3DDataNode : public AbstractGrid3DNode {
 		template<typename NODE, typename I>
@@ -68,16 +63,13 @@ namespace gridmap3D {
 		Grid3DDataNode();
 		Grid3DDataNode(T initVal);
 
-		/// Copy constructor, performs a recursive deep-copy of all children 
-		/// including node data in "value"
+		/// Copy constructor
 		Grid3DDataNode(const Grid3DDataNode& rhs);
 
 		/// Delete only own members. 
-		/// QuadTree maintains tree structure and must have deleted children already
 		~Grid3DDataNode();
 
 		/// Copy the payload (data in "value") from rhs into this node
-		/// Opposed to copy ctor, this does not clone the children as well
 		void copyData(const Grid3DDataNode& from);
 
 		/// Equals operator, compares if the stored value is identical
@@ -102,12 +94,6 @@ namespace gridmap3D {
 
 
 	protected:
-		// void allocChildren();
-
-		/// pointer to array of children, may be NULL
-		/// @note The tree class manages this pointer, the array, and the memory for it!
-		/// The children of a node are always enforced to be the same type as the node
-		// AbstractQuadTreeNode** children;
 		/// stored data (payload)
 		T value;
 

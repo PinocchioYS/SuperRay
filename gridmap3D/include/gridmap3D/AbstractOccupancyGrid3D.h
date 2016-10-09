@@ -44,88 +44,34 @@
 namespace gridmap3D {
 
 	/**
-	 * Interface class for all octree types that store occupancy. This serves
+	 * Interface class for all grid types that store occupancy. This serves
 	 * as a common base class e.g. for polymorphism and contains common code
-	 * for reading and writing binary trees.
+	 * for reading and writing binary grids.
 	 */
 	class AbstractOccupancyGrid3D : public AbstractGrid3D {
 	public:
 		AbstractOccupancyGrid3D();
 		virtual ~AbstractOccupancyGrid3D() {};
 
-		//-- IO
-
-		/**
-		 * Writes OcTree to a binary file using writeBinary().
-		 * The OcTree is first converted to the maximum likelihood estimate and pruned.
-		 * @return success of operation
-		 */
-		bool writeBinary(const std::string& filename);
-
-		/**
-		 * Writes compressed maximum likelihood OcTree to a binary stream.
-		 * The OcTree is first converted to the maximum likelihood estimate and pruned
-		 * for maximum compression.
-		 * @return success of operation
-		 */
-		bool writeBinary(std::ostream &s);
-
-		/**
-		 * Writes OcTree to a binary file using writeBinaryConst().
-		 * The OcTree is not changed, in particular not pruned first.
-		 * Files will be smaller when the tree is pruned first or by using
-		 * writeBinary() instead.
-		 * @return success of operation
-		 */
-		bool writeBinaryConst(const std::string& filename) const;
-
-		/**
-		 * Writes the maximum likelihood OcTree to a binary stream (const variant).
-		 * Files will be smaller when the tree is pruned first or by using
-		 * writeBinary() instead.
-		 * @return success of operation
-		 */
-		bool writeBinaryConst(std::ostream &s) const;
-
-		/// Writes the actual data, implemented in OccupancyOcTreeBase::writeBinaryData()
-		virtual std::ostream& writeBinaryData(std::ostream &s) const = 0;
-
-		/**
-		 * Reads an OcTree from an input stream.
-		 * Existing nodes of the tree are deleted before the tree is read.
-		 * @return success of operation
-		 */
-		bool readBinary(std::istream &s);
-
-		/**
-		 * Reads OcTree from a binary file.
-		 * Existing nodes of the tree are deleted before the tree is read.
-		 * @return success of operation
-		 */
-		bool readBinary(const std::string& filename);
-
-		/// Reads the actual data, implemented in OccupancyOcTreeBase::readBinaryData()
-		virtual std::istream& readBinaryData(std::istream &s) = 0;
-
 		// -- occupancy queries
 
-		/// queries whether a node is occupied according to the tree's parameter for "occupancy"
+		/// queries whether a node is occupied according to the grid's parameter for "occupancy"
 		inline bool isNodeOccupied(const Grid3DNode* occupancyNode) const{
 			return (occupancyNode->getLogOdds() >= this->occ_prob_thres_log);
 		}
 
-		/// queries whether a node is occupied according to the tree's parameter for "occupancy"
+		/// queries whether a node is occupied according to the grid's parameter for "occupancy"
 		inline bool isNodeOccupied(const Grid3DNode& occupancyNode) const{
 			return (occupancyNode.getLogOdds() >= this->occ_prob_thres_log);
 		}
 
-		/// queries whether a node is at the clamping threshold according to the tree's parameter
+		/// queries whether a node is at the clamping threshold according to the grid's parameter
 		inline bool isNodeAtThreshold(const Grid3DNode* occupancyNode) const{
 			return (occupancyNode->getLogOdds() >= this->clamping_thres_max
 				|| occupancyNode->getLogOdds() <= this->clamping_thres_min);
 		}
 
-		/// queries whether a node is at the clamping threshold according to the tree's parameter
+		/// queries whether a node is at the clamping threshold according to the grid's parameter
 		inline bool isNodeAtThreshold(const Grid3DNode& occupancyNode) const{
 			return (occupancyNode.getLogOdds() >= this->clamping_thres_max
 				|| occupancyNode.getLogOdds() <= this->clamping_thres_min);
@@ -138,20 +84,16 @@ namespace gridmap3D {
 		 *
 		 * @param key of the NODE that is to be updated
 		 * @param log_odds_update value to be added (+) to log_odds value of node
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual Grid3DNode* updateNode(const Grid3DKey& key, float log_odds_update) = 0;
 
 		/**
 		 * Manipulate log_odds value of voxel directly.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls udpateNode() with it.
+		 * Looks up the Grid3DKey corresponding to the coordinate and then calls udpateNode() with it.
 		 *
 		 * @param value 3d coordinate of the NODE that is to be updated
 		 * @param log_odds_update value to be added (+) to log_odds value of node
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual Grid3DNode* updateNode(const point3d& value, float log_odds_update) = 0;
@@ -161,20 +103,16 @@ namespace gridmap3D {
 		 *
 		 * @param key of the NODE that is to be updated
 		 * @param occupied true if the node was measured occupied, else false
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual Grid3DNode* updateNode(const Grid3DKey& key, bool occupied) = 0;
 
 		/**
 		 * Integrate occupancy measurement.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls udpateNode() with it.
+		 * Looks up the Grid3DKey corresponding to the coordinate and then calls udpateNode() with it.
 		 *
 		 * @param value 3d coordinate of the NODE that is to be updated
 		 * @param occupied true if the node was measured occupied, else false
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual Grid3DNode* updateNode(const point3d& value, bool occupied) = 0;
@@ -217,14 +155,11 @@ namespace gridmap3D {
 		/// @return maximum threshold for occupancy clamping in the sensor model (logodds)
 		float getClampingThresMaxLog() const { return clamping_thres_max; }
 
-
-
-
 	protected:
 		/// Try to read the old binary format for conversion, will be removed in the future
 		bool readBinaryLegacyHeader(std::istream &s, unsigned int& size, double& res);
 
-		// occupancy parameters of tree, stored in logodds:
+		// occupancy parameters of grid, stored in logodds:
 		float clamping_thres_min;
 		float clamping_thres_max;
 		float prob_hit_log;

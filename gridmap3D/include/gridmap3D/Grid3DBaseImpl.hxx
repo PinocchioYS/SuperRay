@@ -71,7 +71,7 @@ namespace gridmap3D {
 	{
 		init();
 
-		// Copy all of node
+		// Copy all of node - cannot access the rhs.gridmap (protected)
 		if (rhs.gridmap){
 			for (OccupancyGridMap::iterator it = rhs.gridmap->begin(); it != rhs.gridmap->end(); it++){
 				gridmap->insert(std::pair<Grid3DKey, NODE*>(it->first, new NODE(*(it->second))));
@@ -116,33 +116,22 @@ namespace gridmap3D {
 		other.tree_size = this_size;
 	}
 
-	// Imlement operator==() - To do.
-	/*template <class NODE, class I>
+/*	template <class NODE, class I>
 	bool Grid3DBaseImpl<NODE, I>::operator== (const Grid3DBaseImpl<NODE, I>& other) const{
-		if (grid_max_val != other.grid_max_val || resolution != other.resolution){
+		if (grid_max_val != other.grid_max_val || resolution != other.resolution || this->size() != other.size()){
 			return false;
 		}
 
 		// traverse all nodes, check if structure the same
-		Grid3DBaseImpl<NODE, I>::tree_iterator it = this->begin_tree();
-		Grid3DBaseImpl<NODE, I>::tree_iterator end = this->end_tree();
-		Grid3DBaseImpl<NODE, I>::tree_iterator other_it = other.begin_tree();
-		Grid3DBaseImpl<NODE, I>::tree_iterator other_end = other.end_tree();
+		OccupancyGridMap::iterator it = this->gridmap->begin();
+		OccupancyGridMap::iterator end = this->gridmap->end();
+		OccupancyGridMap::iterator other_it = other.gridmap->begin();
+		OccupancyGridMap::iterator other_end = other.gridmap->begin();
 
 		for (; it != end; ++it, ++other_it){
 			if (other_it == other_end)
 				return false;
-
-			if (it.getDepth() != other_it.getDepth()
-				|| it.getKey() != other_it.getKey()
-				|| !(*it == *other_it))
-			{
-				return false;
-			}
 		}
-
-		if (other_it != other_end)
-			return false;
 
 		return true;
 	}*/
@@ -157,172 +146,18 @@ namespace gridmap3D {
 		size_changed = true;
 	}
 
-	/*template <class NODE, class I>
-	NODE* QuadTreeBaseImpl<NODE, I>::createNodeChild(NODE* node, unsigned int childIdx){
-		assert(childIdx < 4);
-		if (node->children == NULL) {
-			allocNodeChildren(node);
-		}
-		assert(node->children[childIdx] == NULL);
-		NODE* newNode = new NODE();
-		node->children[childIdx] = static_cast<AbstractQuadTreeNode*>(newNode);
-
-		tree_size++;
-		size_changed = true;
-
-		return newNode;
-	}*/
-
-	/*template <class NODE, class I>
-	void QuadTreeBaseImpl<NODE, I>::deleteNodeChild(NODE* node, unsigned int childIdx){
-		assert((childIdx < 4) && (node->children != NULL));
-		assert(node->children[childIdx] != NULL);
-		delete static_cast<NODE*>(node->children[childIdx]); // TODO delete check if empty
-		node->children[childIdx] = NULL;
-
-		tree_size--;
-		size_changed = true;
-	}*/
-
-	/*template <class NODE, class I>
-	NODE* QuadTreeBaseImpl<NODE, I>::getNodeChild(NODE* node, unsigned int childIdx) const{
-		assert((childIdx < 4) && (node->children != NULL));
-		assert(node->children[childIdx] != NULL);
-		return static_cast<NODE*>(node->children[childIdx]);
-	}*/
-
-	/*template <class NODE, class I>
-	const NODE* QuadTreeBaseImpl<NODE, I>::getNodeChild(const NODE* node, unsigned int childIdx) const{
-		assert((childIdx < 4) && (node->children != NULL));
-		assert(node->children[childIdx] != NULL);
-		return static_cast<const NODE*>(node->children[childIdx]);
-	}*/
-
-	/*template <class NODE, class I>
-	bool QuadTreeBaseImpl<NODE, I>::isNodeCollapsible(const NODE* node) const{
-		// all children must exist, must not have children of
-		// their own and have the same occupancy probability
-		if (!nodeChildExists(node, 0))
-			return false;
-
-		const NODE* firstChild = getNodeChild(node, 0);
-		if (nodeHasChildren(firstChild))
-			return false;
-
-		for (unsigned int i = 1; i < 4; i++) {
-			// comparison via getChild so that casts of derived classes ensure
-			// that the right == operator gets called
-			if (!nodeChildExists(node, i) || nodeHasChildren(getNodeChild(node, i)) || !(*(getNodeChild(node, i)) == *(firstChild)))
-				return false;
-		}
-
-		return true;
-	}*/
-
-	/*template <class NODE, class I>
-	bool QuadTreeBaseImpl<NODE, I>::nodeChildExists(const NODE* node, unsigned int childIdx) const{
-		assert(childIdx < 4);
-		if ((node->children != NULL) && (node->children[childIdx] != NULL))
-			return true;
-		else
-			return false;
-	}*/
-
-	/*template <class NODE, class I>
-	bool QuadTreeBaseImpl<NODE, I>::nodeHasChildren(const NODE* node) const {
-		if (node->children == NULL)
-			return false;
-
-		for (unsigned int i = 0; i < 4; i++){
-			if (node->children[i] != NULL)
-				return true;
-		}
-		return false;
-	}*/
-
-
-	/*template <class NODE, class I>
-	void QuadTreeBaseImpl<NODE, I>::expandNode(NODE* node){
-		assert(!nodeHasChildren(node));
-
-		for (unsigned int k = 0; k < 4; k++) {
-			NODE* newNode = createNodeChild(node, k);
-			newNode->copyData(*node);
-		}
-	}*/
-
-	/*template <class NODE, class I>
-	bool QuadTreeBaseImpl<NODE, I>::pruneNode(NODE* node){
-
-		if (!isNodeCollapsible(node))
-			return false;
-
-		// set value to children's values (all assumed equal)
-		node->copyData(*(getNodeChild(node, 0)));
-
-		// delete children (known to be leafs at this point!)
-		for (unsigned int i = 0; i < 4; i++) {
-			deleteNodeChild(node, i);
-		}
-		delete[] node->children;
-		node->children = NULL;
-
-		return true;
-	}*/
-
-	/*template <class NODE, class I>
-	void QuadTreeBaseImpl<NODE, I>::allocNodeChildren(NODE* node){
-		// TODO NODE*
-		node->children = new AbstractQuadTreeNode*[4];
-		for (unsigned int i = 0; i < 4; i++) {
-			node->children[i] = NULL;
-		}
-	}*/
-
-
-
-	/*template <class NODE, class I>
-	inline key_type Grid3DBaseImpl<NODE, I>::coordToKey(double coordinate, unsigned depth) const{
-		assert(depth <= tree_depth);
-		int keyval = ((int)floor(resolution_factor * coordinate));
-
-		unsigned int diff = tree_depth - depth;
-		if (!diff) // same as coordToKey without depth
-			return keyval + grid_max_val;
-		else // shift right and left => erase last bits. Then add offset.
-			return ((keyval >> diff) << diff) + (1 << (diff - 1)) + grid_max_val;
-	}*/
-
-
 	template <class NODE, class I>
 	bool Grid3DBaseImpl<NODE, I>::coordToKeyChecked(double coordinate, key_type& keyval) const {
-
 		// scale to resolution and shift center for grid_max_val
 		int scaled_coord = ((int)floor(resolution_factor * coordinate)) + grid_max_val;
 
-		// keyval within range of tree?
+		// keyval within range of grid?
 		if ((scaled_coord >= 0) && (((unsigned int)scaled_coord) < (2 * grid_max_val))) {
 			keyval = scaled_coord;
 			return true;
 		}
 		return false;
 	}
-
-
-	/*template <class NODE, class I>
-	bool Grid3DBaseImpl<NODE, I>::coordToKeyChecked(double coordinate, unsigned depth, key_type& keyval) const {
-
-		// scale to resolution and shift center for grid_max_val
-		int scaled_coord = ((int)floor(resolution_factor * coordinate)) + grid_max_val;
-
-		// keyval within range of tree?
-		if ((scaled_coord >= 0) && (((unsigned int)scaled_coord) < (2 * grid_max_val))) {
-			keyval = scaled_coord;
-			keyval = adjustKeyAtDepth(keyval, depth);
-			return true;
-		}
-		return false;
-	}*/
 
 	template <class NODE, class I>
 	bool Grid3DBaseImpl<NODE, I>::coordToKeyChecked(const point3d& point, Grid3DKey& key) const{
@@ -331,15 +166,6 @@ namespace gridmap3D {
 		}
 		return true;
 	}
-
-	/*template <class NODE, class I>
-	bool QuadTreeBaseImpl<NODE, I>::coordToKeyChecked(const point3d& point, unsigned depth, QuadTreeKey& key) const{
-
-		for (unsigned int i = 0; i < 3; i++) {
-			if (!coordToKeyChecked(point(i), depth, key[i])) return false;
-		}
-		return true;
-	}*/
 
 	template <class NODE, class I>
 	bool Grid3DBaseImpl<NODE, I>::coordToKeyChecked(double x, double y, double z, Grid3DKey& key) const{
@@ -351,45 +177,6 @@ namespace gridmap3D {
 			return true;
 		}
 	}
-
-	/*template <class NODE, class I>
-	bool QuadTreeBaseImpl<NODE, I>::coordToKeyChecked(double x, double y, unsigned depth, QuadTreeKey& key) const{
-
-		if (!(coordToKeyChecked(x, depth, key[0])
-			&& coordToKeyChecked(y, depth, key[1])))
-		{
-			return false;
-		}
-		else {
-			return true;
-		}
-	}*/
-
-	/*template <class NODE, class I>
-	key_type QuadTreeBaseImpl<NODE, I>::adjustKeyAtDepth(key_type key, unsigned int depth) const{
-		unsigned int diff = tree_depth - depth;
-
-		if (diff == 0)
-			return key;
-		else
-			return (((key - grid_max_val) >> diff) << diff) + (1 << (diff - 1)) + grid_max_val;
-	}*/
-
-	/*template <class NODE, class I>
-	double QuadTreeBaseImpl<NODE, I>::keyToCoord(key_type key, unsigned depth) const{
-		assert(depth <= tree_depth);
-
-		// root is centered on 0 = 0.0
-		if (depth == 0) {
-			return 0.0;
-		}
-		else if (depth == tree_depth) {
-			return keyToCoord(key);
-		}
-		else {
-			return (floor((double(key) - double(this->grid_max_val)) / double(1 << (tree_depth - depth))) + 0.5) * this->getNodeSize(depth);
-		}
-	}*/
 
 	template <class NODE, class I>
 	NODE* Grid3DBaseImpl<NODE, I>::search(const point3d& value) const {
@@ -419,7 +206,7 @@ namespace gridmap3D {
 
 	template <class NODE, class I>
 	NODE* Grid3DBaseImpl<NODE, I>::search(const Grid3DKey& key) const {
-		if (gridmap == NULL)
+		if (gridmap == NULL || gridmap->size() == 0)
 			return NULL;
 
 		OccupancyGridMap::iterator cell = gridmap->find(key);
@@ -455,7 +242,7 @@ namespace gridmap3D {
 
 	template <class NODE, class I>
 	bool Grid3DBaseImpl<NODE, I>::deleteNode(const Grid3DKey& key) {
-		if (gridmap == NULL)
+		if (gridmap == NULL || gridmap->size() == 0)
 			return true;
 
 		OccupancyGridMap::iterator cell = gridmap->find(key);
@@ -469,33 +256,8 @@ namespace gridmap3D {
 
 	template <class NODE, class I>
 	void Grid3DBaseImpl<NODE, I>::clear() {
-		if (this->gridmap){
-			delete this->gridmap;
-			// this->tree_size = 0;
-			this->gridmap = NULL;
-			// max extent of tree changed:
-			this->size_changed = true;
-		}
+		gridmap->clear();
 	}
-
-	/*template <class NODE, class I>
-	void QuadTreeBaseImpl<NODE, I>::prune() {
-		if (root == NULL)
-			return;
-
-		for (unsigned int depth = tree_depth - 1; depth > 0; --depth) {
-			unsigned int num_pruned = 0;
-			pruneRecurs(this->root, 0, depth, num_pruned);
-			if (num_pruned == 0)
-				break;
-		}
-	}*/
-
-	/*template <class NODE, class I>
-	void QuadTreeBaseImpl<NODE, I>::expand() {
-		if (root)
-			expandRecurs(root, 0, tree_depth);
-	}*/
 
 	template <class NODE, class I>
 	bool Grid3DBaseImpl<NODE, I>::computeRayKeys(const point3d& origin, const point3d& end, KeyRay& ray) const {
@@ -613,192 +375,69 @@ namespace gridmap3D {
 		return true;
 	}
 
-	/*template <class NODE, class I>
-	void Grid3DBaseImpl<NODE, I>::deleteNodeRecurs(NODE* node){
-		assert(node);
-		// TODO: maintain tree size?
-
-		if (node->children != NULL) {
-			for (unsigned int i = 0; i < 4; i++) {
-				if (node->children[i] != NULL){
-					this->deleteNodeRecurs(static_cast<NODE*>(node->children[i]));
-				}
-			}
-			delete[] node->children;
-			node->children = NULL;
-		} // else: node has no children
-
-		delete node;
-	}*/
-
-
-	/*template <class NODE, class I>
-	bool QuadTreeBaseImpl<NODE, I>::deleteNodeRecurs(NODE* node, unsigned int depth, unsigned int max_depth, const QuadTreeKey& key){
-		if (depth >= max_depth) // on last level: delete child when going up
-			return true;
-
-		assert(node);
-
-		unsigned int pos = computeChildIdx(key, this->tree_depth - 1 - depth);
-
-		if (!nodeChildExists(node, pos)) {
-			// child does not exist, but maybe it's a pruned node?
-			if ((!nodeHasChildren(node)) && (node != this->root)) { // TODO double check for exists / root exception?
-				// current node does not have children AND it's not the root node
-				// -> expand pruned node
-				expandNode(node);
-				// tree_size and size_changed adjusted in createNodeChild(...)
-			}
-			else { // no branch here, node does not exist
-				return false;
-			}
-		}
-
-		// follow down further, fix inner nodes on way back up
-		bool deleteChild = deleteNodeRecurs(getNodeChild(node, pos), depth + 1, max_depth, key);
-		if (deleteChild){
-			// TODO: lazy eval?
-			// TODO delete check depth, what happens to inner nodes with children?
-			this->deleteNodeChild(node, pos);
-
-			if (!nodeHasChildren(node))
-				return true;
-			else{
-				node->updateOccupancyChildren(); // TODO: occupancy?
-			}
-		}
-		// node did not lose a child, or still has other children
-		return false;
-	}*/
-
-	/*template <class NODE, class I>
-	void QuadTreeBaseImpl<NODE, I>::pruneRecurs(NODE* node, unsigned int depth,
-		unsigned int max_depth, unsigned int& num_pruned) {
-
-		assert(node);
-
-		if (depth < max_depth) {
-			for (unsigned int i = 0; i < 4; i++) {
-				if (nodeChildExists(node, i)) {
-					pruneRecurs(getNodeChild(node, i), depth + 1, max_depth, num_pruned);
-				}
-			}
-		} // end if depth
-
-		else {
-			// max level reached
-			if (pruneNode(node)) {
-				num_pruned++;
-			}
-		}
-	}*/
-
-
-	/*template <class NODE, class I>
-	void QuadTreeBaseImpl<NODE, I>::expandRecurs(NODE* node, unsigned int depth,
-		unsigned int max_depth) {
-		if (depth >= max_depth)
-			return;
-
-		assert(node);
-
-		// current node has no children => can be expanded
-		if (!nodeHasChildren(node)){
-			expandNode(node);
-		}
-		// recursively expand children
-		for (unsigned int i = 0; i < 4; i++) {
-			if (nodeChildExists(node, i)) { // TODO double check (node != NULL)
-				expandRecurs(getNodeChild(node, i), depth + 1, max_depth);
-			}
-		}
-	}*/
-
-
 	template <class NODE, class I>
 	std::ostream& Grid3DBaseImpl<NODE, I>::writeData(std::ostream &s) const{
-		// Implement writeData() - To do.
-		/*if (root)
-			writeNodesRecurs(root, s);*/
+		// Implement writeData() - Need to check
+		if (gridmap){
+			size_t node_size = gridmap->size();
+			s.write((char*)&node_size, sizeof(node_size));
+			Grid3DKey key;
+			for (OccupancyGridMap::iterator it = gridmap->begin(); it != gridmap->end(); it++){
+				// Write key of grid node
+				key = it->first;
+				s.write((char*)&(key[0]), sizeof(key[0]));
+				s.write((char*)&(key[1]), sizeof(key[1]));
+				s.write((char*)&(key[2]), sizeof(key[2]));
+				// Write occupancy of grid node
+				it->second->writeData(s);
+			}
+		}
 
 		return s;
 	}
-
-	/*template <class NODE, class I>
-	std::ostream& Grid3DBaseImpl<NODE, I>::writeNodesRecurs(const NODE* node, std::ostream &s) const{
-		node->writeData(s);
-
-		// 1 bit for each children; 0: empty, 1: allocated
-		std::bitset<4> children;
-		for (unsigned int i = 0; i < 4; i++) {
-			if (nodeChildExists(node, i))
-				children[i] = 1;
-			else
-				children[i] = 0;
-		}
-
-		char children_char = (char)children.to_ulong();
-		s.write((char*)&children_char, sizeof(char));
-
-		//     std::cout << "wrote: " << value << " "
-		//               << children.to_string<char,std::char_traits<char>,std::allocator<char> >() 
-		//               << std::endl;
-
-		// recursively write children
-		for (unsigned int i = 0; i < 4; i++) {
-			if (children[i] == 1) {
-				this->writeNodesRecurs(getNodeChild(node, i), s);
-			}
-		}
-
-		return s;
-	}*/
 
 	template <class NODE, class I>
 	std::istream& Grid3DBaseImpl<NODE, I>::readData(std::istream &s) {
 		// Implement readData() - To do.
-		/*if (!s.good()){
+		if (!s.good()){
 			GRIDMAP3D_WARNING_STR(__FILE__ << ":" << __LINE__ << "Warning: Input filestream not \"good\"");
 		}
 
-		this->tree_size = 0;
+		size_t node_size = 0;
+		s.read((char*)&node_size, sizeof(node_size));
+
 		size_changed = true;
 
-		// tree needs to be newly created or cleared externally
-		if (root) {
-			QUADMAP_ERROR_STR("Trying to read into an existing tree.");
+		// grid needs to be newly created or cleared externally
+		if (gridmap->size() != 0) {
+			GRIDMAP3D_ERROR_STR("Trying to read into an existing grid.");
 			return s;
 		}
 
-		root = new NODE();
-		readNodesRecurs(root, s);
+		if (node_size > 0){
+			Grid3DKey key;
+			NODE* node;
+			for (unsigned int i = 0; i < node_size; i++){
+				// Read key of grid node
+				s.read((char*)&(key[0]), sizeof(key[0]));
+				s.read((char*)&(key[1]), sizeof(key[1]));
+				s.read((char*)&(key[2]), sizeof(key[2]));
+				// Read occupancy of grid node
+				node = new NODE;
+				node->readData(s);
 
-		tree_size = calcNumNodes();  // compute number of nodes*/
-		return s;
-	}
-
-	/*template <class NODE, class I>
-	std::istream& Grid3DBaseImpl<NODE, I>::readNodesRecurs(NODE* node, std::istream &s) {
-
-		node->readData(s);
-
-		char children_char;
-		s.read((char*)&children_char, sizeof(char));
-		std::bitset<4> children((unsigned long long) children_char);
-
-		//std::cout << "read: " << node->getValue() << " "
-		//            << children.to_string<char,std::char_traits<char>,std::allocator<char> >()
-		//            << std::endl;
-
-		for (unsigned int i = 0; i < 4; i++) {
-			if (children[i] == 1){
-				NODE* newNode = createNodeChild(node, i);
-				readNodesRecurs(newNode, s);
+				if (!s.fail()){
+					gridmap->insert(std::pair<Grid3DKey, NODE*>(key, node));
+				}
+				else{
+					GRIDMAP3D_ERROR_STR("Grid3DBaseImpl::ReadData: ERROR.\n");
+					break;
+				}
 			}
 		}
-
+		
 		return s;
-	}*/
+	}
 
 	// non-const versions, 
 	// change min/max/size_changed members
@@ -837,7 +476,7 @@ namespace gridmap3D {
 			return;
 
 		// empty tree
-		if (gridmap == NULL){
+		if (gridmap == NULL || gridmap->size() == 0){
 			min_value[0] = min_value[1] = min_value[2] = 0.0;
 			max_value[0] = max_value[1] = max_value[2] = 0.0;
 			size_changed = false;
@@ -1005,12 +644,11 @@ namespace gridmap3D {
 		return sum_leafs_children;
 	}*/
 
-	// Implement volume() - To do.
 	template <class NODE, class I>
 	double Grid3DBaseImpl<NODE, I>::volume() {
 		double x, y, z;
 		getMetricSize(x, y, z);
-		return x*y*z;
+		return x * y * z;
 	}
 
 

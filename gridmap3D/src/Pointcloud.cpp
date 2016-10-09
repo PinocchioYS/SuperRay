@@ -283,7 +283,7 @@ namespace gridmap3D {
 
 	std::istream& Pointcloud::readBinary(std::istream &s) {
 
-		unsigned int pc_size = 0;
+		size_t pc_size = 0;
 		s.read((char*)&pc_size, sizeof(pc_size));
 		GRIDMAP3D_DEBUG("Reading %d points from binary file...", pc_size);
 

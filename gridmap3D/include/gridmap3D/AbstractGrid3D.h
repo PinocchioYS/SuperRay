@@ -43,8 +43,8 @@
 namespace gridmap3D {
 
 	/**
-	 * This abstract class is an interface to all quadtrees and provides a
-	 * factory design pattern for readin and writing all kinds of QuadTrees
+	 * This abstract class is an interface to all gridmap3Ds and provides a
+	 * factory design pattern for readin and writing all kinds of Grid3Ds
 	 * to files (see read()).
 	 */
 	class AbstractGrid3D {
@@ -70,55 +70,53 @@ namespace gridmap3D {
 		virtual void getMetricMax(double& x, double& y, double& z) const = 0;
 		virtual void getMetricSize(double& x, double& y, double& z) = 0;
 
-//		virtual void prune() = 0;
-//		virtual void expand() = 0;
 		virtual void clear() = 0;
 
-		//-- Iterator tree access
+		//-- Iterator grid access
 
 		// default iterator is leaf_iterator
 //		class iterator_base;
 
-		/// Write file header and complete tree to file (serialization)
+		/// Write file header and complete grid to file (serialization)
 		bool write(const std::string& filename) const;
-		/// Write file header and complete tree to stream (serialization)
+		/// Write file header and complete grid to stream (serialization)
 		bool write(std::ostream& s) const;
 
 		/**
-		 * Creates a certain OcTree (factory pattern)
+		 * Creates a certain Grid3D (factory pattern)
 		 *
-		 * @param id unique ID of OcTree
-		 * @param res resolution of OcTree
-		 * @return pointer to newly created OcTree (empty). NULL if the ID is unknown!
+		 * @param id unique ID of Grid3D
+		 * @param res resolution of Grid3D
+		 * @return pointer to newly created Grid3D (empty). NULL if the ID is unknown!
 		 */
 		static AbstractGrid3D* createGrid(const std::string id, double res);
 
 		/**
 		 * Read the file header, create the appropriate class and deserialize.
-		 * This creates a new octree which you need to delete yourself. If you
-		 * expect or requre a specific kind of octree, use dynamic_cast afterwards:
+		 * This creates a new grid3D which you need to delete yourself. If you
+		 * expect or requre a specific kind of grid3D, use dynamic_cast afterwards:
 		 * @code
-		 * AbstractOcTree* tree = AbstractOcTree::read("filename.ot");
-		 * OcTree* octree = dynamic_cast<OcTree*>(tree);
+		 * AbstractGrid3D* grid = AbstractGrid3D::read("filename.ot");
+		 * Grid3D* grid3D = dynamic_cast<Grid3D*>(grid);
 		 *
 		 * @endcode
 		 */
 		static AbstractGrid3D* read(const std::string& filename);
 
 		/// Read the file header, create the appropriate class and deserialize.
-		/// This creates a new octree which you need to delete yourself.
+		/// This creates a new grid3D which you need to delete yourself.
 		static AbstractGrid3D* read(std::istream &s);
 
 		/**
 		 * Read all nodes from the input stream (without file header),
-		 * for this the tree needs to be already created.
+		 * for this the grid needs to be already created.
 		 * For general file IO, you
-		 * should probably use AbstractOcTree::read() instead.
+		 * should probably use AbstractGrid3D::read() instead.
 		 */
 		virtual std::istream& readData(std::istream &s) = 0;
 
-		/// Write complete state of tree to stream (without file header) unmodified.
-		/// Pruning the tree first produces smaller files (lossless compression)
+		/// Write complete state of grid to stream (without file header) unmodified.
+		/// Pruning the grid first produces smaller files (lossless compression)
 		virtual std::ostream& writeData(std::ostream &s) const = 0;
 	private:
 		/// create private store, Construct on first use
@@ -126,7 +124,7 @@ namespace gridmap3D {
 
 	protected:
 		static bool readHeader(std::istream &s, std::string& id, unsigned& size, double& res);
-		static void registerGridType(AbstractGrid3D* map);
+		static void registerGridType(AbstractGrid3D* grid);
 
 		static const std::string fileHeader;
 	};

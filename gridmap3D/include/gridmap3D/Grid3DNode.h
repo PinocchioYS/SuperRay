@@ -42,15 +42,8 @@
 namespace gridmap3D {
 
 	/**
-	 * Nodes to be used in OcTree. They represent 3d occupancy grid cells.
+	 * Nodes to be used in Grid3D. They represent 3d occupancy grid cells.
 	 * "value" stores their log-odds occupancy.
-	 *
-	 * Note: If you derive a class (directly or indirectly) from OcTreeNode or
-	 * OcTreeDataNode, you have to implement (at least) the following functions:
-	 * createChild(), getChild(), getChild() const, expandNode() to avoid slicing
-	 * errors and memory-related bugs.
-	 * See ColorOcTreeNode in ColorOcTree.h for an example.
-	 *
 	 */
 	class Grid3DNode : public Grid3DDataNode<float> {
 

@@ -67,7 +67,7 @@ namespace gridmap3D {
 
 		// write the actual data:
 		writeData(s);
-		// TODO: ret.val, checks stream?
+
 		return true;
 	}
 
@@ -79,7 +79,6 @@ namespace gridmap3D {
 			return NULL;
 		}
 		else {
-			// TODO: check is_good of finished stream, warn?
 			return read(file);
 		}
 	}
@@ -91,7 +90,7 @@ namespace gridmap3D {
 		std::string line;
 		std::getline(s, line);
 		if (line.compare(0, fileHeader.length(), fileHeader) != 0){
-			GRIDMAP3D_ERROR_STR("First line of QuadTree file header does not start with \"" << fileHeader);
+			GRIDMAP3D_ERROR_STR("First line of Grid3D file header does not start with \"" << fileHeader);
 			return NULL;
 		}
 
@@ -197,15 +196,15 @@ namespace gridmap3D {
 	}
 
 	std::map<std::string, AbstractGrid3D*>& AbstractGrid3D::classIDMapping(){
-		// we will "leak" the memory of the map and all trees until program exits,
+		// we will "leak" the memory of the map and all grid3Ds until program exits,
 		// but this ensures all static objects are there as long as needed
 		// http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.15
 		static std::map<std::string, AbstractGrid3D*>* map = new std::map<std::string, AbstractGrid3D*>();
 		return *map;
 	}
 
-	void AbstractGrid3D::registerGridType(AbstractGrid3D* tree){
-		classIDMapping()[tree->getGridType()] = tree;
+	void AbstractGrid3D::registerGridType(AbstractGrid3D* grid){
+		classIDMapping()[grid->getGridType()] = grid;
 	}
 
 

@@ -78,11 +78,6 @@ namespace gridmath3D {
 			data[2] = z;
 		}
 
-
-		/* inline Eigen3::Vector3f getVector3f() const { return Eigen3::Vector3f(data[0], data[1], data[2]) ; } */
-		/* inline Eigen3::Vector4f& getVector4f() { return data; } */
-		/* inline Eigen3::Vector4f getVector4f() const { return data; } */
-
 		/*!
 		 * \brief Assignment operator
 		 *

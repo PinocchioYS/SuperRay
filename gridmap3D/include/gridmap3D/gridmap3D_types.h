@@ -40,13 +40,12 @@
 
 #include <gridmap3D/math/Vector3.h>
 #include <gridmap3D/math/Pose6D.h>
-#include <gridmap3D/gridmap3D_deprecated.h>
 
 namespace gridmap3D {
 
-	/// Use Vector3 (float precision) as a point3d in quadmap
+	/// Use Vector3 (float precision) as a point3d in gridmap3D
 	typedef gridmath3D::Vector3               point3d;
-	/// Use our Pose3D (float precision) as pose3d in quadmap
+	/// Use our Pose6D (float precision) as pose3d in gridmap3D
 	typedef gridmath3D::Pose6D                pose6d;
 
 	typedef std::vector<gridmath3D::Vector3>  point3d_collection;

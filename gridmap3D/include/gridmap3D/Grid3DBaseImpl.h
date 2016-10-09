@@ -46,27 +46,26 @@
 
 namespace gridmap3D {
 
-	// forward declaration for NODE children array
+	// forward declaration for NODE
 	class AbstractGrid3DNode;
 
 	/**
-	 * OcTree base class, to be used with with any kind of OcTreeDataNode.
+	 * Grid3D base class, to be used with with any kind of Grid3DDataNode.
 	 *
-	 * This tree implementation currently has a maximum depth of 16
-	 * nodes. For this reason, coordinates values have to be, e.g.,
-	 * below +/- 327.68 meters (2^15) at a maximum resolution of 0.01m.
+	 * Coordinates values are below +/- 327.68 meters (2^15) at a maximum 
+	 * resolution of 0.01m.
 	 *
 	 * This limitation enables the use of an efficient key generation
 	 * method which uses the binary representation of the data point
 	 * coordinates.
 	 *
 	 * \note You should probably not use this class directly, but
-	 * QuadTreeBase or OccupancyQuadTreeBase instead
+	 * Grid3DBase or OccupancyGrid3DBase instead
 	 *
-	 * \tparam NODE Node class to be used in tree (usually derived from
-	 *    QuadTreeDataNode)
+	 * \tparam NODE Node class to be used in grid (usually derived from
+	 *    Grid3DDataNode)
 	 * \tparam INTERFACE Interface to be derived from, should be either
-	 *    AbstractQuadTree or AbstractOccupancyQuadTree
+	 *    AbstractGrid3D or AbstractOccupancyGrid3D
 	 */
 	template <class NODE, class INTERFACE>
 	class Grid3DBaseImpl : public INTERFACE {
@@ -87,78 +86,78 @@ namespace gridmap3D {
 
 
 		/**
-		 * Swap contents of two gridmaps, i.e., only the underlying
-		 * pointer / tree structure. You have to ensure yourself that the
+		 * Swap contents of two grids, i.e., only the underlying
+		 * pointer. You have to ensure yourself that the
 		 * metadata (resolution etc) matches. No memory is cleared
 		 * in this function
 		 */
 		void swapContent(Grid3DBaseImpl<NODE, INTERFACE>& rhs);
 
-		/// Comparison between two octrees, all meta data, all
+		/// Comparison between two grids, all meta data, all
 		/// nodes, and the structure must be identical
-		// bool operator== (const Grid3DBaseImpl<NODE, INTERFACE>& rhs) const;
+//		bool operator== (const Grid3DBaseImpl<NODE, INTERFACE>& rhs) const;
 
 		std::string getGridType() const { return "Grid3DBaseImpl"; }
 
-		/// Change the resolution of the quadtree, scaling all voxels.
+		/// Change the resolution of the grid3D, scaling all voxels.
 		/// This will not preserve the (metric) scale!
 		void setResolution(double r);
 		inline double getResolution() const { return resolution; }
 
-		// inline double getNodeSize(unsigned depth) const { assert(depth <= tree_depth); return sizeLookupTable[depth]; }
-
 		/**
 		 * Clear KeyRay vector to minimize unneeded memory. This is only
 		 * useful for the StaticMemberInitializer classes, don't call it for
-		 * an quadtree that is actually used.
+		 * a grid3D that is actually used.
 		 */
 		void clearKeyRays(){
 			keyrays.clear();
 		}
 
 		/**
-		 *  Search node at specified depth given a 3d point.
+		* \return Pointer to the grid. This pointer
+		* should not be modified or deleted externally, the Grid3D
+		* manages its memory itself.
+		*/
+		typedef unordered_ns::unordered_map<Grid3DKey, NODE*, Grid3DKey::KeyHash> OccupancyGridMap;
+		inline OccupancyGridMap* getGrid() const { return gridmap; }
+
+		/**
+		 *  Search node given a 3d point (x, y, z).
 		 *  You need to check if the returned node is NULL, since it can be in unknown space.
 		 *  @return pointer to node if found, NULL otherwise
 		 */
 		NODE* search(double x, double y, double z) const;
 
 		/**
-		 *  Search node at specified depth given a 3d point (depth=0: search full tree depth)
+		 *  Search node given a 3d point (point3d).
 		 *  You need to check if the returned node is NULL, since it can be in unknown space.
 		 *  @return pointer to node if found, NULL otherwise
 		 */
 		NODE* search(const point3d& value) const;
 
 		/**
-		 *  Search a node at specified depth given an addressing key (depth=0: search full tree depth)
+		 *  Search a node given an addressing key 
 		 *  You need to check if the returned node is NULL, since it can be in unknown space.
 		 *  @return pointer to node if found, NULL otherwise
 		 */
 		NODE* search(const Grid3DKey& key) const;
 
 		/**
-		 *  Delete a node (if exists) given a 3d point. Will always
-		 *  delete at the lowest level unless depth !=0, and expand pruned inner nodes as needed.
-		 *  Pruned nodes at level "depth" will directly be deleted as a whole.
+		 *  Delete a node (if exists) given a 3d point (x, y, z). 
 		 */
 		bool deleteNode(double x, double y, double z);
 
 		/**
-		 *  Delete a node (if exists) given a 3d point. Will always
-		 *  delete at the lowest level unless depth !=0, and expand pruned inner nodes as needed.
-		 *  Pruned nodes at level "depth" will directly be deleted as a whole.
+		 *  Delete a node (if exists) given a 3d point (point3d). 
 		 */
 		bool deleteNode(const point3d& value);
 
 		/**
-		 *  Delete a node (if exists) given an addressing key. Will always
-		 *  delete at the lowest level unless depth !=0, and expand pruned inner nodes as needed.
-		 *  Pruned nodes at level "depth" will directly be deleted as a whole.
+		 *  Delete a node (if exists) given an addressing key. 
 		 */
 		bool deleteNode(const Grid3DKey& key);
 
-		/// Deletes the complete tree structure
+		/// Deletes the complete grid structure
 		void clear();
 
 		// -- statistics  ----------------------
@@ -166,28 +165,26 @@ namespace gridmap3D {
 		/// \return The number of nodes in the tree
 		virtual inline size_t size() const { return gridmap->size(); }
 
-		/// \return Memory usage of the complete octree in bytes (may vary between architectures)
+		/// \return Memory usage of the grid3D in bytes (may vary between architectures)
 		virtual size_t memoryUsage() const;	// Add HashTable?
 
-		/// \return Memory usage of a single octree node
+		/// \return Memory usage of a single grid3D node
 		virtual inline size_t memoryUsageNode() const { return sizeof(NODE); };
 
 		double volume();
 
-		/// Size of QuadTree (all known space) in meters for x and y dimension
+		/// Size of Grid3D (all known space) in meters for x, y and z dimension
 		virtual void getMetricSize(double& x, double& y, double& z);
-		/// Size of QuadTree (all known space) in meters for x and y dimension
+		/// Size of Grid3D (all known space) in meters for x, y and z dimension
 		virtual void getMetricSize(double& x, double& y, double& z) const;
-		/// minimum value of the bounding box of all known space in x, y
+		/// minimum value of the bounding box of all known space in x, y, z
 		virtual void getMetricMin(double& x, double& y, double& z);
-		/// minimum value of the bounding box of all known space in x, y
+		/// minimum value of the bounding box of all known space in x, y, z
 		void getMetricMin(double& x, double& y, double& z) const;
-		/// maximum value of the bounding box of all known space in x, y
+		/// maximum value of the bounding box of all known space in x, y, z
 		virtual void getMetricMax(double& x, double& y, double& z);
-		/// maximum value of the bounding box of all known space in x, y
+		/// maximum value of the bounding box of all known space in x, y, z
 		void getMetricMax(double& x, double& y, double& z) const;
-
-		// -- access tree nodes  ------------------
 
 		/// return centers of leafs that do NOT exist (but could) in a given bounding box
 		// void getUnknownLeafCenters(point3d_list& node_centers, point3d pmin, point3d pmax, unsigned int depth = 0) const; - To do.
@@ -197,13 +194,13 @@ namespace gridmap3D {
 
 		/**
 		 * Traces a ray from origin to end (excluding), returning an
-		 * QuadTreeKey of all nodes traversed by the beam. You still need to check
+		 * Grid3DKey of all nodes traversed by the beam. You still need to check
 		 * if a node at that coordinate exists (e.g. with search()).
 		 *
 		 * @param origin start coordinate of ray
 		 * @param end end coordinate of ray
 		 * @param ray KeyRay structure that holds the keys of all nodes traversed by the ray, excluding "end"
-		 * @return Success of operation. Returning false usually means that one of the coordinates is out of the QuadTree's range
+		 * @return Success of operation. Returning false usually means that one of the coordinates is out of the Grid3D's range
 		 */
 		bool computeRayKeys(const point3d& origin, const point3d& end, KeyRay& ray) const;
 
@@ -217,7 +214,7 @@ namespace gridmap3D {
 		 * @param origin start coordinate of ray
 		 * @param end end coordinate of ray
 		 * @param ray KeyRay structure that holds the keys of all nodes traversed by the ray, excluding "end"
-		 * @return Success of operation. Returning false usually means that one of the coordinates is out of the QuadTree's range
+		 * @return Success of operation. Returning false usually means that one of the coordinates is out of the Grid3D's range
 		 */
 		bool computeRay(const point3d& origin, const point3d& end, std::vector<point3d>& ray);
 
@@ -226,15 +223,14 @@ namespace gridmap3D {
 
 		/**
 		 * Read all nodes from the input stream (without file header),
-		 * for this the tree needs to be already created.
+		 * for this the grid needs to be already created.
 		 * For general file IO, you
-		 * should probably use AbstractQuadTree::read() instead.
+		 * should probably use AbstractGrid3D::read() instead.
 		 */
-		std::istream& readData(std::istream &s); // - To do.
+		std::istream& readData(std::istream &s);
 
 		/// Write complete state of tree to stream (without file header) unmodified.
-		/// Pruning the tree first produces smaller files (lossless compression)
-		std::ostream& writeData(std::ostream &s) const;  // - To do.
+		std::ostream& writeData(std::ostream &s) const;
 
 //		typedef OccupancyGridMap::iterator Map_iterator;
 
@@ -249,7 +245,7 @@ namespace gridmap3D {
 		// const leaf_iterator end_leafs() const { return leaf_iterator_end; }
 
 		/// @return beginning of the tree as leaf iterator in a bounding box
-		/*leaf_bbx_iterator begin_leafs_bbx(const QuadTreeKey& min, const QuadTreeKey& max, unsigned char maxDepth = 0) const {
+		/*leaf_bbx_iterator begin_leafs_bbx(const Grid3DKey& min, const Grid3DKey& max, unsigned char maxDepth = 0) const {
 			return leaf_bbx_iterator(this, min, max, maxDepth);
 		}*/
 		/// @return beginning of the tree as leaf iterator in a bounding box
@@ -292,7 +288,7 @@ namespace gridmap3D {
 		 *
 		 * @param coord 3d coordinate of a point
 		 * @param key values that will be computed, an array of fixed size 3.
-		 * @return true if point is within the quadtree (valid), false otherwise
+		 * @return true if point is within the grid3D (valid), false otherwise
 		 */
 		bool coordToKeyChecked(const point3d& coord, Grid3DKey& key) const;
 
@@ -302,7 +298,7 @@ namespace gridmap3D {
 		 * @param x
 		 * @param y
 		 * @param key values that will be computed, an array of fixed size 3.
-		 * @return true if point is within the quadtree (valid), false otherwise
+		 * @return true if point is within the grid3D (valid), false otherwise
 		 */
 		bool coordToKeyChecked(double x, double y, double z, Grid3DKey& key) const;
 
@@ -311,7 +307,7 @@ namespace gridmap3D {
 		 *
 		 * @param coordinate 3d coordinate of a point
 		 * @param key discrete 16 bit adressing key, result
-		 * @return true if coordinate is within the quadtree bounds (valid), false otherwise
+		 * @return true if coordinate is within the grid3D bounds (valid), false otherwise
 		 */
 		bool coordToKeyChecked(double coordinate, key_type& key) const;
 
@@ -344,10 +340,6 @@ namespace gridmap3D {
 		// QuadTreeBaseImpl<NODE, INTERFACE>& operator=(const QuadTreeBaseImpl<NODE, INTERFACE>&);
 
 	protected:
-		// void allocNodeChildren(NODE* node);
-
-		// NODE* root; ///< Pointer to the root NODE, NULL for empty tree
-		typedef unordered_ns::unordered_map<Grid3DKey, NODE*, Grid3DKey::KeyHash> OccupancyGridMap;
 		OccupancyGridMap* gridmap;
 
 		// constants of the tree
@@ -355,8 +347,7 @@ namespace gridmap3D {
 		double resolution;  ///< in meters
 		double resolution_factor; ///< = 1. / resolution
 
-		// size_t grid_size; ///< number of nodes in tree ( does not need, use gridmap->size();
-		/// flag to denote whether the quadtree extent changed (for lazy min/max eval)
+		/// flag to denote whether the grid extent changed (for lazy min/max eval)
 		bool size_changed;
 
 		point3d grid_center;  // coordinate offset of tree

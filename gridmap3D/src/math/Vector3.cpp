@@ -59,13 +59,6 @@ namespace gridmath3D {
 		return *this;
 	}
 
-	//   void Vector3::read(unsigned char * src, unsigned int size){
-	//     memcpy(&data[0],src, sizeof(double));
-	//     memcpy(&data[1],src, sizeof(double));
-	//     memcpy(&data[2],src, sizeof(double));
-	//   }
-
-
 	std::istream& Vector3::read(std::istream &s) {
 		int temp;
 		s >> temp; // should be 3

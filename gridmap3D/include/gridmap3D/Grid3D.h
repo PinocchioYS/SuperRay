@@ -41,8 +41,8 @@
 namespace gridmap3D {
 
 	/**
-	 * octomap main map data structure, stores 3D occupancy grid map in an OcTree.
-	 * Basic functionality is implemented in OcTreeBase.
+	 * gridmap3D main map data structure, stores 3D occupancy grid map.
+	 * Basic functionality is implemented in Grid3DBase.
 	 *
 	 */
 	class Grid3D : public OccupancyGrid3DBase <Grid3DNode> {
@@ -52,7 +52,7 @@ namespace gridmap3D {
 		Grid3D(double resolution);
 
 		/**
-		 * Reads an OcTree from a binary file
+		 * Reads a Grid3D from a file
 		 * @param _filename
 		 *
 		 */
@@ -69,10 +69,10 @@ namespace gridmap3D {
 
 	protected:
 		/**
-		 * Static member object which ensures that this OcTree's prototype
+		 * Static member object which ensures that this Grid3D's prototype
 		 * ends up in the classIDMapping only once. You need this as a
-		 * static member in any derived octree class in order to read .ot
-		 * files through the AbstractOcTree factory. You should also call
+		 * static member in any derived grid3D class in order to read .g3t
+		 * files through the AbstractGrid3D factory. You should also call
 		 * ensureLinking() once from the constructor.
 		 */
 		class StaticMemberInitializer{
@@ -86,7 +86,7 @@ namespace gridmap3D {
 			/**
 			 * Dummy function to ensure that MSVC does not drop the
 			 * StaticMemberInitializer, causing this tree failing to register.
-			 * Needs to be called from the constructor of this octree.
+			 * Needs to be called from the constructor of this grid3D.
 			 */
 			void ensureLinking() {};
 		};
