@@ -45,8 +45,8 @@ namespace gridmap3D {
 	}
 
 	template <class NODE>
-	OccupancyGrid3DBase<NODE>::OccupancyGrid3DBase(double resolution, unsigned int tree_max_val)
-		: Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>(resolution, tree_max_val), use_bbx_limit(false), use_change_detection(false)
+	OccupancyGrid3DBase<NODE>::OccupancyGrid3DBase(double resolution, unsigned int grid_max_val)
+		: Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>(resolution, grid_max_val), use_bbx_limit(false), use_change_detection(false)
 	{
 		if (gridmap == NULL)
 			gridmap = new OccupancyGridMap;

@@ -41,8 +41,8 @@
 namespace gridmap2D {
 
 	/**
-	 * octomap main map data structure, stores 3D occupancy grid map in an OcTree.
-	 * Basic functionality is implemented in OcTreeBase.
+	 * gridmap2D main map data structure, stores 2D occupancy grid map.
+	 * Basic functionality is implemented in Grid2DBase.
 	 *
 	 */
 	class Grid2D : public OccupancyGrid2DBase <Grid2DNode> {
@@ -50,13 +50,6 @@ namespace gridmap2D {
 	public:
 		/// Default constructor, sets resolution of leafs
 		Grid2D(double resolution);
-
-		/**
-		 * Reads an OcTree from a binary file
-		 * @param _filename
-		 *
-		 */
-		Grid2D(std::string _filename);
 
 		virtual ~Grid2D(){};
 
@@ -69,10 +62,10 @@ namespace gridmap2D {
 
 	protected:
 		/**
-		 * Static member object which ensures that this OcTree's prototype
+		 * Static member object which ensures that this Grid2D's prototype
 		 * ends up in the classIDMapping only once. You need this as a
-		 * static member in any derived octree class in order to read .ot
-		 * files through the AbstractOcTree factory. You should also call
+		 * static member in any derived grid2D class in order to read .ot
+		 * files through the AbstractGrid2D factory. You should also call
 		 * ensureLinking() once from the constructor.
 		 */
 		class StaticMemberInitializer{
@@ -85,8 +78,8 @@ namespace gridmap2D {
 
 			/**
 			 * Dummy function to ensure that MSVC does not drop the
-			 * StaticMemberInitializer, causing this tree failing to register.
-			 * Needs to be called from the constructor of this octree.
+			 * StaticMemberInitializer, causing this grid failing to register.
+			 * Needs to be called from the constructor of this grid2D.
 			 */
 			void ensureLinking() {};
 		};

@@ -35,13 +35,12 @@
 #define GRIDMATH2D_POSE3D_H
 
 #include "Vector2.h"
-// #include "Quaternion.h"
 
 namespace gridmath2D {
 
 	/*!
-	 * \brief This class represents a two-dimensional pose of an object
-	 */
+	* \brief This class represents a two-dimensional pose of an object
+	*/
 	class Pose3D {
 	public:
 
@@ -49,18 +48,18 @@ namespace gridmath2D {
 		~Pose3D();
 
 		/*!
-		 * \brief Constructor
-		 *
-		 * Constructs a pose from given translation and rotation.
-		 */
+		* \brief Constructor
+		*
+		* Constructs a pose from given translation and rotation.
+		*/
 		Pose3D(const Vector2& trans, const double& rot);
 
 		/*!
-		 * \brief Constructor
-		 *
-		 * Constructs a pose from a translation represented by
-		 * its x, y-values and a rotation
-		 */
+		* \brief Constructor
+		*
+		* Constructs a pose from a translation represented by
+		* its x, y-values and a rotation
+		*/
 		Pose3D(float x, float y, double rot);
 
 		Pose3D& operator= (const Pose3D& other);
@@ -68,27 +67,30 @@ namespace gridmath2D {
 		bool operator!=(const Pose3D& other) const;
 
 		/*!
-		 * \brief Translational component
-		 *
-		 * @return the translational component of this pose
-		 */
+		* \brief Translational component
+		*
+		* @return the translational component of this pose
+		*/
 		inline Vector2& trans() { return translation; }
+
 		/*!
-		 * \brief Rotational component
-		 *
-		 * @return the rotational component of this pose
-		 */
+		* \brief Rotational component
+		*
+		* @return the rotational component of this pose
+		*/
 		inline double& rot() { return rotation; }
+
 		/*!
-		 * \brief Translational component
-		 *
-		 * @return the translational component of this pose
-		 */
+		* \brief Translational component
+		*
+		* @return the translational component of this pose
+		*/
 		const Vector2& trans() const { return translation; }
+
 		/*!
-		 * \brief Rotational component
-		 * @return the rotational component of this pose
-		 */
+		* \brief Rotational component
+		* @return the rotational component of this pose
+		*/
 		const double& rot() const { return rotation; }
 
 		inline float& x() { return translation(0); }
@@ -97,87 +99,87 @@ namespace gridmath2D {
 		inline const float& y() const { return translation(1); }
 
 		/*!
-		 * \brief Transformation of a vector
-		 *
-		 * Transforms the vector v by the transformation which is
-		 * specified by this.
-		 * @return the vector which is translated by the translation of
-		 * this and afterwards rotated by the rotation of this.
-		 */
+		* \brief Transformation of a vector
+		*
+		* Transforms the vector v by the transformation which is
+		* specified by this.
+		* @return the vector which is translated by the translation of
+		* this and afterwards rotated by the rotation of this.
+		*/
 		Vector2 transform(const Vector2 &v) const;
 
 		/*!
-		 * \brief Inversion
-		 *
-		 * Inverts the coordinate transformation represented by this pose
-		 * @return a copy of this pose inverted
-		 */
+		* \brief Inversion
+		*
+		* Inverts the coordinate transformation represented by this pose
+		* @return a copy of this pose inverted
+		*/
 		Pose3D inv() const;
 
 		/*!
-		 * \brief Inversion
-		 *
-		 * Inverts the coordinate transformation represented by this pose
-		 * @return a reference to this pose
-		 */
+		* \brief Inversion
+		*
+		* Inverts the coordinate transformation represented by this pose
+		* @return a reference to this pose
+		*/
 		Pose3D& inv_IP();
 
 		/*!
-		 * \brief Concatenation
-		 *
-		 * Concatenates the coordinate transformations represented
-		 * by this and p.
-		 * @return this * p (applies first this, then p)
-		 */
+		* \brief Concatenation
+		*
+		* Concatenates the coordinate transformations represented
+		* by this and p.
+		* @return this * p (applies first this, then p)
+		*/
 		Pose3D operator* (const Pose3D &p) const;
 
 		/*!
-		 * \brief In place concatenation
-		 *
-		 * Concatenates p to this Pose6D.
-		 * @return this which results from first moving by this and
-		 * afterwards by p
-		 */
+		* \brief In place concatenation
+		*
+		* Concatenates p to this Pose6D.
+		* @return this which results from first moving by this and
+		* afterwards by p
+		*/
 		const Pose3D& operator*= (const Pose3D &p);
 
 		/*!
-		 * \brief Translational distance
-		 *
-		 * @return the translational (euclidian) distance to p
-		 */
+		* \brief Translational distance
+		*
+		* @return the translational (euclidian) distance to p
+		*/
 		double distance(const Pose3D &other) const;
 
 		/*!
-		 * \brief Translational length
-		 *
-		 * @return the translational (euclidian) length of the translation
-		 * vector of this Pose6D
-		 */
+		* \brief Translational length
+		*
+		* @return the translational (euclidian) length of the translation
+		* vector of this Pose6D
+		*/
 		double transLength() const;
 
 		/*!
-		 * \brief Output operator
-		 *
-		 * Output to stream in a format which can be parsed using read().
-		 */
+		* \brief Output operator
+		*
+		* Output to stream in a format which can be parsed using read().
+		*/
 		std::ostream& write(std::ostream &s) const;
 		/*!
-		 * \brief Input operator
-		 *
-		 * Parsing from stream which was written by write().
-		 */
+		* \brief Input operator
+		*
+		* Parsing from stream which was written by write().
+		*/
 		std::istream& read(std::istream &s);
 		/*!
-		 * \brief Binary output operator
-		 *
-		 * Output to stream in a binary format which can be parsed using readBinary().
-		 */
+		* \brief Binary output operator
+		*
+		* Output to stream in a binary format which can be parsed using readBinary().
+		*/
 		std::ostream& writeBinary(std::ostream &s) const;
 		/*!
-		 * \brief Binary input operator
-		 *
-		 * Parsing from binary stream which was written by writeBinary().
-		 */
+		* \brief Binary input operator
+		*
+		* Parsing from binary stream which was written by writeBinary().
+		*/
 		std::istream& readBinary(std::istream &s);
 
 	protected:

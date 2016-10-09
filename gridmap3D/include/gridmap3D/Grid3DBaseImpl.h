@@ -162,7 +162,7 @@ namespace gridmap3D {
 
 		// -- statistics  ----------------------
 
-		/// \return The number of nodes in the tree
+		/// \return The number of nodes in the grid
 		virtual inline size_t size() const { return gridmap->size(); }
 
 		/// \return Memory usage of the grid3D in bytes (may vary between architectures)
@@ -232,8 +232,6 @@ namespace gridmap3D {
 		/// Write complete state of tree to stream (without file header) unmodified.
 		std::ostream& writeData(std::ostream &s) const;
 
-//		typedef OccupancyGridMap::iterator Map_iterator;
-
 		/// @return beginning of the tree as leaf iterator
 //		const OccupancyGridMap::iterator begin() const { return gridmap->begin(); }
 		/// @return end of the tree as leaf iterator
@@ -268,10 +266,6 @@ namespace gridmap3D {
 		inline key_type coordToKey(double coordinate) const{
 			return ((int)floor(resolution_factor * coordinate)) + grid_max_val;
 		}
-
-		/// Converts from a single coordinate into a discrete key at a given depth
-		// key_type coordToKey(double coordinate, unsigned depth) const;
-
 
 		/// Converts from a 3D coordinate into a 3D addressing key
 		inline Grid3DKey coordToKey(const point3d& coord) const{
@@ -311,38 +305,36 @@ namespace gridmap3D {
 		 */
 		bool coordToKeyChecked(double coordinate, key_type& key) const;
 
-		/// converts from a discrete key at the lowest tree level into a coordinate
-		/// corresponding to the key's center
+		/// converts from a discrete key into a coordinate corresponding to the key's center
 		inline double keyToCoord(key_type key) const{
 			return (double((int)key - (int) this->grid_max_val) + 0.5) * this->resolution;
 		}
 
-		/// converts from an addressing key at the lowest tree level into a coordinate
-		/// corresponding to the key's center
+		/// converts from an addressing key into a coordinate corresponding to the key's center
 		inline point3d keyToCoord(const Grid3DKey& key) const{
 			return point3d(float(keyToCoord(key[0])), float(keyToCoord(key[1])), float(keyToCoord(key[2])));
 		}
 
 	protected:
-		/// Constructor to enable derived classes to change tree constants.
-		/// This usually requires a re-implementation of some core tree-traversal functions as well!
+		/// Constructor to enable derived classes to change grid constants.
+		/// This usually requires a re-implementation of some core grid-traversal functions as well!
 		Grid3DBaseImpl(double resolution, unsigned int grid_max_val);
 
 		/// initialize non-trivial members, helper for constructors
 		void init();
 
-		/// recalculates min and max in x, y. Does nothing when tree size didn't change.
+		/// recalculates min and max in x, y. Does nothing when grid size didn't change.
 		void calcMinMax();
 
 	private:
-		/// Assignment operator is private: don't (re-)assign quadtrees
+		/// Assignment operator is private: don't (re-)assign grid3D
 		/// (const-parameters can't be changed) -  use the copy constructor instead.
-		// QuadTreeBaseImpl<NODE, INTERFACE>& operator=(const QuadTreeBaseImpl<NODE, INTERFACE>&);
+		Grid3DBaseImpl<NODE, INTERFACE>& operator=(const Grid3DBaseImpl<NODE, INTERFACE>&);
 
 	protected:
 		OccupancyGridMap* gridmap;
 
-		// constants of the tree
+		// constants of the grid
 		const unsigned int grid_max_val;
 		double resolution;  ///< in meters
 		double resolution_factor; ///< = 1. / resolution
@@ -350,7 +342,7 @@ namespace gridmap3D {
 		/// flag to denote whether the grid extent changed (for lazy min/max eval)
 		bool size_changed;
 
-		point3d grid_center;  // coordinate offset of tree
+		point3d grid_center;  // coordinate offset of grid
 
 		double max_value[3]; ///< max in x, y
 		double min_value[3]; ///< min in x, y

@@ -40,11 +40,6 @@ namespace gridmap2D {
 		grid2DMemberInit.ensureLinking();
 	};
 
-	Grid2D::Grid2D(std::string _filename)
-	: OccupancyGrid2DBase<Grid2DNode>(0.1)  { // resolution will be set according to tree file
-		readBinary(_filename);
-	}
-
 	Grid2D::StaticMemberInitializer Grid2D::grid2DMemberInit;
 
 } // namespace

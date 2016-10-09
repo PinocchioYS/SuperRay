@@ -94,12 +94,7 @@ namespace gridmap3D {
 		/**
 		 * Read the file header, create the appropriate class and deserialize.
 		 * This creates a new grid3D which you need to delete yourself. If you
-		 * expect or requre a specific kind of grid3D, use dynamic_cast afterwards:
-		 * @code
-		 * AbstractGrid3D* grid = AbstractGrid3D::read("filename.ot");
-		 * Grid3D* grid3D = dynamic_cast<Grid3D*>(grid);
-		 *
-		 * @endcode
+		 * expect or requre a specific kind of grid3D, use dynamic_cast afterwards
 		 */
 		static AbstractGrid3D* read(const std::string& filename);
 

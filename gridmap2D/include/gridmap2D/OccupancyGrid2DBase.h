@@ -47,22 +47,22 @@
 namespace gridmap2D {
 
 	/**
-	 * Base implementation for Occupancy Quadtrees (e.g. for mapping).
-	 * AbstractOccupancyQuadTree serves as a common
+	 * Base implementation for Occupancy Grid2Ds (e.g. for mapping).
+	 * AbstractOccupancyGrid2D serves as a common
 	 * base interface for all these classes.
 	 * Each class used as NODE type needs to be derived from
-	 * OccupancyQuadTreeNode.
+	 * OccupancyGrid2DNode.
 	 *
-	 * This tree implementation has a maximum depth of 16.
-	 * At a resolution of 1 cm, values have to be < +/- 327.68 meters (2^15)
+	 * Coordinates values are below +/- 327.68 meters (2^15) at a maximum 
+	 * resolution of 0.01m.
 	 *
 	 * This limitation enables the use of an efficient key generation
 	 * method which uses the binary representation of the data.
 	 *
-	 * \note The tree does not save individual points.
+	 * \note The grid does not save individual points.
 	 *
-	 * \tparam NODE Node class to be used in tree (usually derived from
-	 *    QuadTreeDataNode)
+	 * \tparam NODE Node class to be used in grid (usually derived from
+	 *    Grid2DDataNode)
 	 */
 	template <class NODE>
 	class OccupancyGrid2DBase : public Grid2DBaseImpl<NODE, AbstractOccupancyGrid2D> {
@@ -76,61 +76,6 @@ namespace gridmap2D {
 		OccupancyGrid2DBase(const OccupancyGrid2DBase<NODE>& rhs);
 
 		/**
-		* Integrate a Pointcloud (in global reference frame), parallelized with OpenMP.
-		* Special care is taken that each voxel
-		* in the map is updated only once, and occupied nodes have a preference over free ones.
-		* This avoids holes in the floor from mutual deletion and is more efficient than the plain
-		* ray insertion in insertPointCloudRays().
-		*
-		* @note replaces insertScan()
-		*
-		* @param scan Pointcloud (measurement endpoints), in global reference frame
-		* @param sensor_origin measurement origin in global reference frame
-		* @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
-		* @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		*   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
-		* @param discretize whether the scan is discretized first into octree key cells (default: false).
-		*   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.*
-		*/
-		virtual void insertPointCloud(const Pointcloud& scan, const gridmap2D::point2d& sensor_origin,
-			double maxrange = -1., bool discretize = false);
-
-		/**
-		* Integrate a 3d scan (transform scan before tree update), parallelized with OpenMP.
-		* Special care is taken that each voxel
-		* in the map is updated only once, and occupied nodes have a preference over free ones.
-		* This avoids holes in the floor from mutual deletion and is more efficient than the plain
-		* ray insertion in insertPointCloudRays().
-		*
-		* @note replaces insertScan()
-		*
-		* @param scan Pointcloud (measurement endpoints) relative to frame origin
-		* @param sensor_origin origin of sensor relative to frame origin
-		* @param frame_origin origin of reference frame, determines transform to be applied to cloud and sensor origin
-		* @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
-		* @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		*   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
-		* @param discretize whether the scan is discretized first into octree key cells (default: false).
-		*   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.*
-		*/
-		virtual void insertPointCloud(const Pointcloud& scan, const point2d& sensor_origin, const pose3d& frame_origin,
-			double maxrange = -1., bool discretize = false);
-
-		/**
-		* Insert a 3d scan (given as a ScanNode) into the tree, parallelized with OpenMP.
-		*
-		* @note replaces insertScan
-		*
-		* @param scan ScanNode contains Pointcloud data and frame/sensor origin
-		* @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
-		* @param lazy_eval whether the tree is left 'dirty' after the update (default: false).
-		*   This speeds up the insertion by not updating inner nodes, but you need to call updateInnerOccupancy() when done.
-		* @param discretize whether the scan is discretized first into octree key cells (default: false).
-		*   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.
-		*/
-		virtual void insertPointCloud(const ScanNode& scan, double maxrange = -1., bool discretize = false);
-
-		/**
 		 * Integrate a Pointcloud (in global reference frame), parallelized with OpenMP.
 		 * This function simply inserts all rays of the point clouds as batch operation.
 		 * Discretization effects can lead to the deletion of occupied space, it is
@@ -139,83 +84,65 @@ namespace gridmap2D {
 		 * @param scan Pointcloud (measurement endpoints), in global reference frame
 		 * @param sensor_origin measurement origin in global reference frame
 		 * @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 */
 		virtual void insertPointCloudRays(const Pointcloud& scan, const point2d& sensor_origin, double maxrange = -1.);
 
 		/**
-		 * Set log_odds value of voxel to log_odds_value. This only works if key is at the lowest
-		 * octree level
+		 * Set log_odds value of voxel to log_odds_value.
 		 *
-		 * @param key OcTreeKey of the NODE that is to be updated
+		 * @param key Grid2DKey of the NODE that is to be updated
 		 * @param log_odds_value value to be set as the log_odds value of the node
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual NODE* setNodeValue(const Grid2DKey& key, float log_odds_value);
 
 		/**
 		 * Set log_odds value of voxel to log_odds_value.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls setNodeValue() with it.
+		 * Looks up the Grid2DKey corresponding to the coordinate and then calls setNodeValue() with it.
 		 *
-		 * @param value 3d coordinate of the NODE that is to be updated
+		 * @param value 2d coordinate of the NODE that is to be updated
 		 * @param log_odds_value value to be set as the log_odds value of the node
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual NODE* setNodeValue(const point2d& value, float log_odds_value);
 
 		/**
 		 * Set log_odds value of voxel to log_odds_value.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls setNodeValue() with it.
+		 * Looks up the Grid2DKey corresponding to the coordinate and then calls setNodeValue() with it.
 		 *
 		 * @param x
 		 * @param y
-		 * @param z
 		 * @param log_odds_value value to be set as the log_odds value of the node
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual NODE* setNodeValue(double x, double y, float log_odds_value);
 
 		/**
 		 * Manipulate log_odds value of a voxel by changing it by log_odds_update (relative).
-		 * This only works if key is at the lowest octree level
 		 *
-		 * @param key OcTreeKey of the NODE that is to be updated
+		 * @param key Grid2DKey of the NODE that is to be updated
 		 * @param log_odds_update value to be added (+) to log_odds value of node
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual NODE* updateNode(const Grid2DKey& key, float log_odds_update);
 
 		/**
 		 * Manipulate log_odds value of a voxel by changing it by log_odds_update (relative).
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls updateNode() with it.
+		 * Looks up the Grid2DKey corresponding to the coordinate and then calls updateNode() with it.
 		 *
-		 * @param value 3d coordinate of the NODE that is to be updated
+		 * @param value 2d coordinate of the NODE that is to be updated
 		 * @param log_odds_update value to be added (+) to log_odds value of node
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual NODE* updateNode(const point2d& value, float log_odds_update);
 
 		/**
 		 * Manipulate log_odds value of a voxel by changing it by log_odds_update (relative).
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls updateNode() with it.
+		 * Looks up the Grid2DKey corresponding to the coordinate and then calls updateNode() with it.
 		 *
 		 * @param x
 		 * @param y
-		 * @param z
 		 * @param log_odds_update value to be added (+) to log_odds value of node
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual NODE* updateNode(double x, double y, float log_odds_update);
@@ -223,36 +150,29 @@ namespace gridmap2D {
 		/**
 		 * Integrate occupancy measurement.
 		 *
-		 * @param key OcTreeKey of the NODE that is to be updated
+		 * @param key Grid2DKey of the NODE that is to be updated
 		 * @param occupied true if the node was measured occupied, else false
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual NODE* updateNode(const Grid2DKey& key, bool occupied);
 
 		/**
 		 * Integrate occupancy measurement.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls udpateNode() with it.
+		 * Looks up the Grid2DKey corresponding to the coordinate and then calls udpateNode() with it.
 		 *
-		 * @param value 3d coordinate of the NODE that is to be updated
+		 * @param value 2d coordinate of the NODE that is to be updated
 		 * @param occupied true if the node was measured occupied, else false
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual NODE* updateNode(const point2d& value, bool occupied);
 
 		/**
 		 * Integrate occupancy measurement.
-		 * Looks up the OcTreeKey corresponding to the coordinate and then calls udpateNode() with it.
+		 * Looks up the Grid2DKey corresponding to the coordinate and then calls udpateNode() with it.
 		 *
 		 * @param x
 		 * @param y
-		 * @param z
 		 * @param occupied true if the node was measured occupied, else false
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return pointer to the updated NODE
 		 */
 		virtual NODE* updateNode(double x, double y, bool occupied);
@@ -260,28 +180,25 @@ namespace gridmap2D {
 
 		/**
 		 * Creates the maximum likelihood map by calling toMaxLikelihood on all
-		 * tree nodes, setting their occupancy to the corresponding occupancy thresholds.
-		 * This enables a very efficient compression if you call prune() afterwards.
+		 * grid nodes, setting their occupancy to the corresponding occupancy thresholds.
 		 */
 		virtual void toMaxLikelihood();
 
 		/**
-		 * Insert one ray between origin and end into the tree.
+		 * Insert one ray between origin and end into the grid.
 		 * integrateMissOnRay() is called for the ray, the end point is updated as occupied.
-		 * It is usually more efficient to insert complete pointcloudsm with insertPointCloud() or
+		 * It is usually more efficient to insert complete pointclouds with insertPointCloud() or
 		 * insertPointCloudRays().
 		 *
 		 * @param origin origin of sensor in global coordinates
 		 * @param end endpoint of measurement in global coordinates
 		 * @param maxrange maximum range after which the raycast should be aborted
-		 * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-		 *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
 		 * @return success of operation
 		 */
 		virtual bool insertRay(const point2d& origin, const point2d& end, double maxrange = -1.0);
 
 		/**
-		 * Performs raycasting in 3d, similar to computeRay(). Can be called in parallel e.g. with OpenMP
+		 * Performs raycasting in 2d, similar to computeRay(). Can be called in parallel e.g. with OpenMP
 		 * for a speedup.
 		 *
 		 * A ray is cast from 'origin' with a given direction, the first non-free
@@ -290,13 +207,12 @@ namespace gridmap2D {
 		 * was hit by the raycast. If the raycast returns false you can search() the node at 'end' and
 		 * see whether it's unknown space.
 		 *
-		 *
 		 * @param[in] origin starting coordinate of ray
 		 * @param[in] direction A vector pointing in the direction of the raycast (NOT a point in space). Does not need to be normalized.
 		 * @param[out] end returns the center of the last cell on the ray. If the function returns true, it is occupied.
 		 * @param[in] ignoreUnknownCells whether unknown cells are ignored (= treated as free). If false (default), the raycast aborts when an unknown cell is hit and returns false.
 		 * @param[in] maxRange Maximum range after which the raycast is aborted (<= 0: no limit, default)
-		 * @return true if an occupied cell was hit, false if the maximum range or octree bounds are reached, or if an unknown node was hit.
+		 * @return true if an occupied cell was hit, false if the maximum range or grid2D bounds are reached, or if an unknown node was hit.
 		 */
 		virtual bool castRay(const point2d& origin, const point2d& direction, point2d& end,
 			bool ignoreUnknownCells = false, double maxRange = -1.0) const;
@@ -315,7 +231,7 @@ namespace gridmap2D {
 		virtual bool getRayIntersection(const point2d& origin, const point2d& direction, const point2d& center,
 			point2d& intersection, double delta = 0.0) const;
 
-		//-- set BBX limit (limits tree updates to this bounding box)
+		//-- set BBX limit (limits grid updates to this bounding box)
 
 		///  use or ignore BBX limit (default: ignore)
 		void useBBXLimit(bool enable) { use_bbx_limit = enable; }
@@ -344,8 +260,7 @@ namespace gridmap2D {
 
 		/**
 		 * Iterator to traverse all keys of changed nodes.
-		 * you need to enableChangeDetection() first. Here, an OcTreeKey always
-		 * refers to a node at the lowest tree level (its size is the minimum tree resolution)
+		 * you need to enableChangeDetection() first.
 		 */
 		KeyBoolMap::const_iterator changedKeysBegin() const { return changed_keys.begin(); }
 
@@ -355,104 +270,22 @@ namespace gridmap2D {
 		/// Number of changes since last reset.
 		size_t numChangesDetected() const { return changed_keys.size(); }
 
-
-		/**
-		 * Helper for insertPointCloud(). Computes all octree nodes affected by the point cloud
-		 * integration at once. Here, occupied nodes have a preference over free
-		 * ones.
-		 *
-		 * @param scan point cloud measurement to be integrated
-		 * @param origin origin of the sensor for ray casting
-		 * @param free_cells keys of nodes to be cleared
-		 * @param occupied_cells keys of nodes to be marked occupied
-		 * @param maxrange maximum range for raycasting (-1: unlimited)
-		 */
-		void computeUpdate(const Pointcloud& scan, const gridmap2D::point2d& origin,
-			KeySet& free_cells,
-			KeySet& occupied_cells,
-			double maxrange);
-
-
-		/**
-		 * Helper for insertPointCloud(). Computes all octree nodes affected by the point cloud
-		 * integration at once. Here, occupied nodes have a preference over free
-		 * ones. This function first discretizes the scan with the octree grid, which results
-		 * in fewer raycasts (=speedup) but a slightly different result than computeUpdate().
-		 *
-		 * @param scan point cloud measurement to be integrated
-		 * @param origin origin of the sensor for ray casting
-		 * @param free_cells keys of nodes to be cleared
-		 * @param occupied_cells keys of nodes to be marked occupied
-		 * @param maxrange maximum range for raycasting (-1: unlimited)
-		 */
-		void computeDiscreteUpdate(const Pointcloud& scan, const gridmap2D::point2d& origin,
-			KeySet& free_cells,
-			KeySet& occupied_cells,
-			double maxrange);
-
-
-		// -- I/O  -----------------------------------------
-
-		/**
-		 * Reads only the data (=complete tree structure) from the input stream.
-		 * The tree needs to be constructed with the proper header information
-		 * beforehand, see readBinary().
-		 */
-		std::istream& readBinaryData(std::istream &s);
-
-		/**
-		 * Read node from binary stream (max-likelihood value), recursively
-		 * continue with all children.
-		 *
-		 * This will set the log_odds_occupancy value of
-		 * all leaves to either free or occupied.
-		 */
-		std::istream& readBinaryNode(std::istream &s, NODE* node);
-
-		/**
-		 * Write node to binary stream (max-likelihood value),
-		 * recursively continue with all children.
-		 *
-		 * This will discard the log_odds_occupancy value, writing
-		 * all leaves as either free or occupied.
-		 *
-		 * @param s
-		 * @param node OcTreeNode to write out, will recurse to all children
-		 * @return
-		 */
-		std::ostream& writeBinaryNode(std::ostream &s, const NODE* node) const;
-
-		/**
-		 * Writes the data of the tree (without header) to the stream, recursively
-		 * calling writeBinaryNode (starting with root)
-		 */
-		std::ostream& writeBinaryData(std::ostream &s) const;
-
-
-		/**
-		 * Updates the occupancy of all inner nodes to reflect their children's occupancy.
-		 * If you performed batch-updates with lazy evaluation enabled, you must call this
-		 * before any queries to ensure correct multi-resolution behavior.
-		 **/
-		void updateInnerOccupancy();
-
-
-		/// integrate a "hit" measurement according to the tree's sensor model
+		/// integrate a "hit" measurement according to the grid's sensor model
 		virtual void integrateHit(NODE* occupancyNode) const;
-		/// integrate a "miss" measurement according to the tree's sensor model
+		/// integrate a "miss" measurement according to the grid's sensor model
 		virtual void integrateMiss(NODE* occupancyNode) const;
 		/// update logodds value of node by adding to the current value.
 		virtual void updateNodeLogOdds(NODE* occupancyNode, const float& update) const;
 
-		/// converts the node to the maximum likelihood value according to the tree's parameter for "occupancy"
+		/// converts the node to the maximum likelihood value according to the grid's parameter for "occupancy"
 		virtual void nodeToMaxLikelihood(NODE* occupancyNode) const;
-		/// converts the node to the maximum likelihood value according to the tree's parameter for "occupancy"
+		/// converts the node to the maximum likelihood value according to the grid's parameter for "occupancy"
 		virtual void nodeToMaxLikelihood(NODE& occupancyNode) const;
 
 	protected:
-		/// Constructor to enable derived classes to change tree constants.
-		/// This usually requires a re-implementation of some core tree-traversal functions as well!
-		OccupancyGrid2DBase(double resolution, unsigned int tree_max_val);
+		/// Constructor to enable derived classes to change grid constants.
+		/// This usually requires a re-implementation of some core grid-traversal functions as well!
+		OccupancyGrid2DBase(double resolution, unsigned int grid_max_val);
 
 		/**
 		 * Traces a ray from origin to end and updates all voxels on the

@@ -102,7 +102,6 @@ namespace gridmap2D {
 
 
 	void Pointcloud::transformAbsolute(pose3d transform) {
-
 		// undo previous transform, then apply current transform
 		pose3d transf = current_inv_transform * transform;
 
@@ -115,7 +114,6 @@ namespace gridmap2D {
 
 
 	void Pointcloud::rotate(double rot) {
-
 		for (unsigned int i = 0; i < points.size(); i++) {
 			points[i].rotate_IP(rot);
 		}
@@ -207,57 +205,10 @@ namespace gridmap2D {
 #endif
 	}
 
-
-/*	void Pointcloud::writeVrml(std::string filename){
-
-		std::ofstream outfile(filename.c_str());
-
-		outfile << "#VRML V2.0 utf8" << std::endl;
-		outfile << "Transform {" << std::endl;
-		outfile << "translation 0 0 0" << std::endl;
-		outfile << "rotation 0 0 0 0" << std::endl;
-		outfile << "  children [" << std::endl;
-		outfile << "     Shape{" << std::endl;
-		outfile << "  geometry PointSet {" << std::endl;
-		outfile << "      coord Coordinate {" << std::endl;
-		outfile << "          point [" << std::endl;
-
-		QUADMAP_DEBUG_STR("PointCloud::writeVrml writing "
-			<< points.size() << " points to "
-			<< filename.c_str() << ".");
-
-		for (unsigned int i = 0; i < (points.size()); i++){
-			outfile << "\t\t" << (points[i])(0)
-				<< " " << (points[i])(1)
-				<< "\n";
-		}
-
-		outfile << "                 ]" << std::endl;
-		outfile << "      }" << std::endl;
-		outfile << "    color Color{" << std::endl;
-		outfile << "              color [" << std::endl;
-
-		for (unsigned int i = 0; i < points.size(); i++){
-			outfile << "\t\t 1.0 1.0 1.0 \n";
-		}
-
-		outfile << "                 ]" << std::endl;
-		outfile << "      }" << std::endl;
-
-		outfile << "   }" << std::endl;
-		outfile << "     }" << std::endl;
-
-
-		outfile << "  ]" << std::endl;
-		outfile << "}" << std::endl;
-
-
-	}*/
-
 	std::istream& Pointcloud::read(std::istream &s){
 		while (!s.eof()){
 			point2d p;
-			for (unsigned int i = 0; i < 3; i++){
+			for (unsigned int i = 0; i < 2; i++){
 				s >> p(i);
 			}
 			if (!s.fail()){
@@ -273,7 +224,7 @@ namespace gridmap2D {
 
 	std::istream& Pointcloud::readBinary(std::istream &s) {
 
-		unsigned int pc_size = 0;
+		size_t pc_size = 0;
 		s.read((char*)&pc_size, sizeof(pc_size));
 		GRIDMAP2D_DEBUG("Reading %d points from binary file...", pc_size);
 

@@ -40,7 +40,6 @@
 
 #include <gridmap2D/math/Vector2.h>
 #include <gridmap2D/math/Pose3D.h>
-#include <gridmap2D/gridmap2D_deprecated.h>
 
 namespace gridmap2D {
 
@@ -53,7 +52,7 @@ namespace gridmap2D {
 	typedef std::list<gridmath2D::Vector2>    point2d_list;
 
 	/// A voxel defined by its center point2d and its side length
-	typedef std::pair<point2d, double>		QuadTreeVolume;
+	typedef std::pair<point2d, double>		  Grid2DVolume;
 
 }
 

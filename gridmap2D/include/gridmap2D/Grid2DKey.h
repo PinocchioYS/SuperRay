@@ -66,9 +66,9 @@ namespace gridmap2D {
 	typedef uint16_t key_type;
 
 	/**
-	 * QuadTreeKey is a container class for internal key addressing. The keys count the
+	 * Grid2DKey is a container class for internal key addressing. The keys count the
 	 * number of cells (voxels) from the origin as discrete address of a voxel.
-	 * @see QuadTreeBaseImpl::coordToKey() and QuadTreeBaseImpl::keyToCoord() for conversions.
+	 * @see Grid2DBaseImpl::coordToKey() and Grid2DBaseImpl::keyToCoord() for conversions.
 	 */
 	class Grid2DKey {
 
@@ -130,7 +130,7 @@ namespace gridmap2D {
 
 	/**
 	 * Data structrure to efficiently track changed nodes as a combination of
-	 * OcTreeKeys and a bool flag (to denote newly created nodes)
+	 * Grid2DKeys and a bool flag (to denote newly created nodes)
 	 *
 	 */
 	typedef unordered_ns::unordered_map<Grid2DKey, bool, Grid2DKey::KeyHash> KeyBoolMap;

@@ -110,8 +110,7 @@ namespace gridmath2D {
 	}
 
 	bool Pose3D::operator==(const Pose3D& other) const {
-		return translation == other.translation
-			&& rotation == other.rotation;
+		return translation == other.translation && rotation == other.rotation;
 	}
 
 	bool Pose3D::operator!=(const Pose3D& other) const {
@@ -121,15 +120,14 @@ namespace gridmath2D {
 	std::istream& Pose3D::read(std::istream &s) {
 		translation.read(s);
 		int temp; // should be 1
-		s >> temp >> rotation; 
+		s >> temp >> rotation;
 		return s;
 	}
 
 
 	std::ostream& Pose3D::write(std::ostream &s) const {
 		translation.write(s);
-		s << " ";
-		s << 1 << rotation;
+		s << " " << 1 << " " << rotation;
 		return s;
 	}
 

@@ -40,70 +40,48 @@
 namespace gridmath2D {
 
 	/*!
-	 * \brief This class represents a two-dimensional vector
-	 */
+	* \brief This class represents a two-dimensional vector
+	*/
 
 	class Vector2 {
 	public:
 
 		/*!
-		 * \brief Default constructor
-		 */
+		* \brief Default constructor
+		*/
 		Vector2() { data[0] = data[1] = 0.0; }
 
 		/*!
-		 * \brief Copy constructor
-		 *
-		 * @param other a vector of dimension 2
-		 */
+		* \brief Copy constructor
+		*
+		* @param other a vector of dimension 2
+		*/
 		Vector2(const Vector2& other) {
 			data[0] = other(0);
 			data[1] = other(1);
 		}
 
 		/*!
-		 * \brief Constructor
-		 *
-		 * Constructs a two-dimensional vector from
-		 * three single values x, y or roll, pitch, yaw
-		 */
+		* \brief Constructor
+		*
+		* Constructs a two-dimensional vector from
+		* three single values x, y
+		*/
 		Vector2(float x, float y) {
 			data[0] = x;
 			data[1] = y;
 		}
 
-		/* inline Eigen3::Vector3f getVector3f() const { return Eigen3::Vector3f(data[0], data[1], data[2]) ; } */
-		/* inline Eigen3::Vector4f& getVector4f() { return data; } */
-		/* inline Eigen3::Vector4f getVector4f() const { return data; } */
-
 		/*!
-		 * \brief Assignment operator
-		 *
-		 * @param other a vector of dimension 2
-		 */
+		* \brief Assignment operator
+		*
+		* @param other a vector of dimension 2
+		*/
 		inline Vector2& operator= (const Vector2& other)  {
 			data[0] = other(0);
 			data[1] = other(1);
 			return *this;
 		}
-
-
-		/*!
-		 * \brief Two-dimensional vector (cross) product
-		 *
-		 * Calculates the two-dimensional cross product, which
-		 * represents the vector orthogonal to the plane defined
-		 * by this and other.
-		 * @return this x other
-		 */
-		/*inline Vector3 cross (const Vector3& other) const
-		{
-			//return (data.start<3> ().cross (other.data.start<3> ()));
-			// \note should this be renamed?
-			return Vector3(y()*other.z() - z()*other.y(),
-					z()*other.x() - x()*other.z(),
-					x()*other.y() - y()*other.x());
-		}*/
 
 		/// dot product
 		inline double dot(const Vector2& other) const
@@ -139,36 +117,6 @@ namespace gridmath2D {
 		{
 			return operator()(1);
 		}
-
-		/*inline float& roll()
-		{
-			return operator()(0);
-		}
-
-		inline float& pitch()
-		{
-			return operator()(1);
-		}
-
-		inline float& yaw()
-		{
-			return operator()(2);
-		}
-
-		inline const float& roll() const
-		{
-			return operator()(0);
-		}
-
-		inline const float& pitch() const
-		{
-			return operator()(1);
-		}
-
-		inline const float& yaw() const
-		{
-			return operator()(2);
-		}*/
 
 		inline Vector2 operator- () const
 		{
@@ -280,13 +228,10 @@ namespace gridmath2D {
 
 	protected:
 		float data[2];
-
 	};
 
-
 	//! user friendly output in format (x y)
-	std::ostream& operator<<(std::ostream& out, gridmath2D::Vector2 const& v);
-
+	std::ostream& operator<<(std::ostream& out, Vector2 const& v);
 }
 
 

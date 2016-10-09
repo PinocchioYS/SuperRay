@@ -51,13 +51,6 @@ namespace gridmap3D {
 		/// Default constructor, sets resolution of leafs
 		Grid3D(double resolution);
 
-		/**
-		 * Reads a Grid3D from a file
-		 * @param _filename
-		 *
-		 */
-		Grid3D(std::string _filename);
-
 		virtual ~Grid3D(){};
 
 		/// virtual constructor: creates a new object of same type
@@ -71,7 +64,7 @@ namespace gridmap3D {
 		/**
 		 * Static member object which ensures that this Grid3D's prototype
 		 * ends up in the classIDMapping only once. You need this as a
-		 * static member in any derived grid3D class in order to read .g3t
+		 * static member in any derived grid3D class in order to read .ot
 		 * files through the AbstractGrid3D factory. You should also call
 		 * ensureLinking() once from the constructor.
 		 */

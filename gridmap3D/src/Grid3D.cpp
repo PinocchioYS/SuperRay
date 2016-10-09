@@ -40,13 +40,6 @@ namespace gridmap3D {
 		grid3DMemberInit.ensureLinking();
 	};
 
-	Grid3D::Grid3D(std::string _filename)
-	: OccupancyGrid3DBase<Grid3DNode>(0.1)  { // resolution will be set according to tree file
-		std::ifstream inputfile(_filename);
-		readData(inputfile);
-		inputfile.close();
-	}
-
 	Grid3D::StaticMemberInitializer Grid3D::grid3DMemberInit;
 
 } // namespace

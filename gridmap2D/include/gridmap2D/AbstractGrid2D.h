@@ -31,8 +31,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef QUADMAP_ABSTRACT_GRID2D_H
-#define QUADMAP_ABSTRACT_GRID2D_H
+#ifndef GRIDMAP2D_ABSTRACT_GRID2D_H
+#define GRIDMAP2D_ABSTRACT_GRID2D_H
 
 #include <cstddef>
 #include <fstream>
@@ -43,8 +43,8 @@
 namespace gridmap2D {
 
 	/**
-	 * This abstract class is an interface to all quadtrees and provides a
-	 * factory design pattern for readin and writing all kinds of QuadTrees
+	 * This abstract class is an interface to all gridmap2Ds and provides a
+	 * factory design pattern for readin and writing all kinds of Grid2Ds
 	 * to files (see read()).
 	 */
 	class AbstractGrid2D {
@@ -70,55 +70,48 @@ namespace gridmap2D {
 		virtual void getMetricMax(double& x, double& y) const = 0;
 		virtual void getMetricSize(double& x, double& y) = 0;
 
-//		virtual void prune() = 0;
-//		virtual void expand() = 0;
 		virtual void clear() = 0;
 
-		//-- Iterator tree access
+		//-- Iterator grid access
 
 		// default iterator is leaf_iterator
 //		class iterator_base;
 
-		/// Write file header and complete tree to file (serialization)
+		/// Write file header and complete grid to file (serialization)
 		bool write(const std::string& filename) const;
-		/// Write file header and complete tree to stream (serialization)
+		/// Write file header and complete grid to stream (serialization)
 		bool write(std::ostream& s) const;
 
 		/**
-		 * Creates a certain OcTree (factory pattern)
+		 * Creates a certain Grid2D (factory pattern)
 		 *
-		 * @param id unique ID of OcTree
-		 * @param res resolution of OcTree
-		 * @return pointer to newly created OcTree (empty). NULL if the ID is unknown!
+		 * @param id unique ID of Grid2D
+		 * @param res resolution of Grid2D
+		 * @return pointer to newly created Grid2D (empty). NULL if the ID is unknown!
 		 */
 		static AbstractGrid2D* createGrid(const std::string id, double res);
 
 		/**
 		 * Read the file header, create the appropriate class and deserialize.
-		 * This creates a new octree which you need to delete yourself. If you
-		 * expect or requre a specific kind of octree, use dynamic_cast afterwards:
-		 * @code
-		 * AbstractOcTree* tree = AbstractOcTree::read("filename.ot");
-		 * OcTree* octree = dynamic_cast<OcTree*>(tree);
-		 *
-		 * @endcode
+		 * This creates a new grid2D which you need to delete yourself. If you
+		 * expect or requre a specific kind of grid2D, use dynamic_cast afterwards
 		 */
 		static AbstractGrid2D* read(const std::string& filename);
 
 		/// Read the file header, create the appropriate class and deserialize.
-		/// This creates a new octree which you need to delete yourself.
+		/// This creates a new grid2D which you need to delete yourself.
 		static AbstractGrid2D* read(std::istream &s);
 
 		/**
 		 * Read all nodes from the input stream (without file header),
-		 * for this the tree needs to be already created.
+		 * for this the grid needs to be already created.
 		 * For general file IO, you
-		 * should probably use AbstractOcTree::read() instead.
+		 * should probably use AbstractGrid2D::read() instead.
 		 */
 		virtual std::istream& readData(std::istream &s) = 0;
 
-		/// Write complete state of tree to stream (without file header) unmodified.
-		/// Pruning the tree first produces smaller files (lossless compression)
+		/// Write complete state of grid to stream (without file header) unmodified.
+		/// Pruning the grid first produces smaller files (lossless compression)
 		virtual std::ostream& writeData(std::ostream &s) const = 0;
 	private:
 		/// create private store, Construct on first use

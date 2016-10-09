@@ -45,8 +45,7 @@ namespace gridmap3D {
 
 	/**
 	 * Interface class for all grid types that store occupancy. This serves
-	 * as a common base class e.g. for polymorphism and contains common code
-	 * for reading and writing binary grids.
+	 * as a common base class
 	 */
 	class AbstractOccupancyGrid3D : public AbstractGrid3D {
 	public:
@@ -156,8 +155,6 @@ namespace gridmap3D {
 		float getClampingThresMaxLog() const { return clamping_thres_max; }
 
 	protected:
-		/// Try to read the old binary format for conversion, will be removed in the future
-		bool readBinaryLegacyHeader(std::istream &s, unsigned int& size, double& res);
 
 		// occupancy parameters of grid, stored in logodds:
 		float clamping_thres_min;

@@ -46,7 +46,7 @@ namespace gridmap2D {
 	Grid2DNode::Grid2DNode()
 		: Grid2DDataNode<float>(0.0)
 	{
-		}
+	}
 
 	Grid2DNode::~Grid2DNode(){
 	}

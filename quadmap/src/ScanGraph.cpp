@@ -188,7 +188,6 @@ namespace quadmap {
 
 		if ((first != 0) && (second != 0)) {
 			edges.push_back(new ScanEdge(first, second, constraint));
-			//      OCTOMAP_DEBUG("ScanGraph::AddEdge %d --> %d\n", first->id, second->id);
 			return edges.back();
 		}
 		else {
@@ -461,19 +460,16 @@ namespace quadmap {
 					std::string tmp;
 					ss >> tmp >> x >> y >> rot;
 					pose3d pose(x, y, rot);
-					//std::cout << "Pose "<< pose << " found.\n";
 					currentNode->pose = pose;
 				}
 				else{
 					if (currentNode == NULL){
-						// TODO: allow "simple" pc files by setting initial Scan Pose to (0,0,0)
 						QUADMAP_ERROR_STR("Error parsing log file, no Scan to add point to!");
 						break;
 					}
 					float x, y;
 					ss >> x >> y;
 
-					//std::cout << "Point "<< x << "," <<y <<"," <<z << " found.\n";
 					currentNode->scan->push_back(x, y);
 				}
 			}

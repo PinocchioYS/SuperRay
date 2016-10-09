@@ -77,7 +77,7 @@ namespace gridmap2D {
 		s << " " << this->id;  // export pose for human editor
 		s << " ";
 		this->pose.trans().write(s);
-		s << " " << 1 << pose.rot();
+		s << " " << 1 << " " << pose.rot();
 		s << std::endl;
 		return s;
 	}
@@ -189,7 +189,6 @@ namespace gridmap2D {
 
 		if ((first != 0) && (second != 0)) {
 			edges.push_back(new ScanEdge(first, second, constraint));
-			//      OCTOMAP_DEBUG("ScanGraph::AddEdge %d --> %d\n", first->id, second->id);
 			return edges.back();
 		}
 		else {
@@ -460,19 +459,16 @@ namespace gridmap2D {
 					std::string tmp;
 					ss >> tmp >> x >> y >> rot;
 					pose3d pose(x, y, rot);
-					//std::cout << "Pose "<< pose << " found.\n";
 					currentNode->pose = pose;
 				}
 				else{
 					if (currentNode == NULL){
-						// TODO: allow "simple" pc files by setting initial Scan Pose to (0,0,0)
 						GRIDMAP2D_ERROR_STR("Error parsing log file, no Scan to add point to!");
 						break;
 					}
 					float x, y;
 					ss >> x >> y;
 
-					//std::cout << "Point "<< x << "," <<y <<"," <<z << " found.\n";
 					currentNode->scan->push_back(x, y);
 				}
 			}
@@ -566,28 +562,11 @@ namespace gridmap2D {
 			(*it)->constraint = (first->pose).inv() * second->pose;
 		}
 
-		// constraints and nodes are inconsistent, rewire graph
-		//     for (unsigned int i=0; i<this->edges.size(); i++) delete edges[i];
-		//     this->edges.clear();
-
-
-		//     ScanGraph::iterator first_it = this->begin();
-		//     ScanGraph::iterator second_it = first_it+1;
-
-		//     for ( ; second_it != this->end(); first_it++, second_it++) {
-		//       ScanNode* first = (*first_it);
-		//       ScanNode* second = (*second_it);
-		//       octomath::Pose6D c =  (first->pose).inv() * second->pose;
-		//       this->addEdge(first, second, c);
-		//     }
-
-
 		return s;
 	}
 
 
 	void ScanGraph::cropEachScan(point2d lowerBound, point2d upperBound) {
-
 		for (ScanGraph::iterator it = this->begin(); it != this->end(); it++) {
 			((*it)->scan)->crop(lowerBound, upperBound);
 		}
@@ -595,8 +574,6 @@ namespace gridmap2D {
 
 
 	void ScanGraph::crop(point2d lowerBound, point2d upperBound) {
-
-
 		// for all node in graph...
 		for (ScanGraph::iterator it = this->begin(); it != this->end(); it++) {
 			pose3d scan_pose = (*it)->pose;

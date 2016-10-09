@@ -50,23 +50,22 @@ namespace gridmap2D {
 	class AbstractGrid2DNode;
 
 	/**
-	 * OcTree base class, to be used with with any kind of OcTreeDataNode.
+	 * Grid2D base class, to be used with with any kind of Grid2DDataNode.
 	 *
-	 * This tree implementation currently has a maximum depth of 16
-	 * nodes. For this reason, coordinates values have to be, e.g.,
-	 * below +/- 327.68 meters (2^15) at a maximum resolution of 0.01m.
+	 * Coordinates values are below +/- 327.68 meters (2^15) at a maximum
+	 * resolution of 0.01m.
 	 *
 	 * This limitation enables the use of an efficient key generation
 	 * method which uses the binary representation of the data point
 	 * coordinates.
 	 *
 	 * \note You should probably not use this class directly, but
-	 * QuadTreeBase or OccupancyQuadTreeBase instead
+	 * Grid2DBase or OccupancyGrid2DBase instead
 	 *
-	 * \tparam NODE Node class to be used in tree (usually derived from
-	 *    QuadTreeDataNode)
+	 * \tparam NODE Node class to be used in grid (usually derived from
+	 *    Grid2DDataNode)
 	 * \tparam INTERFACE Interface to be derived from, should be either
-	 *    AbstractQuadTree or AbstractOccupancyQuadTree
+	 *    AbstractGrid2D or AbstractOccupancyGrid2D
 	 */
 	template <class NODE, class INTERFACE>
 	class Grid2DBaseImpl : public INTERFACE {
@@ -87,96 +86,96 @@ namespace gridmap2D {
 
 
 		/**
-		 * Swap contents of two gridmaps, i.e., only the underlying
-		 * pointer / tree structure. You have to ensure yourself that the
+		 * Swap contents of two grids, i.e., only the underlying
+		 * pointer. You have to ensure yourself that the
 		 * metadata (resolution etc) matches. No memory is cleared
 		 * in this function
 		 */
 		void swapContent(Grid2DBaseImpl<NODE, INTERFACE>& rhs);
 
-		/// Comparison between two octrees, all meta data, all
+		/// Comparison between two grids, all meta data, all
 		/// nodes, and the structure must be identical
-		// bool operator== (const Grid2DBaseImpl<NODE, INTERFACE>& rhs) const;
+//		bool operator== (const Grid2DBaseImpl<NODE, INTERFACE>& rhs) const;
 
 		std::string getGridType() const { return "Grid2DBaseImpl"; }
 
-		/// Change the resolution of the quadtree, scaling all voxels.
+		/// Change the resolution of the grid2D, scaling all voxels.
 		/// This will not preserve the (metric) scale!
 		void setResolution(double r);
 		inline double getResolution() const { return resolution; }
 
-		// inline double getNodeSize(unsigned depth) const { assert(depth <= tree_depth); return sizeLookupTable[depth]; }
-
 		/**
 		 * Clear KeyRay vector to minimize unneeded memory. This is only
 		 * useful for the StaticMemberInitializer classes, don't call it for
-		 * an quadtree that is actually used.
+		 * a grid2D that is actually used.
 		 */
 		void clearKeyRays(){
 			keyrays.clear();
 		}
 
 		/**
-		 *  Search node at specified depth given a 2d point.
+		* \return Pointer to the grid. This pointer
+		* should not be modified or deleted externally, the Grid2D
+		* manages its memory itself.
+		*/
+		typedef unordered_ns::unordered_map<Grid2DKey, NODE*, Grid2DKey::KeyHash> OccupancyGridMap;
+		inline OccupancyGridMap* getGrid() const { return gridmap; }
+
+		/**
+		 *  Search node given a 2d point (x, y).
 		 *  You need to check if the returned node is NULL, since it can be in unknown space.
 		 *  @return pointer to node if found, NULL otherwise
 		 */
 		NODE* search(double x, double y) const;
 
 		/**
-		 *  Search node at specified depth given a 2d point (depth=0: search full tree depth)
+		 *  Search node given a 2d point (point2d).
 		 *  You need to check if the returned node is NULL, since it can be in unknown space.
 		 *  @return pointer to node if found, NULL otherwise
 		 */
 		NODE* search(const point2d& value) const;
 
 		/**
-		 *  Search a node at specified depth given an addressing key (depth=0: search full tree depth)
+		 *  Search a node given an addressing key
 		 *  You need to check if the returned node is NULL, since it can be in unknown space.
 		 *  @return pointer to node if found, NULL otherwise
 		 */
 		NODE* search(const Grid2DKey& key) const;
 
 		/**
-		 *  Delete a node (if exists) given a 2d point. Will always
-		 *  delete at the lowest level unless depth !=0, and expand pruned inner nodes as needed.
-		 *  Pruned nodes at level "depth" will directly be deleted as a whole.
+		 *  Delete a node (if exists) given a 2d point (x, y).
 		 */
 		bool deleteNode(double x, double y);
 
 		/**
-		 *  Delete a node (if exists) given a 2d point. Will always
-		 *  delete at the lowest level unless depth !=0, and expand pruned inner nodes as needed.
-		 *  Pruned nodes at level "depth" will directly be deleted as a whole.
+		 *  Delete a node (if exists) given a 2d point (point2d).
 		 */
 		bool deleteNode(const point2d& value);
 
 		/**
-		 *  Delete a node (if exists) given an addressing key. Will always
-		 *  delete at the lowest level unless depth !=0, and expand pruned inner nodes as needed.
-		 *  Pruned nodes at level "depth" will directly be deleted as a whole.
+		 *  Delete a node (if exists) given an addressing key.
 		 */
 		bool deleteNode(const Grid2DKey& key);
 
-		/// Deletes the complete tree structure
+		/// Deletes the complete grid structure
 		void clear();
 
 		// -- statistics  ----------------------
 
-		/// \return The number of nodes in the tree
+		/// \return The number of nodes in the grid
 		virtual inline size_t size() const { return gridmap->size(); }
 
-		/// \return Memory usage of the complete octree in bytes (may vary between architectures)
+		/// \return Memory usage of the complete grid2D in bytes (may vary between architectures)
 		virtual size_t memoryUsage() const;	// Add HashTable?
 
-		/// \return Memory usage of a single octree node
+		/// \return Memory usage of a single grid2D node
 		virtual inline size_t memoryUsageNode() const { return sizeof(NODE); };
 
 		double volume();
 
-		/// Size of QuadTree (all known space) in meters for x and y dimension
+		/// Size of Grid2D (all known space) in meters for x and y dimension
 		virtual void getMetricSize(double& x, double& y);
-		/// Size of QuadTree (all known space) in meters for x and y dimension
+		/// Size of Grid2D (all known space) in meters for x and y dimension
 		virtual void getMetricSize(double& x, double& y) const;
 		/// minimum value of the bounding box of all known space in x, y
 		virtual void getMetricMin(double& x, double& y);
@@ -187,8 +186,6 @@ namespace gridmap2D {
 		/// maximum value of the bounding box of all known space in x, y
 		void getMetricMax(double& x, double& y) const;
 
-		// -- access tree nodes  ------------------
-
 		/// return centers of leafs that do NOT exist (but could) in a given bounding box
 		// void getUnknownLeafCenters(point2d_list& node_centers, point2d pmin, point2d pmax, unsigned int depth = 0) const; - To do.
 
@@ -197,13 +194,13 @@ namespace gridmap2D {
 
 		/**
 		 * Traces a ray from origin to end (excluding), returning an
-		 * QuadTreeKey of all nodes traversed by the beam. You still need to check
+		 * Grid2DKey of all nodes traversed by the beam. You still need to check
 		 * if a node at that coordinate exists (e.g. with search()).
 		 *
 		 * @param origin start coordinate of ray
 		 * @param end end coordinate of ray
 		 * @param ray KeyRay structure that holds the keys of all nodes traversed by the ray, excluding "end"
-		 * @return Success of operation. Returning false usually means that one of the coordinates is out of the QuadTree's range
+		 * @return Success of operation. Returning false usually means that one of the coordinates is out of the Grid2D's range
 		 */
 		bool computeRayKeys(const point2d& origin, const point2d& end, KeyRay& ray) const;
 
@@ -217,7 +214,7 @@ namespace gridmap2D {
 		 * @param origin start coordinate of ray
 		 * @param end end coordinate of ray
 		 * @param ray KeyRay structure that holds the keys of all nodes traversed by the ray, excluding "end"
-		 * @return Success of operation. Returning false usually means that one of the coordinates is out of the QuadTree's range
+		 * @return Success of operation. Returning false usually means that one of the coordinates is out of the Grid2D's range
 		 */
 		bool computeRay(const point2d& origin, const point2d& end, std::vector<point2d>& ray);
 
@@ -226,17 +223,14 @@ namespace gridmap2D {
 
 		/**
 		 * Read all nodes from the input stream (without file header),
-		 * for this the tree needs to be already created.
+		 * for this the grid needs to be already created.
 		 * For general file IO, you
-		 * should probably use AbstractQuadTree::read() instead.
+		 * should probably use AbstractGrid2D::read() instead.
 		 */
-		std::istream& readData(std::istream &s); // - To do.
+		std::istream& readData(std::istream &s);
 
-		/// Write complete state of tree to stream (without file header) unmodified.
-		/// Pruning the tree first produces smaller files (lossless compression)
-		std::ostream& writeData(std::ostream &s) const;  // - To do.
-
-//		typedef OccupancyGridMap::iterator Map_iterator;
+		/// Write complete state of grid to stream (without file header) unmodified.
+		std::ostream& writeData(std::ostream &s) const;
 
 		/// @return beginning of the tree as leaf iterator
 //		const OccupancyGridMap::iterator begin() const { return gridmap->begin(); }
@@ -273,11 +267,7 @@ namespace gridmap2D {
 			return ((int)floor(resolution_factor * coordinate)) + grid_max_val;
 		}
 
-		/// Converts from a single coordinate into a discrete key at a given depth
-		// key_type coordToKey(double coordinate, unsigned depth) const;
-
-
-		/// Converts from a23D coordinate into a 2D addressing key
+		/// Converts from a 2D coordinate into a 2D addressing key
 		inline Grid2DKey coordToKey(const point2d& coord) const{
 			return Grid2DKey(coordToKey(coord(0)), coordToKey(coord(1)));
 		}
@@ -288,21 +278,21 @@ namespace gridmap2D {
 		}
 
 		/**
-		 * Converts a 2D coordinate into a 2D OcTreeKey, with boundary checking.
+		 * Converts a 2D coordinate into a 2D Grid2DKey, with boundary checking.
 		 *
 		 * @param coord 2d coordinate of a point
 		 * @param key values that will be computed, an array of fixed size 2.
-		 * @return true if point is within the quadtree (valid), false otherwise
+		 * @return true if point is within the grid2D (valid), false otherwise
 		 */
 		bool coordToKeyChecked(const point2d& coord, Grid2DKey& key) const;
 
 		/**
-		 * Converts a 2D coordinate into a 2D OcTreeKey, with boundary checking.
+		 * Converts a 2D coordinate into a 2D Grid2DKey, with boundary checking.
 		 *
 		 * @param x
 		 * @param y
 		 * @param key values that will be computed, an array of fixed size 2.
-		 * @return true if point is within the quadtree (valid), false otherwise
+		 * @return true if point is within the grid2D (valid), false otherwise
 		 */
 		bool coordToKeyChecked(double x, double y, Grid2DKey& key) const;
 
@@ -311,55 +301,49 @@ namespace gridmap2D {
 		 *
 		 * @param coordinate 2d coordinate of a point
 		 * @param key discrete 16 bit adressing key, result
-		 * @return true if coordinate is within the quadtree bounds (valid), false otherwise
+		 * @return true if coordinate is within the grid2D bounds (valid), false otherwise
 		 */
 		bool coordToKeyChecked(double coordinate, key_type& key) const;
 
-		/// converts from a discrete key at the lowest tree level into a coordinate
-		/// corresponding to the key's center
+		/// converts from a discrete key into a coordinate corresponding to the key's center
 		inline double keyToCoord(key_type key) const{
 			return (double((int)key - (int) this->grid_max_val) + 0.5) * this->resolution;
 		}
 
-		/// converts from an addressing key at the lowest tree level into a coordinate
-		/// corresponding to the key's center
+		/// converts from an addressing key into a coordinate corresponding to the key's center
 		inline point2d keyToCoord(const Grid2DKey& key) const{
 			return point2d(float(keyToCoord(key[0])), float(keyToCoord(key[1])));
 		}
 
 	protected:
-		/// Constructor to enable derived classes to change tree constants.
-		/// This usually requires a re-implementation of some core tree-traversal functions as well!
+		/// Constructor to enable derived classes to change grid constants.
+		/// This usually requires a re-implementation of some core grid-traversal functions as well!
 		Grid2DBaseImpl(double resolution, unsigned int grid_max_val);
 
 		/// initialize non-trivial members, helper for constructors
 		void init();
 
-		/// recalculates min and max in x, y. Does nothing when tree size didn't change.
+		/// recalculates min and max in x, y. Does nothing when grid size didn't change.
 		void calcMinMax();
 
 	private:
-		/// Assignment operator is private: don't (re-)assign quadtrees
+		/// Assignment operator is private: don't (re-)assign grid2D
 		/// (const-parameters can't be changed) -  use the copy constructor instead.
-		// QuadTreeBaseImpl<NODE, INTERFACE>& operator=(const QuadTreeBaseImpl<NODE, INTERFACE>&);
+		Grid2DBaseImpl<NODE, INTERFACE>& operator=(const Grid2DBaseImpl<NODE, INTERFACE>&);
 
 	protected:
-		// void allocNodeChildren(NODE* node);
-
-		// NODE* root; ///< Pointer to the root NODE, NULL for empty tree
-		typedef unordered_ns::unordered_map<Grid2DKey, NODE*, Grid2DKey::KeyHash> OccupancyGridMap;
 		OccupancyGridMap* gridmap;
 
-		// constants of the tree
+		// constants of the grid
 		const unsigned int grid_max_val;
 		double resolution;  ///< in meters
 		double resolution_factor; ///< = 1. / resolution
 
-		// size_t grid_size; ///< number of nodes in tree ( does not need, use gridmap->size();
-		/// flag to denote whether the quadtree extent changed (for lazy min/max eval)
+		// size_t grid_size; ///< number of nodes in grid ( does not need, use gridmap->size();
+		/// flag to denote whether the grid2D extent changed (for lazy min/max eval)
 		bool size_changed;
 
-		point2d grid_center;  // coordinate offset of tree
+		point2d grid_center;  // coordinate offset of grid
 
 		double max_value[2]; ///< max in x, y
 		double min_value[2]; ///< min in x, y

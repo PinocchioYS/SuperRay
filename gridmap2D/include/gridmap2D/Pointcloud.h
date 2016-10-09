@@ -69,13 +69,10 @@ namespace gridmap2D {
 		/// Add points from other Pointcloud
 		void push_back(const Pointcloud& other);
 
-		/// Export the Pointcloud to a VRML file
-		// void writeVrml(std::string filename);
-
 		/// Apply transform to each point
 		void transform(pose3d transform);
 
-		/// Rotate each point in pointcloud
+		/// Rotate each point in pointcloud along with Z axis
 		void rotate(double rot);
 
 		/// Apply transform to each point, undo previous transforms
@@ -83,10 +80,11 @@ namespace gridmap2D {
 
 		/// Calculate bounding box of Pointcloud
 		void calcBBX(point2d& lowerBound, point2d& upperBound) const;
+
 		/// Crop Pointcloud to given bounding box
 		void crop(point2d lowerBound, point2d upperBound);
 
-		// removes any points closer than [thres] to (0,0,0)
+		// removes any points closer than [thres] to (0, 0)
 		void minDist(double thres);
 
 		void subSampleRandom(unsigned int num_samples, Pointcloud& sample_cloud);
@@ -117,7 +115,6 @@ namespace gridmap2D {
 		pose3d               current_inv_transform;
 		point2d_collection   points;
 	};
-
 }
 
 

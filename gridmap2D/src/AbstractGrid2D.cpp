@@ -67,7 +67,7 @@ namespace gridmap2D {
 
 		// write the actual data:
 		writeData(s);
-		// TODO: ret.val, checks stream?
+
 		return true;
 	}
 
@@ -91,7 +91,7 @@ namespace gridmap2D {
 		std::string line;
 		std::getline(s, line);
 		if (line.compare(0, fileHeader.length(), fileHeader) != 0){
-			GRIDMAP2D_ERROR_STR("First line of QuadTree file header does not start with \"" << fileHeader);
+			GRIDMAP2D_ERROR_STR("First line of Grid2D file header does not start with \"" << fileHeader);
 			return NULL;
 		}
 

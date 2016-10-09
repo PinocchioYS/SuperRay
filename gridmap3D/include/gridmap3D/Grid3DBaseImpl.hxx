@@ -110,10 +110,6 @@ namespace gridmap3D {
 		OccupancyGridMap* this_gridmap = gridamp;
 		gridamp = other.gridamp;
 		other.gridamp = this_gridmap;
-
-		size_t this_size = this->tree_size;
-		this->tree_size = other.tree_size;
-		other.tree_size = this_size;
 	}
 
 /*	template <class NODE, class I>
@@ -206,7 +202,7 @@ namespace gridmap3D {
 
 	template <class NODE, class I>
 	NODE* Grid3DBaseImpl<NODE, I>::search(const Grid3DKey& key) const {
-		if (gridmap == NULL || gridmap->size() == 0)
+		if (gridmap->size() == 0)
 			return NULL;
 
 		OccupancyGridMap::iterator cell = gridmap->find(key);
@@ -242,7 +238,7 @@ namespace gridmap3D {
 
 	template <class NODE, class I>
 	bool Grid3DBaseImpl<NODE, I>::deleteNode(const Grid3DKey& key) {
-		if (gridmap == NULL || gridmap->size() == 0)
+		if (gridmap->size() == 0)
 			return true;
 
 		OccupancyGridMap::iterator cell = gridmap->find(key);
@@ -256,7 +252,8 @@ namespace gridmap3D {
 
 	template <class NODE, class I>
 	void Grid3DBaseImpl<NODE, I>::clear() {
-		gridmap->clear();
+		if (gridmap != NULL)
+			gridmap->clear();
 	}
 
 	template <class NODE, class I>
@@ -405,6 +402,7 @@ namespace gridmap3D {
 
 		size_t node_size = 0;
 		s.read((char*)&node_size, sizeof(node_size));
+		GRIDMAP3D_DEBUG_STR("Done (" << node_size << " nodes)");
 
 		size_changed = true;
 
@@ -415,9 +413,9 @@ namespace gridmap3D {
 		}
 
 		if (node_size > 0){
-			Grid3DKey key;
-			NODE* node;
 			for (unsigned int i = 0; i < node_size; i++){
+				NODE* node;
+				Grid3DKey key;
 				// Read key of grid node
 				s.read((char*)&(key[0]), sizeof(key[0]));
 				s.read((char*)&(key[1]), sizeof(key[1]));
@@ -476,7 +474,7 @@ namespace gridmap3D {
 			return;
 
 		// empty tree
-		if (gridmap == NULL || gridmap->size() == 0){
+		if (gridmap->size() == 0){
 			min_value[0] = min_value[1] = min_value[2] = 0.0;
 			max_value[0] = max_value[1] = max_value[2] = 0.0;
 			size_changed = false;
@@ -490,7 +488,7 @@ namespace gridmap3D {
 
 		for (typename Grid3DBaseImpl<NODE, I>::OccupancyGridMap::iterator it = this->gridmap->begin(), end = this->gridmap->end(); it != end; ++it)
 		{
-			double size = this->resolution;	// is it correct?
+			double size = this->resolution;
 			double halfSize = size / 2.0;
 			double x = keyToCoord(it->first[0]) - halfSize;
 			double y = keyToCoord(it->first[1]) - halfSize;
@@ -532,13 +530,13 @@ namespace gridmap3D {
 		mx = my = mz = std::numeric_limits<double>::max();
 		if (size_changed) {
 			// empty tree
-			if (gridmap == NULL || gridmap->size() == 0){
+			if (gridmap->size() == 0){
 				mx = my = mz = 0.0;
 				return;
 			}
 
 			for (typename Grid3DBaseImpl<NODE, I>::OccupancyGridMap::iterator it = this->gridmap->begin(), end = this->gridmap->end(); it != end; ++it) {
-				double halfSize = this->resolution / 2.0;	// is it correct?s
+				double halfSize = this->resolution / 2.0;
 				double x = keyToCoord(it->first[0]) - halfSize;
 				double y = keyToCoord(it->first[1]) - halfSize;
 				double z = keyToCoord(it->first[2]) - halfSize;
@@ -559,13 +557,13 @@ namespace gridmap3D {
 		mx = my = mz = -std::numeric_limits<double>::max();
 		if (size_changed) {
 			// empty tree
-			if (gridmap == NULL || gridmap->size() == 0){
+			if (gridmap->size() == 0){
 				mx = my = mz = 0.0;
 				return;
 			}
 
 			for (typename Grid3DBaseImpl<NODE, I>::OccupancyGridMap::iterator it = this->gridmap->begin(), end = this->gridmap->end(); it != end; ++it) {
-				double halfSize = this->resolution / 2.0;	// is it correct?
+				double halfSize = this->resolution / 2.0;
 				double x = keyToCoord(it->first[0]) + halfSize;
 				double y = keyToCoord(it->first[1]) + halfSize;
 				double z = keyToCoord(it->first[2]) + halfSize;
@@ -616,32 +614,6 @@ namespace gridmap3D {
 			}
 			p.y() = pmin.y();
 		}
-	}*/
-
-
-	/*template <class NODE, class I>
-	size_t Grid3DBaseImpl<NODE, I>::getNumLeafNodes() const {
-		if (root == NULL)
-			return 0;
-
-		return getNumLeafNodesRecurs(root);
-	}*/
-
-
-	/*template <class NODE, class I>
-	size_t Grid3DBaseImpl<NODE, I>::getNumLeafNodesRecurs(const NODE* parent) const {
-		assert(parent);
-
-		if (!nodeHasChildren(parent)) // this is a leaf -> terminate
-			return 1;
-
-		size_t sum_leafs_children = 0;
-		for (unsigned int i = 0; i < 4; ++i) {
-			if (nodeChildExists(parent, i)) {
-				sum_leafs_children += getNumLeafNodesRecurs(getNodeChild(parent, i));
-			}
-		}
-		return sum_leafs_children;
 	}*/
 
 	template <class NODE, class I>
