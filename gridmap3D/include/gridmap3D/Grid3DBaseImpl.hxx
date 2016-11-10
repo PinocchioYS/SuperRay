@@ -342,7 +342,7 @@ namespace gridmap3D {
 
 				// reached endpoint world coords?
 				// dist_from_origin now contains the length of the ray when traveled until the border of the current voxel
-				double dist_from_origin = std::min(tMax[0], tMax[1]);
+				double dist_from_origin = std::min(std::min(tMax[0], tMax[1]), tMax[2]);
 				// if this is longer than the expected ray length, we should have already hit the voxel containing the end point with the code above (key_end).
 				// However, we did not hit it due to accumulating discretization errors, so this is the point here to stop the ray as we would never reach the voxel key_end
 				if (dist_from_origin > length) {

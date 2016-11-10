@@ -607,13 +607,13 @@ namespace quadmap {
 			unsigned int dim;
 
 			// find minimum tMax:
-			dim = tMax[0] < tMax[1] ? 0 : 1;
-			/*if (tMax[0] < tMax[1]){
+			// dim = tMax[0] < tMax[1] ? 0 : 1;
+			if (tMax[0] < tMax[1]){
 				dim = 0;
 			}
 			else {
 				dim = 1;
-			}*/
+			}
 
 			// advance in direction "dim"
 			current_key[dim] += step[dim];
