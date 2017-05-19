@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 	double res = 0.1;
 	int threshold = 20;
 	std::string graphFilename = "";
-	std::string treeFilename = "";
+	std::string gridFilename = "";
 
 	timeval start;
 	timeval stop;
@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
 		if (!strcmp(argv[arg], "-i"))
 			graphFilename = std::string(argv[++arg]);
 		else if (!strcmp(argv[arg], "-o"))
-			treeFilename = std::string(argv[++arg]);
+			gridFilename = std::string(argv[++arg]);
 		else if (!strcmp(argv[arg], "-res") && argc - arg < 2)
 			printUsage(argv[0]);
 		else if (!strcmp(argv[arg], "-res"))
@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 			printUsage(argv[0]);
 		}
 	}
-	if (graphFilename == "" || treeFilename == "")
+	if (graphFilename == "" || gridFilename == "")
 		printUsage(argv[0]);
 
 	// Verify input
@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
 		(*scan_it)->pose = gridmap2D::pose3d(transformed_sensor_origin, 0);
 	}
 
-	std::cout << "\nCreating tree\n===========================\n";
+	std::cout << "\nCreating grid\n===========================\n";
 	gridmap2D::SuperRayGrid2D* grid = new gridmap2D::SuperRayGrid2D(res);
 
 	double time_to_update = 0.0;	// sec
@@ -92,11 +92,11 @@ int main(int argc, char** argv) {
 		currentScan++;
 	}
 
-	std::cout << "Done building tree." << std::endl;
+	std::cout << "Done building grid." << std::endl;
 	std::cout << "Time to insert scans (SR): " << time_to_update << " [sec]" << std::endl;
 	std::cout << "Time to insert 100.000 points took (SR): " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
 
-//	grid->writeBinary(treeFilename);
+//	grid->writeBinary(gridFilename);
 
 	delete graph;
 	delete grid;
