@@ -79,6 +79,8 @@ namespace octomap{
 		// Utility functions
 		typedef unordered_ns::unordered_map<octomap::OcTreeKey, std::vector<octomap::point3d>, octomap::OcTreeKey::KeyHash> Vexelized_Pointclouds;
 		void ComputeAxis(const octomap::point3d& _min, const octomap::point3d& _max, Axis3D& _axis);
+		inline bool GenerateSuperRays3D(const int _num_points, Axis3D& _axis, VoxelInfo& _voxelinfo);
+		inline bool GenerateSuperRays2D(const int _num_points, Axis3D& _axis, VoxelInfo& _voxelinfo);
 
 		// Re-implmentation for Key / coordinate conversion functions
 		inline octomap::OcTreeKey coordToKey(const octomap::point3d& coord) const {

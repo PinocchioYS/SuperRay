@@ -19,6 +19,18 @@ SET (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
 # COMPILER SETTINGS (default: Release) and flags
 INCLUDE(CompilerSettings)
 
+# SUPERRAY_OMP = enable OpenMP parallelization (defaults to OFF)
+SET(SUPERRAY_OMP FALSE CACHE BOOL "Enable/disable OpenMP parallelization")
+IF(DEFINED ENV{SUPERRAY_OMP})
+  SET(SUPERRAY_OMP $ENV{SUPERRAY_OMP})
+ENDIF(DEFINED ENV{SUPERRAY_OMP})
+IF(SUPERRAY_OMP)
+  FIND_PACKAGE( OpenMP REQUIRED)
+  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+  SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+ENDIF(SUPERRAY_OMP)
+
 # Set output directories for libraries and executables
 SET( BASE_DIR ${CMAKE_SOURCE_DIR} )
 SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BASE_DIR}/lib )
@@ -45,6 +57,7 @@ set(INSTALL_TARGETS_DEFAULT_ARGS
 	ARCHIVE DESTINATION lib
 )
 
+# Dependency of OctoMap Library
 find_package(octomap REQUIRED
   HINTS ${CMAKE_SOURCE_DIR}/lib/cmake/octomap
    ${CMAKE_SOURCE_DIR}/../octomap/lib/cmake/octomap
@@ -53,6 +66,36 @@ MESSAGE(STATUS "Found octomap version: " ${octomap_VERSION})
 MESSAGE(STATUS "octomap libraries: ${OCTOMAP_LIBRARIES}")
 
 INCLUDE_DIRECTORIES(${OCTOMAP_INCLUDE_DIRS})
+
+# Dependency of QuadMap
+find_package(quadmap REQUIRED
+  HINTS ${CMAKE_SOURCE_DIR}/lib/cmake/quadmap
+   ${CMAKE_SOURCE_DIR}/../quadmap/lib/cmake/quadmap
+)
+MESSAGE(STATUS "Found quadmap version: " ${quadmap_VERSION})
+MESSAGE(STATUS "quadmap libraries: ${QUADMAP_LIBRARIES}")
+
+INCLUDE_DIRECTORIES(${QUADMAP_INCLUDE_DIRS})
+
+# Dependency of GridMap3D
+find_package(gridmap3D REQUIRED
+  HINTS ${CMAKE_SOURCE_DIR}/lib/cmake/gridmap3D
+   ${CMAKE_SOURCE_DIR}/../gridmap3D/lib/cmake/gridmap3D
+)
+MESSAGE(STATUS "Found gridmap3D version: " ${gridmap3D_VERSION})
+MESSAGE(STATUS "gridmap3D libraries: ${GRIDMAP3D_LIBRARIES}")
+
+INCLUDE_DIRECTORIES(${GRIDMAP3D_INCLUDE_DIRS})
+
+# Dependency of GridMap2D
+find_package(gridmap2D REQUIRED
+  HINTS ${CMAKE_SOURCE_DIR}/lib/cmake/gridmap2D
+   ${CMAKE_SOURCE_DIR}/../gridmap2D/lib/cmake/gridmap2D
+)
+MESSAGE(STATUS "Found gridmap2D version: " ${gridmap2D_VERSION})
+MESSAGE(STATUS "gridmap2D libraries: ${GRIDMAP2D_LIBRARIES}")
+
+INCLUDE_DIRECTORIES(${QUADMAP_INCLUDE_DIRS})
 
 ADD_SUBDIRECTORY(src)
 
