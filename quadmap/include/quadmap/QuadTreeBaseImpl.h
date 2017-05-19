@@ -359,7 +359,7 @@ namespace quadmap {
 		key_type coordToKey(double coordinate, unsigned depth) const;
 
 
-		/// Converts from a23D coordinate into a 2D addressing key
+		/// Converts from a 2D coordinate into a 2D addressing key
 		inline QuadTreeKey coordToKey(const point2d& coord) const{
 			return QuadTreeKey(coordToKey(coord(0)), coordToKey(coord(1)));
 		}

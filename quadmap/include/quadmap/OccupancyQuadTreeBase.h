@@ -77,7 +77,7 @@ namespace quadmap {
 
 		/**
 		* Integrate a Pointcloud (in global reference frame), parallelized with OpenMP.
-		* Special care is taken that each voxel
+		* Special care is taken that each pixel
 		* in the map is updated only once, and occupied nodes have a preference over free ones.
 		* This avoids holes in the floor from mutual deletion and is more efficient than the plain
 		* ray insertion in insertPointCloudRays().
@@ -89,15 +89,15 @@ namespace quadmap {
 		* @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
 		* @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
 		*   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
-		* @param discretize whether the scan is discretized first into octree key cells (default: false).
+		* @param discretize whether the scan is discretized first into quadtree key cells (default: false).
 		*   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.*
 		*/
 		virtual void insertPointCloud(const Pointcloud& scan, const quadmap::point2d& sensor_origin,
 			double maxrange = -1., bool lazy_eval = false, bool discretize = false);
 
 		/**
-		* Integrate a 3d scan (transform scan before tree update), parallelized with OpenMP.
-		* Special care is taken that each voxel
+		* Integrate a 2d scan (transform scan before tree update), parallelized with OpenMP.
+		* Special care is taken that each pixel
 		* in the map is updated only once, and occupied nodes have a preference over free ones.
 		* This avoids holes in the floor from mutual deletion and is more efficient than the plain
 		* ray insertion in insertPointCloudRays().
@@ -117,7 +117,7 @@ namespace quadmap {
 			double maxrange = -1., bool lazy_eval = false, bool discretize = false);
 
 		/**
-		* Insert a 3d scan (given as a ScanNode) into the tree, parallelized with OpenMP.
+		* Insert a 2d scan (given as a ScanNode) into the tree, parallelized with OpenMP.
 		*
 		* @note replaces insertScan
 		*
@@ -145,7 +145,7 @@ namespace quadmap {
 		virtual void insertPointCloudRays(const Pointcloud& scan, const point2d& sensor_origin, double maxrange = -1., bool lazy_eval = false);
 
 		/**
-		 * Set log_odds value of voxel to log_odds_value. This only works if key is at the lowest
+		 * Set log_odds value of pixel to log_odds_value. This only works if key is at the lowest
 		 * quadtree level
 		 *
 		 * @param key QuadTreeKey of the NODE that is to be updated
@@ -157,7 +157,7 @@ namespace quadmap {
 		virtual NODE* setNodeValue(const QuadTreeKey& key, float log_odds_value, bool lazy_eval = false);
 
 		/**
-		 * Set log_odds value of voxel to log_odds_value.
+		 * Set log_odds value of pixel to log_odds_value.
 		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls setNodeValue() with it.
 		 *
 		 * @param value 2d coordinate of the NODE that is to be updated
@@ -169,7 +169,7 @@ namespace quadmap {
 		virtual NODE* setNodeValue(const point2d& value, float log_odds_value, bool lazy_eval = false);
 
 		/**
-		 * Set log_odds value of voxel to log_odds_value.
+		 * Set log_odds value of pixel to log_odds_value.
 		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls setNodeValue() with it.
 		 *
 		 * @param x
@@ -182,7 +182,7 @@ namespace quadmap {
 		virtual NODE* setNodeValue(double x, double y, float log_odds_value, bool lazy_eval = false);
 
 		/**
-		 * Manipulate log_odds value of a voxel by changing it by log_odds_update (relative).
+		 * Manipulate log_odds value of a pixel by changing it by log_odds_update (relative).
 		 * This only works if key is at the lowest quadtree level
 		 *
 		 * @param key QuadTreeKey of the NODE that is to be updated
@@ -194,7 +194,7 @@ namespace quadmap {
 		virtual NODE* updateNode(const QuadTreeKey& key, float log_odds_update, bool lazy_eval = false);
 
 		/**
-		 * Manipulate log_odds value of a voxel by changing it by log_odds_update (relative).
+		 * Manipulate log_odds value of a pixel by changing it by log_odds_update (relative).
 		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls updateNode() with it.
 		 *
 		 * @param value 2d coordinate of the NODE that is to be updated
@@ -206,7 +206,7 @@ namespace quadmap {
 		virtual NODE* updateNode(const point2d& value, float log_odds_update, bool lazy_eval = false);
 
 		/**
-		 * Manipulate log_odds value of a voxel by changing it by log_odds_update (relative).
+		 * Manipulate log_odds value of a pixel by changing it by log_odds_update (relative).
 		 * Looks up the QuadTreeKey corresponding to the coordinate and then calls updateNode() with it.
 		 *
 		 * @param x
@@ -299,15 +299,15 @@ namespace quadmap {
 			bool ignoreUnknownCells = false, double maxRange = -1.0) const;
 
 		/**
-		 * Retrieves the entry point of a ray into a voxel. This is the closest intersection point of the ray
+		 * Retrieves the entry point of a ray into a pixel. This is the closest intersection point of the ray
 		 * originating from origin and a plane of the axis aligned cube.
 		 *
 		 * @param[in] origin Starting point of ray
 		 * @param[in] direction A vector pointing in the direction of the raycast. Does not need to be normalized.
-		 * @param[in] center The center of the voxel where the ray terminated. This is the output of castRay.
-		 * @param[out] intersection The entry point of the ray into the voxel, on the voxel surface.
-		 * @param[in] delta A small increment to avoid ambiguity of beeing exactly on a voxel surface. A positive value will get the point out of the hit voxel, while a negative valuewill get it inside.
-		 * @return Whether or not an intesection point has been found. Either, the ray never cross the voxel or the ray is exactly parallel to the only surface it intersect.
+		 * @param[in] center The center of the pixel where the ray terminated. This is the output of castRay.
+		 * @param[out] intersection The entry point of the ray into the pixel, on the pixel surface.
+		 * @param[in] delta A small increment to avoid ambiguity of beeing exactly on a pixel surface. A positive value will get the point out of the hit pixel, while a negative valuewill get it inside.
+		 * @return Whether or not an intesection point has been found. Either, the ray never cross the pixel or the ray is exactly parallel to the only surface it intersect.
 		 */
 		virtual bool getRayIntersection(const point2d& origin, const point2d& direction, const point2d& center,
 			point2d& intersection, double delta = 0.0) const;
@@ -452,7 +452,7 @@ namespace quadmap {
 		OccupancyQuadTreeBase(double resolution, unsigned int tree_depth, unsigned int tree_max_val);
 
 		/**
-		 * Traces a ray from origin to end and updates all voxels on the
+		 * Traces a ray from origin to end and updates all pixels on the
 		 *  way as free.  The volume containing "end" is not updated.
 		 */
 		inline bool integrateMissOnRay(const point2d& origin, const point2d& end, bool lazy_eval = false);
