@@ -4,15 +4,11 @@
 #include <quadmap/quadmap_timing.h>
 #include <quadmap_superray/SuperRayQuadTree.h>
 
-// For experiments
-// #include <../../gridmap3D/include/gridmap3D/Grid3D.h>
-// #include <../../gridmap3D/include/gridmap3D/math/Quaternion.h>
-
 void printUsage(char* self){
 	std::cout << "USAGE: " << self << " [options]" << std::endl << std::endl;
 	std::cout << "This tool inserts the data of a scan graph file (point clouds with poses)" << std::endl;
-	std::cout << "into an octree using Super Ray based Updates method." << std::endl;
-	std::cout << "The output is a compact maximum-likelihood binary octree file(.bt, bonsai tree)." << std::endl;
+	std::cout << "into a qaudtree using Super Ray based Updates method." << std::endl;
+	std::cout << "The output is a compact maximum-likelihood binary quadtree file(.bt, bonsai tree)." << std::endl;
 
 	std::cout << "Options: " << std::endl;
 	std::cout << " -i <InputFile.graph> (required)" << std::endl;
@@ -100,59 +96,10 @@ int main(int argc, char** argv) {
 	std::cout << "Time to insert scans (SR): " << time_to_update << " [sec]" << std::endl;
 	std::cout << "Time to insert 100.000 points took (SR): " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
 
-//	tree->writeBinary(treeFilename);
+	tree->writeBinary(treeFilename);
 
 	delete graph;
 	delete tree;
 
 	return 0;
-
-/*	gridmap3D::ScanGraph* graph3D = new gridmap3D::ScanGraph();
-	if (!graph3D->readBinary(graphFilename)){
-		std::cout << "There is no graph file at " + graphFilename << std::endl;
-		exit(1);
-	}
-	for (gridmap3D::ScanGraph::iterator scan_it = graph3D->begin(); scan_it != graph3D->end(); scan_it++) {
-		gridmap3D::pose6d frame_origin = (*scan_it)->pose;
-		gridmap3D::point3d sensor_origin = frame_origin.inv().transform((*scan_it)->pose.trans());
-
-		(*scan_it)->scan->transform(frame_origin);
-		gridmap3D::point3d transformed_sensor_origin = frame_origin.transform(sensor_origin);
-		(*scan_it)->pose = gridmap3D::pose6d(transformed_sensor_origin, gridmath3D::Quaternion());
-	}
-
-	std::cout << "\nCreating tree\n===========================\n";
-	quadmap::SuperRayQuadTree* tree = new quadmap::SuperRayQuadTree(res);
-
-	double time_to_update = 0.0;	// sec
-	size_t currentScan = 1;
-	for (gridmap3D::ScanGraph::iterator scan_it = graph3D->begin(); scan_it != graph3D->end(); scan_it++) {
-		std::cout << "(" << currentScan << "/" << graph3D->size() << ") " << std::endl;
-
-		quadmap::Pointcloud pc2D;
-		gridmap3D::Pointcloud& pc3D = *(*scan_it)->scan;
-		for (unsigned int i = 0; i < pc3D.size(); i++){
-			pc2D.push_back(pc3D[i].x(), pc3D[i].y());
-		}
-		quadmap::point2d origin((*scan_it)->pose.trans().x(), (*scan_it)->pose.trans().y());
-
-		// Generate Super Ray
-		gettimeofday(&start, NULL);  // start timer
-		tree->insertSuperRayCloudRays(pc2D, origin, threshold);
-		gettimeofday(&stop, NULL);  // stop timer
-		time_to_update += (stop.tv_sec - start.tv_sec) + 1.0e-6 * (stop.tv_usec - start.tv_usec);;
-
-		currentScan++;
-	}
-
-	std::cout << "Done building tree." << std::endl;
-	std::cout << "Time to insert scans (SR): " << time_to_update << " [sec]" << std::endl;
-	std::cout << "Time to insert 100.000 points took (SR): " << time_to_update / ((double)graph3D->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
-
-	//	grid->writeBinary(treeFilename);
-
-	delete graph3D;
-	delete tree;
-
-	return 0;*/
 }
