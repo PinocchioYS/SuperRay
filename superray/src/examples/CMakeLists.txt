@@ -1,2 +1,0 @@
-add_executable(exampleSuperRayOcTree exampleSuperRayOcTree.cpp)
-target_link_libraries(exampleSuperRayOcTree superray)
