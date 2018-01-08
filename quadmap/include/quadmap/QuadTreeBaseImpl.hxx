@@ -492,7 +492,7 @@ namespace quadmap {
 	bool QuadTreeBaseImpl<NODE, I>::deleteNode(double x, double y, unsigned int depth) {
 		QuadTreeKey key;
 		if (!coordToKeyChecked(x, y, key)){
-			QuadMAP_ERROR_STR("Error in deleteNode: [" << x << " " << y << "] is out of QuadTree bounds!");
+			QUADMAP_ERROR_STR("Error in deleteNode: [" << x << " " << y << "] is out of QuadTree bounds!");
 			return false;
 		}
 		else {

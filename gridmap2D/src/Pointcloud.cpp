@@ -198,7 +198,7 @@ namespace gridmap2D {
 		std::random_shuffle(samples.begin(), samples.end());
 		samples.resize(num_samples);
 #else
-		random_sample_n(begin(), end(), std::back_insert_iterator<point3d_collection>(samples), num_samples);
+		random_sample_n(begin(), end(), std::back_insert_iterator<point2d_collection>(samples), num_samples);
 		for (unsigned int i=0; i<samples.size(); i++) {
 			sample_cloud.push_back(samples[i]);
 		}
