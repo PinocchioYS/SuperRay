@@ -73,7 +73,7 @@ namespace gridmap3D {
 
 		// Copy all of node - cannot access the rhs.gridmap (protected)
 		if (rhs.gridmap){
-			for (OccupancyGridMap::iterator it = rhs.gridmap->begin(); it != rhs.gridmap->end(); it++){
+			for (typename OccupancyGridMap::iterator it = rhs.gridmap->begin(); it != rhs.gridmap->end(); it++){
 				gridmap->insert(std::pair<Grid3DKey, NODE*>(it->first, new NODE(*(it->second))));
 			}
 		}
@@ -107,8 +107,8 @@ namespace gridmap3D {
 
 	template <class NODE, class I>
 	void Grid3DBaseImpl<NODE, I>::swapContent(Grid3DBaseImpl<NODE, I>& other){
-		OccupancyGridMap* this_gridmap = gridamp;
-		gridamp = other.gridamp;
+		OccupancyGridMap* this_gridmap = this->gridamp;
+		this->gridamp = other.gridamp;
 		other.gridamp = this_gridmap;
 	}
 
@@ -205,7 +205,7 @@ namespace gridmap3D {
 		if (gridmap->size() == 0)
 			return NULL;
 
-		OccupancyGridMap::iterator cell = gridmap->find(key);
+		typename OccupancyGridMap::iterator cell = gridmap->find(key);
 		if (cell == gridmap->end())
 			return NULL;
 		return cell->second;
@@ -241,7 +241,7 @@ namespace gridmap3D {
 		if (gridmap->size() == 0)
 			return true;
 
-		OccupancyGridMap::iterator cell = gridmap->find(key);
+		typename OccupancyGridMap::iterator cell = gridmap->find(key);
 		if (cell == gridmap->end())
 			return false;
 
@@ -379,7 +379,7 @@ namespace gridmap3D {
 			size_t node_size = gridmap->size();
 			s.write((char*)&node_size, sizeof(node_size));
 			Grid3DKey key;
-			for (OccupancyGridMap::iterator it = gridmap->begin(); it != gridmap->end(); it++){
+			for (typename OccupancyGridMap::iterator it = gridmap->begin(); it != gridmap->end(); it++){
 				// Write key of grid node
 				key = it->first;
 				s.write((char*)&(key[0]), sizeof(key[0]));

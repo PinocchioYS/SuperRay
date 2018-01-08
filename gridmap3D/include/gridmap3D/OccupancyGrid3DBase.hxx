@@ -40,23 +40,23 @@ namespace gridmap3D {
 	OccupancyGrid3DBase<NODE>::OccupancyGrid3DBase(double resolution)
 		: Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>(resolution), use_bbx_limit(false), use_change_detection(false)
 	{
-		if (gridmap == NULL)
-			gridmap = new OccupancyGridMap;
+		if (this->gridmap == NULL)
+			this->gridmap = new typename Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>::OccupancyGridMap;
 	}
 
 	template <class NODE>
 	OccupancyGrid3DBase<NODE>::OccupancyGrid3DBase(double resolution, unsigned int grid_max_val)
 		: Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>(resolution, grid_max_val), use_bbx_limit(false), use_change_detection(false)
 	{
-		if (gridmap == NULL)
-			gridmap = new OccupancyGridMap;
+		if (this->gridmap == NULL)
+			this->gridmap = new typename Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>::OccupancyGridMap;
 	}
 
 	template <class NODE>
 	OccupancyGrid3DBase<NODE>::~OccupancyGrid3DBase(){
-		if (gridmap){
-			delete gridmap;
-			gridmap = NULL;
+		if (this->gridmap){
+			delete this->gridmap;
+			this->gridmap = NULL;
 		}
 	}
 
@@ -111,11 +111,11 @@ namespace gridmap3D {
 		// clamp log odds within range:
 		log_odds_value = std::min(std::max(log_odds_value, this->clamping_thres_min), this->clamping_thres_max);
 
-		OccupancyGridMap::iterator cell = gridmap->find(key);
-		if (cell == gridmap->end()){
+		typename Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>::OccupancyGridMap::iterator cell = this->gridmap->find(key);
+		if (cell == this->gridmap->end()){
 			NODE* node = new NODE();
 			node->setLogOdds(log_odds_value);
-			gridmap->insert(std::pair<Grid3DKey, NODE*>(key, node));
+			this->gridmap->insert(std::pair<Grid3DKey, NODE*>(key, node));
 			return node;
 		}
 		else{
@@ -158,7 +158,7 @@ namespace gridmap3D {
 
 		if (!node){
 			node = new NODE();
-			gridmap->insert(std::pair<Grid3DKey, NODE*>(key, node));
+			this->gridmap->insert(std::pair<Grid3DKey, NODE*>(key, node));
 		}
 		node->addValue(log_odds_update);
 
@@ -213,7 +213,7 @@ namespace gridmap3D {
 		if (this->gridmap == NULL)
 			return;
 
-		for (OccupancyGridMap::iterator cell = gridmap->begin(); cell != gridmap->end(); cell++){
+		for (typename Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>::OccupancyGridMap::iterator cell = this->gridmap->begin(); cell != this->gridmap->end(); cell++){
 			nodeToMaxLikelihood(cell->second);
 		}
 	}
