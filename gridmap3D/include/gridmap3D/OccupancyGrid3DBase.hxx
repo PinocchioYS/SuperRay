@@ -37,16 +37,16 @@
 namespace gridmap3D {
 
 	template <class NODE>
-	OccupancyGrid3DBase<NODE>::OccupancyGrid3DBase(double resolution)
-		: Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>(resolution), use_bbx_limit(false), use_change_detection(false)
+	OccupancyGrid3DBase<NODE>::OccupancyGrid3DBase(double in_resolution)
+		: Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>(in_resolution), use_bbx_limit(false), use_change_detection(false)
 	{
 		if (this->gridmap == NULL)
 			this->gridmap = new typename Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>::OccupancyGridMap;
 	}
 
 	template <class NODE>
-	OccupancyGrid3DBase<NODE>::OccupancyGrid3DBase(double resolution, unsigned int grid_max_val)
-		: Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>(resolution, grid_max_val), use_bbx_limit(false), use_change_detection(false)
+	OccupancyGrid3DBase<NODE>::OccupancyGrid3DBase(double in_resolution, unsigned int in_grid_max_val)
+		: Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>(in_resolution, in_grid_max_val), use_bbx_limit(false), use_change_detection(false)
 	{
 		if (this->gridmap == NULL)
 			this->gridmap = new typename Grid3DBaseImpl<NODE, AbstractOccupancyGrid3D>::OccupancyGridMap;
@@ -458,7 +458,7 @@ namespace gridmap3D {
 		// Line dot normal will be zero if they are parallel, in which case no intersection can be the entry one
 		// if there is an intersection does it occur in the bounded plane of the voxel
 		// if yes keep only the closest (smallest distance to sensor origin).
-		if ((lineDotNormal = normalX.dot(direction))){
+		if ((lineDotNormal = normalX.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
 			d = (pointXNeg - origin).dot(normalX) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(1) < (pointYNeg(1) - 1e-6) || intersect(1) > (pointYPos(1) + 1e-6) ||
@@ -476,7 +476,7 @@ namespace gridmap3D {
 			}
 		}
 
-		if ((lineDotNormal = normalY.dot(direction))){
+		if ((lineDotNormal = normalY.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
 			d = (pointYNeg - origin).dot(normalY) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(0) < (pointXNeg(0) - 1e-6) || intersect(0) > (pointXPos(0) + 1e-6) ||
@@ -494,7 +494,7 @@ namespace gridmap3D {
 			}
 		}
 
-		if ((lineDotNormal = normalZ.dot(direction))){
+		if ((lineDotNormal = normalZ.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
 			d = (pointZNeg - origin).dot(normalZ) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(0) < (pointXNeg(0) - 1e-6) || intersect(0) > (pointXPos(0) + 1e-6) ||

@@ -35,8 +35,8 @@
 
 namespace gridmap3D {
 
-	Grid3D::Grid3D(double resolution)
-	: OccupancyGrid3DBase<Grid3DNode>(resolution) {
+	Grid3D::Grid3D(double in_resolution)
+	: OccupancyGrid3DBase<Grid3DNode>(in_resolution) {
 		grid3DMemberInit.ensureLinking();
 	};
 

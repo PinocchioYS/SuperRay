@@ -74,10 +74,6 @@ namespace gridmap3D {
 		/// Make the templated NODE type available from the outside
 		typedef NODE NodeType;
 
-		// the actual iterator implementation is included here
-		// as a member from this file
-// #include <gridmap3D/Grid3DIterator.hxx>
-
 		Grid3DBaseImpl(double resolution);
 		virtual ~Grid3DBaseImpl();
 
@@ -166,7 +162,7 @@ namespace gridmap3D {
 		virtual inline size_t size() const { return gridmap->size(); }
 
 		/// \return Memory usage of the grid3D in bytes (may vary between architectures)
-		virtual size_t memoryUsage() const;	// Add HashTable?
+		virtual size_t memoryUsage() const;     // TODO: add the memory usage of hash table
 
 		/// \return Memory usage of a single grid3D node
 		virtual inline size_t memoryUsageNode() const { return sizeof(NODE); };
@@ -291,6 +287,7 @@ namespace gridmap3D {
 		 *
 		 * @param x
 		 * @param y
+         * @param z
 		 * @param key values that will be computed, an array of fixed size 3.
 		 * @return true if point is within the grid3D (valid), false otherwise
 		 */
@@ -344,8 +341,8 @@ namespace gridmap3D {
 
 		point3d grid_center;  // coordinate offset of grid
 
-		double max_value[3]; ///< max in x, y
-		double min_value[3]; ///< min in x, y
+		double max_value[3]; ///< max in x, y, z
+		double min_value[3]; ///< min in x, y, z
 
 		/// data structure for ray casting, array for multithreading
 		std::vector<KeyRay> keyrays;

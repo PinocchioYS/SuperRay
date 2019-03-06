@@ -196,7 +196,7 @@ namespace gridmap3D {
 	}
 
 	std::map<std::string, AbstractGrid3D*>& AbstractGrid3D::classIDMapping(){
-		// we will "leak" the memory of the map and all grid3Ds until program exits,
+		// we will "leak" the memory of the map and all grids until program exits,
 		// but this ensures all static objects are there as long as needed
 		// http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.15
 		static std::map<std::string, AbstractGrid3D*>* map = new std::map<std::string, AbstractGrid3D*>();

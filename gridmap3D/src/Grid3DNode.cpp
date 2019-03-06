@@ -36,8 +36,7 @@
 #include <math.h>
 #include <fstream>
 #include <stdlib.h>
-// #include <inttypes.h>
-#include <gridmap3D/inttype.h>
+#include <inttypes.h>
 
 #include <gridmap3D/Grid3DNode.h>
 

@@ -52,6 +52,54 @@ namespace gridmap3D {
 		AbstractOccupancyGrid3D();
 		virtual ~AbstractOccupancyGrid3D() {};
 
+		//-- IO
+
+		/**
+         * Writes Grid3D to a binary file using writeBinary().
+         * The Grid3D is first converted to the maximum likelihood estimate.
+         * @return success of operation
+         */
+		// bool writeBinary(const std::string& filename);
+
+		/**
+         * Writes maximum likelihood Grid3D to a binary stream.
+         * The Grid3D is first converted to the maximum likelihood estimate.
+         * @return success of operation
+         */
+		// bool writeBinary(std::ostream &s);
+
+		/**
+         * Writes Grid3D to a binary file using writeBinaryConst().
+         * @return success of operation
+         */
+		// bool writeBinaryConst(const std::string& filename) const;
+
+		/**
+         * Writes the maximum likelihood Grid3D to a binary stream (const variant).
+         * @return success of operation
+         */
+		// bool writeBinaryConst(std::ostream &s) const;
+
+		/// Writes the actual data, implemented in OccupancyGrid3DBase::writeBinaryData()
+		// virtual std::ostream& writeBinaryData(std::ostream &s) const = 0;
+
+		/**
+         * Reads a Grid3D from an input stream.
+         * Existing nodes of the grid are deleted before the grid is read.
+         * @return success of operation
+         */
+		// bool readBinary(std::istream &s);
+
+		/**
+         * Reads Grid3D from a binary file.
+         * Existing nodes of the grid are deleted before the grid is read.
+         * @return success of operation
+         */
+		// bool readBinary(const std::string& filename);
+
+		/// Reads the actual data, implemented in OccupancyGrid3DBase::readBinaryData()
+		// virtual std::istream& readBinaryData(std::istream &s) = 0;
+
 		// -- occupancy queries
 
 		/// queries whether a node is occupied according to the grid's parameter for "occupancy"

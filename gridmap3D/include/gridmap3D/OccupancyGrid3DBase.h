@@ -53,8 +53,7 @@ namespace gridmap3D {
 	 * Each class used as NODE type needs to be derived from
 	 * OccupancyGrid3DNode.
 	 *
-	 * Coordinates values are below +/- 327.68 meters (2^15) at a maximum 
-	 * resolution of 0.01m.
+	 * At a resolution of 1 cm, values have to be < +/- 327.68 meters (2^15)
 	 *
 	 * This limitation enables the use of an efficient key generation
 	 * method which uses the binary representation of the data.
@@ -270,6 +269,40 @@ namespace gridmap3D {
 
 		/// Number of changes since last reset.
 		size_t numChangesDetected() const { return changed_keys.size(); }
+
+		// -- I/O  -----------------------------------------
+
+		/**
+         * Reads only the data (=complete grid structure) from the input stream.
+         * The grid needs to be constructed with the proper header information
+         * beforehand, see readBinary().
+         */
+		// std::istream& readBinaryData(std::istream &s);
+
+		/**
+         * Read node from binary stream (max-likelihood value).
+         *
+         * This will set the log_odds_occupancy value of
+         * all cells to either free or occupied.
+         */
+		// std::istream& readBinaryNode(std::istream &s, NODE* node);
+
+		/**
+         * Write node to binary stream (max-likelihood value).
+         *
+         * This will discard the log_odds_occupancy value, writing
+         * all cells as either free or occupied.
+         *
+         * @param s
+         * @param node Grid3DNode to write out
+         * @return
+         */
+		// std::ostream& writeBinaryNode(std::ostream &s, const NODE* node) const;
+
+		/**
+         * Writes the data of the grid (without header) to the stream.
+         */
+		// std::ostream& writeBinaryData(std::ostream &s) const;
 
 		/// integrate a "hit" measurement according to the grid's sensor model
 		virtual void integrateHit(NODE* occupancyNode) const;

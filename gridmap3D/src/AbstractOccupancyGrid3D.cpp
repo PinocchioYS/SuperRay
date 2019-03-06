@@ -46,5 +46,7 @@ namespace gridmap3D {
 		setClampingThresMax(0.971); // = 3.5 in log odds
 	}
 
+	// TODO: implement IO functions
+
 	const std::string AbstractOccupancyGrid3D::binaryFileHeader = "# GridMap3D Grid3D binary file";
 }

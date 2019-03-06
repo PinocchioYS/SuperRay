@@ -39,6 +39,13 @@ namespace gridmap3D{
 		/// Default constructor, sets resolution of leafs
 		SuperRayGrid3D(double resolution);
 
+		/**
+		 * Reads a Grid3D from a binary file
+		 * @param _filename
+		 *
+		 */
+		// SuperRayGrid3D(std::string _filename);
+
 		virtual ~SuperRayGrid3D(){};
 
 		/// virtual constructor: creates a new object of same type
@@ -102,8 +109,7 @@ namespace gridmap3D{
 			*/
 			void ensureLinking() {};
 		};
-
-		/// to ensure static initialization (only once)
+		/// static member to ensure static initialization (only once)
 		static StaticMemberInitializer superrayGrid3DMemberInit;
 	};
 }

@@ -73,8 +73,6 @@ namespace gridmap3D {
 		virtual void clear() = 0;
 
 		//-- Iterator grid access
-
-		// default iterator is leaf_iterator
 //		class iterator_base;
 
 		/// Write file header and complete grid to file (serialization)

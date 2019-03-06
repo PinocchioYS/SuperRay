@@ -40,7 +40,6 @@
 #include <ciso646>
 
 #include <assert.h>
-#include <gridmap3D/inttype.h>
 
 /* Libc++ does not implement the TR1 namespace, all c++11 related functionality
  * is instead implemented in the std namespace.
@@ -58,8 +57,6 @@ namespace gridmap3D {
 	namespace unordered_ns = std;
 }
 #endif
-
-#include <vector>
 
 namespace gridmap3D {
 
@@ -115,9 +112,9 @@ namespace gridmap3D {
 				// a simple hashing function 
 				// explicit casts to size_t to operate on the complete range
 				// constanst will be promoted according to C++ standard
-				return static_cast<std::size_t>(key.k[0])
-					+ 1447 * static_cast<std::size_t>(key.k[1])
-					+ 345637 * static_cast<std::size_t>(key.k[2]);
+				return static_cast<size_t>(key.k[0])
+					+ 1447 * static_cast<size_t>(key.k[1])
+					+ 345637 * static_cast<size_t>(key.k[2]);
 			}
 		};
 
@@ -162,8 +159,8 @@ namespace gridmap3D {
 			++end_of_ray;
 		}
 
-		std::size_t size() const { return end_of_ray - ray.begin(); }
-		std::size_t sizeMax() const { return maxSize; }
+		size_t size() const { return end_of_ray - ray.begin(); }
+		size_t sizeMax() const { return maxSize; }
 
 		typedef std::vector<Grid3DKey>::iterator iterator;
 		typedef std::vector<Grid3DKey>::const_iterator const_iterator;
@@ -180,7 +177,7 @@ namespace gridmap3D {
 	private:
 		std::vector<Grid3DKey> ray;
 		std::vector<Grid3DKey>::iterator end_of_ray;
-		const static std::size_t maxSize = 100000;
+		const static size_t maxSize = 100000;
 	};
 
 } // namespace

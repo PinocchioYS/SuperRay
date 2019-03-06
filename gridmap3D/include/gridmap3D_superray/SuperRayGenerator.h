@@ -30,18 +30,10 @@
 #ifndef GRIDMAP3D_SUPERRAY_SUPERRAY_GENERATOR_H
 #define GRIDMAP3D_SUPERRAY_SUPERRAY_GENERATOR_H
 
+#include <gridmap3D/gridmap3D_types.h>
 #include <gridmap3D/Grid3DKey.h>
 #include <gridmap3D/Pointcloud.h>
 #include <gridmap3D_superray/SuperRayCloud.h>
-
-/* Libc++ does not implement the TR1 namespace, all c++11 related functionality
- * is instead implemented in the std namespace.
- */
-/*#if defined(__GNUC__) && ! defined(_LIBCPP_VERSION)
-namespace unordered_ns = std::tr1;
-#else
-namespace unordered_ns = std;
-#endif*/
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -77,7 +69,7 @@ namespace gridmap3D{
 		double GenerateMappingLine(VoxelInfo& _voxelinfo, const unsigned int& _axisX, const unsigned int& _axisY, std::vector<double>& _mappingPlane);
 
 		// Utility functions
-		typedef unordered_ns::unordered_map<Grid3DKey, std::vector<point3d>, Grid3DKey::KeyHash> Vexelized_Pointclouds;
+		typedef unordered_ns::unordered_map<Grid3DKey, std::vector<point3d>, Grid3DKey::KeyHash> Voxelized_Pointclouds;
 		void ComputeAxis(const point3d& _min, const point3d& _max, Axis3D& _axis);
 
 		// Re-implmentation for Key / coordinate conversion functions
@@ -102,7 +94,7 @@ namespace gridmap3D{
 
 			unsigned int axisU;	// Nearest Axis
 			unsigned int axisV;	// 
-			unsigned int axisK;	// Farest Axis
+			unsigned int axisK;	// Farthest Axis
 		};
 	};
 }

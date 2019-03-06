@@ -47,7 +47,7 @@ namespace gridmap3D{
 		originKey = coordToKey(_origin);
 
 		// Voxelize point clouds
-		Vexelized_Pointclouds voxels;
+		Voxelized_Pointclouds voxels;
 		for (unsigned int i = 0; i < _pc.size(); i++){
 			voxels[coordToKey(_pc[i])].push_back(_pc[i]);
 		}
@@ -78,7 +78,7 @@ namespace gridmap3D{
 			GenerateSuperRay(pointlist, _srcloud);
 		}
 	#else
-		Vexelized_Pointclouds::iterator it;
+		Voxelized_Pointclouds::iterator it;
 		for (it = voxels.begin(); it != voxels.end(); ++it){
 			std::vector<point3d>& pointlist = it->second;
 
@@ -280,8 +280,8 @@ namespace gridmap3D{
 		verticesT[3].x() = maxW(_axisX);	verticesT[3].y() = maxW(_axisY);	verticesT[3].z() = (float)0.0;
 		// Traversal directioin
 		int dir = 0;
-		if (abs(originT.x() - verticesT[0].x()) < abs(originT.x() - verticesT[3].x()))	dir = 1;
-		else																			dir = -1;
+		if (fabs(originT.x() - verticesT[0].x()) < fabs(originT.x() - verticesT[3].x()))	dir = 1;
+		else																			    dir = -1;
 		// Start and goal line of traversal axis
 		int curXKey, mappingXKey;
 		double curX, mappingX;
@@ -340,8 +340,8 @@ namespace gridmap3D{
 
 		double nearDist[3];
 		for (unsigned int i = 0; i < 3; i++){
-			if (abs(originW(i) - _min(i)) < abs(originW(i) - _max(i)))	nearDist[i] = abs(originW(i) - _min(i));
-			else 														nearDist[i] = abs(originW(i) - _max(i));
+			if (fabs(originW(i) - _min(i)) < fabs(originW(i) - _max(i)))	nearDist[i] = fabs(originW(i) - _min(i));
+			else 														    nearDist[i] = fabs(originW(i) - _max(i));
 		}
 
 		if (nearDist[0] < nearDist[1]){

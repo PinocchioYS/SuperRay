@@ -30,8 +30,8 @@
 #include <gridmap3D_superray/SuperRayGrid3D.h>
 
 namespace gridmap3D{
-	SuperRayGrid3D::SuperRayGrid3D(double resolution)
-	: OccupancyGrid3DBase<Grid3DNode>(resolution) {
+	SuperRayGrid3D::SuperRayGrid3D(double in_resolution)
+	: OccupancyGrid3DBase<Grid3DNode>(in_resolution) {
 		superrayGrid3DMemberInit.ensureLinking();
 	};
 

@@ -55,7 +55,9 @@ namespace gridmap3D {
 
 		scan->writeBinary(s);
 		pose.writeBinary(s);
-		s.write((char*)&id, sizeof(id));
+
+		uint32_t uintId = static_cast<uint32_t>(id);
+		s.write((char*)&uintId, sizeof(uintId));
 
 		return s;
 	}
@@ -67,7 +69,9 @@ namespace gridmap3D {
 
 		this->pose.readBinary(s);
 
-		s.read((char*)&this->id, sizeof(this->id));
+		uint32_t uintId;
+		s.read((char*)&uintId, sizeof(uintId));
+		this->id = uintId;
 
 		return s;
 	}
@@ -462,6 +466,7 @@ namespace gridmap3D {
 				}
 				else{
 					if (currentNode == NULL){
+						// TODO: allow "simple" pc files by setting initial Scan Pose to (0,0,0)
 						GRIDMAP3D_ERROR_STR("Error parsing log file, no Scan to add point to!");
 						break;
 					}

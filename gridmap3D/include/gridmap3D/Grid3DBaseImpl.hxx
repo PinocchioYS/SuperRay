@@ -42,17 +42,17 @@
 namespace gridmap3D {
 
 	template <class NODE, class I>
-	Grid3DBaseImpl<NODE, I>::Grid3DBaseImpl(double resolution) :
+	Grid3DBaseImpl<NODE, I>::Grid3DBaseImpl(double in_resolution) :
 		I(), gridmap(NULL), grid_max_val(32768),
-		resolution(resolution)
+		resolution(in_resolution)
 	{
 		init();
 	}
 
 	template <class NODE, class I>
-	Grid3DBaseImpl<NODE, I>::Grid3DBaseImpl(double resolution, unsigned int grid_max_val) :
-		I(), gridmap(NULL), grid_max_val(grid_max_val),
-		resolution(resolution)
+	Grid3DBaseImpl<NODE, I>::Grid3DBaseImpl(double in_resolution, unsigned int in_grid_max_val) :
+		I(), gridmap(NULL), grid_max_val(in_grid_max_val),
+		resolution(in_resolution)
 	{
 		init();
 	}
@@ -71,8 +71,9 @@ namespace gridmap3D {
 	{
 		init();
 
-		// Copy all of node - cannot access the rhs.gridmap (protected)
+		// Copy all of node
 		if (rhs.gridmap){
+			// TODO: copy operator?
 			for (typename OccupancyGridMap::iterator it = rhs.gridmap->begin(); it != rhs.gridmap->end(); it++){
 				gridmap->insert(std::pair<Grid3DKey, NODE*>(it->first, new NODE(*(it->second))));
 			}
@@ -165,8 +166,7 @@ namespace gridmap3D {
 
 	template <class NODE, class I>
 	bool Grid3DBaseImpl<NODE, I>::coordToKeyChecked(double x, double y, double z, Grid3DKey& key) const{
-		if (!(coordToKeyChecked(x, key[0]) && coordToKeyChecked(y, key[1]) && coordToKeyChecked(z, key[2])))
-		{
+		if (!(coordToKeyChecked(x, key[0]) && coordToKeyChecked(y, key[1]) && coordToKeyChecked(z, key[2]))) {
 			return false;
 		}
 		else {
@@ -190,7 +190,7 @@ namespace gridmap3D {
 	template <class NODE, class I>
 	NODE* Grid3DBaseImpl<NODE, I>::search(double x, double y, double z) const {
 		Grid3DKey key;
-		if (!coordToKeyChecked(x, y, key)){
+		if (!coordToKeyChecked(x, y, z, key)){
 			GRIDMAP3D_ERROR_STR("Error in search: [" << x << " " << y << " " << z << "] is out of Grid3D bounds!");
 			return NULL;
 		}
@@ -374,7 +374,6 @@ namespace gridmap3D {
 
 	template <class NODE, class I>
 	std::ostream& Grid3DBaseImpl<NODE, I>::writeData(std::ostream &s) const{
-		// Implement writeData() - Need to check
 		if (gridmap){
 			size_t node_size = gridmap->size();
 			s.write((char*)&node_size, sizeof(node_size));
@@ -395,7 +394,6 @@ namespace gridmap3D {
 
 	template <class NODE, class I>
 	std::istream& Grid3DBaseImpl<NODE, I>::readData(std::istream &s) {
-		// Implement readData() - To do.
 		if (!s.good()){
 			GRIDMAP3D_WARNING_STR(__FILE__ << ":" << __LINE__ << "Warning: Input filestream not \"good\"");
 		}
@@ -589,31 +587,39 @@ namespace gridmap3D {
 	void Grid3DBaseImpl<NODE, I>::getUnknownLeafCenters(point3d_list& node_centers, point3d pmin, point3d pmax, unsigned int depth) const {
 
 		assert(depth <= tree_depth);
-		if (depth == 0)
-			depth = tree_depth;
+      if (depth == 0)
+        depth = tree_depth;
 
-		float diff[3];
-		unsigned int steps[3];
-		float step_size = this->resolution * pow(2, tree_depth - depth);
-		for (int i = 0; i < 3; ++i) {
-			diff[i] = pmax(i) - pmin(i);
-			steps[i] = floor(diff[i] / step_size);
-			//      std::cout << "bbx " << i << " size: " << diff[i] << " " << steps[i] << " steps\n";
-		}
+      point3d pmin_clamped = this->keyToCoord(this->coordToKey(pmin, depth), depth);
+      point3d pmax_clamped = this->keyToCoord(this->coordToKey(pmax, depth), depth);
 
-		point3d p = pmin;
-		NODE* res;
-		for (unsigned int x = 0; x < steps[0]; ++x) {
-			p.x() += step_size;
-			for (unsigned int y = 0; y < steps[1]; ++y) {
-				p.y() += step_size;
-				res = this->search(p, depth);
-				if (res == NULL) {
-					node_centers.push_back(p);
-				}
-			}
-			p.y() = pmin.y();
-		}
+      float diff[3];
+      unsigned int steps[3];
+      float step_size = this->resolution * pow(2, tree_depth-depth);
+      for (int i=0;i<3;++i) {
+        diff[i] = pmax_clamped(i) - pmin_clamped(i);
+        steps[i] = floor(diff[i] / step_size);
+        //      std::cout << "bbx " << i << " size: " << diff[i] << " " << steps[i] << " steps\n";
+      }
+
+      point3d p = pmin_clamped;
+      NODE* res;
+      for (unsigned int x=0; x<steps[0]; ++x) {
+        p.x() += step_size;
+        for (unsigned int y=0; y<steps[1]; ++y) {
+          p.y() += step_size;
+          for (unsigned int z=0; z<steps[2]; ++z) {
+            //          std::cout << "querying p=" << p << std::endl;
+            p.z() += step_size;
+            res = this->search(p,depth);
+            if (res == NULL) {
+              node_centers.push_back(p);
+            }
+          }
+          p.z() = pmin_clamped.z();
+        }
+        p.y() = pmin_clamped.y();
+      }
 	}*/
 
 	template <class NODE, class I>

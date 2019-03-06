@@ -43,6 +43,8 @@
 #endif
 #include <fstream>
 #include <math.h>
+#include <assert.h>
+#include <limits>
 
 #include <gridmap3D/Pointcloud.h>
 
