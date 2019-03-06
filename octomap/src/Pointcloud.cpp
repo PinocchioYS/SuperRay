@@ -209,9 +209,9 @@ namespace octomap {
         // visual studio does not support random_sample_n and neither does libc++
 #if defined(_MSC_VER) || defined(_LIBCPP_VERSION)
         samples.reserve(this->size());
-    samples.insert(samples.end(), this->begin(), this->end());
-    std::random_shuffle(samples.begin(), samples.end());
-    samples.resize(num_samples);
+        samples.insert(samples.end(), this->begin(), this->end());
+        std::random_shuffle(samples.begin(), samples.end());
+        samples.resize(num_samples);
 #else
         random_sample_n(begin(), end(), std::back_insert_iterator<point3d_collection>(samples), num_samples);
         for (unsigned int i=0; i<samples.size(); i++) {

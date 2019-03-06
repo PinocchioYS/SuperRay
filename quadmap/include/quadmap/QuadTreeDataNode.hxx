@@ -80,33 +80,6 @@ namespace quadmap {
 	}
 
 	// ============================================================
-	// =  children          =======================================
-	// ============================================================
-
-
-	/*template <typename T>
-	bool QuadTreeDataNode<T>::childExists(unsigned int i) const {
-		assert(i < 4);
-		if ((children != NULL) && (children[i] != NULL))
-			return true;
-		else
-			return false;
-	}*/
-
-	/*template <typename T>
-	bool QuadTreeDataNode<T>::hasChildren() const {
-		if (children == NULL)
-			return false;
-		for (unsigned int i = 0; i < 4; i++){
-			// fast check, we know children != NULL
-			if (children[i] != NULL)
-				return true;
-		}
-		return false;
-	}*/
-
-
-	// ============================================================
 	// =  File IO           =======================================
 	// ============================================================
 

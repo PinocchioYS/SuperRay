@@ -34,23 +34,21 @@
 #include <bitset>
 #include <algorithm>
 
-// #include <quadmap/MCTables.h>
-
 namespace quadmap {
 
 	template <class NODE>
-	OccupancyQuadTreeBase<NODE>::OccupancyQuadTreeBase(double resolution)
-		: QuadTreeBaseImpl<NODE, AbstractOccupancyQuadTree>(resolution), use_bbx_limit(false), use_change_detection(false)
+	OccupancyQuadTreeBase<NODE>::OccupancyQuadTreeBase(double in_resolution)
+			: QuadTreeBaseImpl<NODE, AbstractOccupancyQuadTree>(in_resolution), use_bbx_limit(false), use_change_detection(false)
 	{
 
-		}
+	}
 
 	template <class NODE>
-	OccupancyQuadTreeBase<NODE>::OccupancyQuadTreeBase(double resolution, unsigned int tree_depth, unsigned int tree_max_val)
-		: QuadTreeBaseImpl<NODE, AbstractOccupancyQuadTree>(resolution, tree_depth, tree_max_val), use_bbx_limit(false), use_change_detection(false)
+	OccupancyQuadTreeBase<NODE>::OccupancyQuadTreeBase(double in_resolution, unsigned int in_tree_depth, unsigned int in_tree_max_val)
+			: QuadTreeBaseImpl<NODE, AbstractOccupancyQuadTree>(in_resolution, in_tree_depth, in_tree_max_val), use_bbx_limit(false), use_change_detection(false)
 	{
 
-		}
+	}
 
 	template <class NODE>
 	OccupancyQuadTreeBase<NODE>::~OccupancyQuadTreeBase(){
@@ -58,19 +56,19 @@ namespace quadmap {
 
 	template <class NODE>
 	OccupancyQuadTreeBase<NODE>::OccupancyQuadTreeBase(const OccupancyQuadTreeBase<NODE>& rhs) :
-		QuadTreeBaseImpl<NODE, AbstractOccupancyQuadTree>(rhs), use_bbx_limit(rhs.use_bbx_limit),
-		bbx_min(rhs.bbx_min), bbx_max(rhs.bbx_max),
-		bbx_min_key(rhs.bbx_min_key), bbx_max_key(rhs.bbx_max_key),
-		use_change_detection(rhs.use_change_detection), changed_keys(rhs.changed_keys)
+			QuadTreeBaseImpl<NODE, AbstractOccupancyQuadTree>(rhs), use_bbx_limit(rhs.use_bbx_limit),
+			bbx_min(rhs.bbx_min), bbx_max(rhs.bbx_max),
+			bbx_min_key(rhs.bbx_min_key), bbx_max_key(rhs.bbx_max_key),
+			use_change_detection(rhs.use_change_detection), changed_keys(rhs.changed_keys)
 	{
-			this->clamping_thres_min = rhs.clamping_thres_min;
-			this->clamping_thres_max = rhs.clamping_thres_max;
-			this->prob_hit_log = rhs.prob_hit_log;
-			this->prob_miss_log = rhs.prob_miss_log;
-			this->occ_prob_thres_log = rhs.occ_prob_thres_log;
+		this->clamping_thres_min = rhs.clamping_thres_min;
+		this->clamping_thres_max = rhs.clamping_thres_max;
+		this->prob_hit_log = rhs.prob_hit_log;
+		this->prob_miss_log = rhs.prob_miss_log;
+		this->occ_prob_thres_log = rhs.occ_prob_thres_log;
 
 
-		}
+	}
 
 	template <class NODE>
 	void OccupancyQuadTreeBase<NODE>::insertPointCloud(const ScanNode& scan, double maxrange, bool lazy_eval, bool discretize) {
@@ -84,7 +82,7 @@ namespace quadmap {
 
 	template <class NODE>
 	void OccupancyQuadTreeBase<NODE>::insertPointCloud(const Pointcloud& scan, const quadmap::point2d& sensor_origin,
-		double maxrange, bool lazy_eval, bool discretize) {
+													   double maxrange, bool lazy_eval, bool discretize) {
 
 		KeySet free_cells, occupied_cells;
 		if (discretize)
@@ -103,7 +101,7 @@ namespace quadmap {
 
 	template <class NODE>
 	void OccupancyQuadTreeBase<NODE>::insertPointCloud(const Pointcloud& pc, const point2d& sensor_origin, const pose3d& frame_origin,
-		double maxrange, bool lazy_eval, bool discretize) {
+													   double maxrange, bool lazy_eval, bool discretize) {
 		// performs transformation to data and sensor origin first
 		Pointcloud transformed_scan(pc);
 		transformed_scan.transform(frame_origin);
@@ -146,8 +144,8 @@ namespace quadmap {
 
 	template <class NODE>
 	void OccupancyQuadTreeBase<NODE>::computeDiscreteUpdate(const Pointcloud& scan, const quadmap::point2d& origin,
-		KeySet& free_cells, KeySet& occupied_cells,
-		double maxrange)
+															KeySet& free_cells, KeySet& occupied_cells,
+															double maxrange)
 	{
 		Pointcloud discretePC;
 		discretePC.reserve(scan.size());
@@ -167,8 +165,8 @@ namespace quadmap {
 
 	template <class NODE>
 	void OccupancyQuadTreeBase<NODE>::computeUpdate(const Pointcloud& scan, const quadmap::point2d& origin,
-		KeySet& free_cells, KeySet& occupied_cells,
-		double maxrange)
+													KeySet& free_cells, KeySet& occupied_cells,
+													double maxrange)
 	{
 
 
@@ -308,7 +306,7 @@ namespace quadmap {
 		// no change: node already at threshold
 		if (leaf
 			&& ((log_odds_update >= 0 && leaf->getLogOdds() >= this->clamping_thres_max)
-			|| (log_odds_update <= 0 && leaf->getLogOdds() <= this->clamping_thres_min)))
+				|| (log_odds_update <= 0 && leaf->getLogOdds() <= this->clamping_thres_min)))
 		{
 			return leaf;
 		}
@@ -368,7 +366,7 @@ namespace quadmap {
 
 	template <class NODE>
 	NODE* OccupancyQuadTreeBase<NODE>::updateNodeRecurs(NODE* node, bool node_just_created, const QuadTreeKey& key,
-		unsigned int depth, const float& log_odds_update, bool lazy_eval) {
+														unsigned int depth, const float& log_odds_update, bool lazy_eval) {
 		bool created_node = false;
 
 		assert(node);
@@ -408,7 +406,7 @@ namespace quadmap {
 			}
 		}
 
-		// at last level, update node, end of recursion
+			// at last level, update node, end of recursion
 		else {
 			if (use_change_detection) {
 				bool occBefore = this->isNodeOccupied(node);
@@ -435,7 +433,7 @@ namespace quadmap {
 	// TODO: mostly copy of updateNodeRecurs => merge code or general tree modifier / traversal
 	template <class NODE>
 	NODE* OccupancyQuadTreeBase<NODE>::setNodeValueRecurs(NODE* node, bool node_just_created, const QuadTreeKey& key,
-		unsigned int depth, const float& log_odds_value, bool lazy_eval) {
+														  unsigned int depth, const float& log_odds_value, bool lazy_eval) {
 		bool created_node = false;
 
 		assert(node);
@@ -475,7 +473,7 @@ namespace quadmap {
 			}
 		}
 
-		// at last level, update node, end of recursion
+			// at last level, update node, end of recursion
 		else {
 			if (use_change_detection) {
 				bool occBefore = this->isNodeOccupied(node);
@@ -539,7 +537,7 @@ namespace quadmap {
 
 	template <class NODE>
 	void OccupancyQuadTreeBase<NODE>::toMaxLikelihoodRecurs(NODE* node, unsigned int depth,
-		unsigned int max_depth) {
+															unsigned int max_depth) {
 
 		assert(node);
 
@@ -558,7 +556,7 @@ namespace quadmap {
 
 	template <class NODE>
 	bool OccupancyQuadTreeBase<NODE>::castRay(const point2d& origin, const point2d& directionP, point2d& end,
-		bool ignoreUnknown, double maxRange) const {
+											  bool ignoreUnknown, double maxRange) const {
 
 		/// ----------  see OcTreeBase::computeRayKeys  -----------
 
@@ -681,12 +679,12 @@ namespace quadmap {
 
 	template <class NODE>
 	bool OccupancyQuadTreeBase<NODE>::getRayIntersection(const point2d& origin, const point2d& direction, const point2d& center,
-		point2d& intersection, double delta/*=0.0*/) const {
-		// We only need three normals for the six planes
+														 point2d& intersection, double delta/*=0.0*/) const {
+		// We only need two normals for the four edges
 		quadmap::point2d normalX(1, 0);
 		quadmap::point2d normalY(0, 1);
 
-		// One point on each plane, let them be the center for simplicity
+		// One point on each edge, let them be the center for simplicity
 		quadmap::point2d pointXNeg(center(0) - float(this->resolution / 2.0), center(1));
 		quadmap::point2d pointXPos(center(0) + float(this->resolution / 2.0), center(1));
 		quadmap::point2d pointYNeg(center(0), center(1) - float(this->resolution / 2.0));
@@ -702,7 +700,7 @@ namespace quadmap {
 		// Line dot normal will be zero if they are parallel, in which case no intersection can be the entry one
 		// if there is an intersection does it occur in the bounded plane of the voxel
 		// if yes keep only the closest (smallest distance to sensor origin).
-		if ((lineDotNormal = normalX.dot(direction))){
+		if ((lineDotNormal = normalX.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
 			d = (pointXNeg - origin).dot(normalX) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(1) < (pointYNeg(1) - 1e-6) || intersect(1) > (pointYPos(1) + 1e-6))){
@@ -718,7 +716,7 @@ namespace quadmap {
 			}
 		}
 
-		if ((lineDotNormal = normalY.dot(direction))){
+		if ((lineDotNormal = normalY.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
 			d = (pointYNeg - origin).dot(normalY) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(0) < (pointXNeg(0) - 1e-6) || intersect(0) > (pointXPos(0) + 1e-6))){
@@ -734,7 +732,7 @@ namespace quadmap {
 			}
 		}
 
-		// Substract (add) a fraction to ensure no ambiguity on the starting voxel
+		// Substract (add) a fraction to ensure no ambiguity on the starting pixel
 		// Don't start on a bondary.
 		if (found)
 			intersection = direction * float(outD + delta) + origin;
@@ -744,38 +742,38 @@ namespace quadmap {
 
 
 	template <class NODE> inline bool
-		OccupancyQuadTreeBase<NODE>::integrateMissOnRay(const point2d& origin, const point2d& end, bool lazy_eval) {
+	OccupancyQuadTreeBase<NODE>::integrateMissOnRay(const point2d& origin, const point2d& end, bool lazy_eval) {
 
-			if (!this->computeRayKeys(origin, end, this->keyrays.at(0))) {
-				return false;
-			}
-
-			for (KeyRay::iterator it = this->keyrays[0].begin(); it != this->keyrays[0].end(); it++) {
-				updateNode(*it, false, lazy_eval); // insert freespace measurement
-			}
-
-			return true;
+		if (!this->computeRayKeys(origin, end, this->keyrays.at(0))) {
+			return false;
 		}
+
+		for (KeyRay::iterator it = this->keyrays[0].begin(); it != this->keyrays[0].end(); it++) {
+			updateNode(*it, false, lazy_eval); // insert freespace measurement
+		}
+
+		return true;
+	}
 
 	template <class NODE> bool
-		OccupancyQuadTreeBase<NODE>::insertRay(const point2d& origin, const point2d& end, double maxrange, bool lazy_eval)
+	OccupancyQuadTreeBase<NODE>::insertRay(const point2d& origin, const point2d& end, double maxrange, bool lazy_eval)
 	{
-			// cut ray at maxrange
-			if ((maxrange > 0) && ((end - origin).norm() > maxrange))
-			{
-				point2d direction = (end - origin).normalized();
-				point2d new_end = origin + direction * (float)maxrange;
-				return integrateMissOnRay(origin, new_end, lazy_eval);
-			}
-			// insert complete ray
-			else
-			{
-				if (!integrateMissOnRay(origin, end, lazy_eval))
-					return false;
-				updateNode(end, true, lazy_eval); // insert hit cell
-				return true;
-			}
+		// cut ray at maxrange
+		if ((maxrange > 0) && ((end - origin).norm() > maxrange))
+		{
+			point2d direction = (end - origin).normalized();
+			point2d new_end = origin + direction * (float)maxrange;
+			return integrateMissOnRay(origin, new_end, lazy_eval);
 		}
+        // insert complete ray
+		else
+		{
+			if (!integrateMissOnRay(origin, end, lazy_eval))
+				return false;
+			updateNode(end, true, lazy_eval); // insert hit cell
+			return true;
+		}
+	}
 
 	template <class NODE>
 	void OccupancyQuadTreeBase<NODE>::setBBXMin(point2d& min) {

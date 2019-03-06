@@ -1,6 +1,5 @@
 SET (quadmath_SRCS
   Vector2.cpp
-#  Quaternion.cpp
   Pose3D.cpp
  )
 
@@ -17,5 +16,17 @@ SET_TARGET_PROPERTIES( quadmath PROPERTIES
 ADD_LIBRARY( quadmath-static STATIC ${quadmath_SRCS})
 SET_TARGET_PROPERTIES(quadmath-static PROPERTIES OUTPUT_NAME "quadmath")
 
-install(TARGETS quadmath quadmath-static ${INSTALL_TARGETS_DEFAULT_ARGS})
+if(NOT EXISTS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/quadmap")
+    file(MAKE_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/quadmap")
+endif()
+
+export(TARGETS quadmath quadmath-static
+    APPEND FILE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/quadmap/quadmap-targets.cmake"
+)
+
+install(TARGETS quadmath quadmath-static
+    EXPORT quadmap-targets
+    INCLUDES DESTINATION include
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
  

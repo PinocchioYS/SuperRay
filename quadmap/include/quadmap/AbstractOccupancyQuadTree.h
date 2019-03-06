@@ -123,13 +123,13 @@ namespace quadmap {
 		/// queries whether a node is at the clamping threshold according to the tree's parameter
 		inline bool isNodeAtThreshold(const QuadTreeNode* occupancyNode) const{
 			return (occupancyNode->getLogOdds() >= this->clamping_thres_max
-				|| occupancyNode->getLogOdds() <= this->clamping_thres_min);
+					|| occupancyNode->getLogOdds() <= this->clamping_thres_min);
 		}
 
 		/// queries whether a node is at the clamping threshold according to the tree's parameter
 		inline bool isNodeAtThreshold(const QuadTreeNode& occupancyNode) const{
 			return (occupancyNode.getLogOdds() >= this->clamping_thres_max
-				|| occupancyNode.getLogOdds() <= this->clamping_thres_min);
+					|| occupancyNode.getLogOdds() <= this->clamping_thres_min);
 		}
 
 		// - update functions

@@ -40,7 +40,6 @@
 #include <ciso646>
 
 #include <assert.h>
-#include <quadmap/inttype.h>
 
 /* Libc++ does not implement the TR1 namespace, all c++11 related functionality
  * is instead implemented in the std namespace.
@@ -58,8 +57,6 @@ namespace quadmap {
 	namespace unordered_ns = std;
 }
 #endif
-
-#include <vector>
 
 namespace quadmap {
 
@@ -109,12 +106,12 @@ namespace quadmap {
 
 		/// Provides a hash function on Keys
 		struct KeyHash{
-			std::size_t operator()(const QuadTreeKey& key) const{
+			size_t operator()(const QuadTreeKey& key) const{
 				// a simple hashing function 
 				// explicit casts to size_t to operate on the complete range
 				// constanst will be promoted according to C++ standard
-				return static_cast<std::size_t>(key.k[0])
-					+ 1447 * static_cast<std::size_t>(key.k[1]);
+				return static_cast<size_t>(key.k[0])
+					+ 1447 * static_cast<size_t>(key.k[1]);
 			}
 		};
 
@@ -145,7 +142,7 @@ namespace quadmap {
 
 		KeyRay(const KeyRay& other){
 			ray = other.ray;
-			std::size_t dSize = other.end() - other.begin();
+			size_t dSize = other.end() - other.begin();
 			end_of_ray = ray.begin() + dSize;
 		}
 
@@ -159,8 +156,8 @@ namespace quadmap {
 			++end_of_ray;
 		}
 
-		std::size_t size() const { return end_of_ray - ray.begin(); }
-		std::size_t sizeMax() const { return maxSize; }
+		size_t size() const { return end_of_ray - ray.begin(); }
+		size_t sizeMax() const { return maxSize; }
 
 		typedef std::vector<QuadTreeKey>::iterator iterator;
 		typedef std::vector<QuadTreeKey>::const_iterator const_iterator;
@@ -177,7 +174,7 @@ namespace quadmap {
 	private:
 		std::vector<QuadTreeKey> ray;
 		std::vector<QuadTreeKey>::iterator end_of_ray;
-		const static std::size_t maxSize = 100000;
+		const static size_t maxSize = 100000;
 	};
 
 	/**

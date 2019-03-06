@@ -43,6 +43,8 @@
 #endif
 #include <fstream>
 #include <math.h>
+#include <assert.h>
+#include <limits>
 
 #include <quadmap/Pointcloud.h>
 
@@ -242,6 +244,8 @@ namespace quadmap {
 				}
 			}
 		}
+		assert(pc_size == this->size());
+
 		QUADMAP_DEBUG("done.\n");
 
 		return s;
@@ -250,8 +254,15 @@ namespace quadmap {
 
 	std::ostream& Pointcloud::writeBinary(std::ostream &s) const {
 
-		size_t pc_size = this->size();
-		QUADMAP_DEBUG("Writing %lu points to binary file...", (unsigned long)pc_size);
+		// check if written unsigned int can hold size
+		size_t orig_size = this->size();
+		if (orig_size > std::numeric_limits<uint32_t>::max()){
+			QUADMAP_ERROR("Pointcloud::writeBinary ERROR: Point cloud too large to be written");
+			return s;
+		}
+
+		size_t pc_size = static_cast<uint32_t>(this->size());
+		QUADMAP_DEBUG("Writing %u points to binary file...", pc_size);
 		s.write((char*)&pc_size, sizeof(pc_size));
 
 		for (Pointcloud::const_iterator it = this->begin(); it != this->end(); it++) {

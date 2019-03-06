@@ -30,10 +30,15 @@
 #include <quadmap_superray/SuperRayQuadTree.h>
 
 namespace quadmap{
-	SuperRayQuadTree::SuperRayQuadTree(double resolution)
-	: OccupancyQuadTreeBase<QuadTreeNode>(resolution) {
+	SuperRayQuadTree::SuperRayQuadTree(double in_resolution)
+	: OccupancyQuadTreeBase<QuadTreeNode>(in_resolution) {
 		superrayQuadTreeMemberInit.ensureLinking();
 	};
+
+	SuperRayQuadTree::SuperRayQuadTree(std::string _filename)
+			: OccupancyQuadTreeBase<QuadTreeNode>(0.1)  { // resolution will be set according to tree file
+		readBinary(_filename);
+	}
 
 	SuperRayQuadTree::StaticMemberInitializer SuperRayQuadTree::superrayQuadTreeMemberInit;
 
@@ -106,14 +111,14 @@ namespace quadmap{
 	#endif
 				{
 					for (KeyRay::iterator it = keyray->begin(); it != keyray->end(); it++) {
-						updateNode(*it, missprob);
+						updateNode(*it, missprob, false);
 					}
 				}
 			}
 		}
 
 		for (int i = 0; i < (int)superray.size(); ++i){
-			updateNode(superray[i].p, prob_hit_log * superray[i].w);
+			updateNode(superray[i].p, prob_hit_log * superray[i].w, false);
 		}
 	}
 }

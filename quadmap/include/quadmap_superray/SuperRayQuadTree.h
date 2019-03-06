@@ -27,7 +27,7 @@
 *
 */
 
-#ifndef QUADMAP_SUPERRAY_QUADTREe_H
+#ifndef QUADMAP_SUPERRAY_QUADTREE_H
 #define QUADMAP_SUPERRAY_QUADTREE_H
 
 #include <quadmap/quadmap.h>
@@ -38,6 +38,13 @@ namespace quadmap{
 	public:
 		/// Default constructor, sets resolution of leafs
 		SuperRayQuadTree(double resolution);
+
+		/**
+		 * Reads an OcTree from a binary file
+		 * @param _filename
+		 *
+		 */
+		SuperRayQuadTree(std::string _filename);
 
 		virtual ~SuperRayQuadTree(){};
 
@@ -81,10 +88,10 @@ namespace quadmap{
 
 	protected:
 		/**
-		* Static member object which ensures that this Grid3D's prototype
+		* Static member object which ensures that this QuadTree's prototype
 		* ends up in the classIDMapping only once. You need this as a
-		* static member in any derived grid3D class in order to read .ot
-		* files through the AbstractGrid3D factory. You should also call
+		* static member in any derived quadtree class in order to read .ot
+		* files through the AbstractQuadTree factory. You should also call
 		* ensureLinking() once from the constructor.
 		*/
 		class StaticMemberInitializer{
@@ -98,12 +105,11 @@ namespace quadmap{
 			/**
 			* Dummy function to ensure that MSVC does not drop the
 			* StaticMemberInitializer, causing this tree failing to register.
-			* Needs to be called from the constructor of this grid.
+			* Needs to be called from the constructor of this quadtree.
 			*/
 			void ensureLinking() {};
 		};
-
-		/// to ensure static initialization (only once)
+		/// static member to ensure static initialization (only once)
 		static StaticMemberInitializer superrayQuadTreeMemberInit;
 	};
 }

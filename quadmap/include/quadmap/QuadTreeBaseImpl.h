@@ -112,7 +112,7 @@ namespace quadmap {
 		/**
 		 * Clear KeyRay vector to minimize unneeded memory. This is only
 		 * useful for the StaticMemberInitializer classes, don't call it for
-		 * an quadtree that is actually used.
+		 * a quadtree that is actually used.
 		 */
 		void clearKeyRays(){
 			keyrays.clear();
@@ -278,7 +278,7 @@ namespace quadmap {
 		// -- raytracing  -----------------------
 
 		/**
-		 * Traces a ray from origin to end (excluding), returning an
+		 * Traces a ray from origin to end (excluding), returning a
 		 * QuadTreeKey of all nodes traversed by the beam. You still need to check
 		 * if a node at that coordinate exists (e.g. with search()).
 		 *

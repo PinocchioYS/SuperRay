@@ -30,8 +30,8 @@
 #include <octomap_superray/SuperRayOcTree.h>
 
 namespace octomap{
-	SuperRayOcTree::SuperRayOcTree(double resolution)
-	: OccupancyOcTreeBase<OcTreeNode>(resolution) {
+	SuperRayOcTree::SuperRayOcTree(double in_resolution)
+	: OccupancyOcTreeBase<OcTreeNode>(in_resolution) {
 		superrayOcTreeMemberInit.ensureLinking();
 	};
 

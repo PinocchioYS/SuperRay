@@ -36,8 +36,8 @@
 
 namespace quadmap {
 
-	QuadTree::QuadTree(double resolution)
-		: OccupancyQuadTreeBase<QuadTreeNode>(resolution) {
+	QuadTree::QuadTree(double in_resolution)
+		: OccupancyQuadTreeBase<QuadTreeNode>(in_resolution) {
 			quadTreeMemberInit.ensureLinking();
 		};
 

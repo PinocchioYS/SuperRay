@@ -42,7 +42,7 @@
 namespace quadmap {
 
 	/**
-	 * quadmap main map data structure, stores 2D occupancy grid map in an QuadTree.
+	 * quadmap main map data structure, stores 2D occupancy grid map in a QuadTree.
 	 * Basic functionality is implemented in QuadTreeBase.
 	 *
 	 */
@@ -53,7 +53,7 @@ namespace quadmap {
 		QuadTree(double resolution);
 
 		/**
-		 * Reads an QuadTree from a binary file
+		 * Reads a QuadTree from a binary file
 		 * @param _filename
 		 *
 		 */

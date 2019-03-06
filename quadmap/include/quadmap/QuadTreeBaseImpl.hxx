@@ -43,9 +43,9 @@ namespace quadmap {
 
 
 	template <class NODE, class I>
-	QuadTreeBaseImpl<NODE, I>::QuadTreeBaseImpl(double resolution) :
+	QuadTreeBaseImpl<NODE, I>::QuadTreeBaseImpl(double in_resolution) :
 		I(), root(NULL), tree_depth(16), tree_max_val(32768),
-		resolution(resolution), tree_size(0)
+		resolution(in_resolution), tree_size(0)
 	{
 
 		init();
@@ -54,9 +54,9 @@ namespace quadmap {
 	}
 
 	template <class NODE, class I>
-	QuadTreeBaseImpl<NODE, I>::QuadTreeBaseImpl(double resolution, unsigned int tree_depth, unsigned int tree_max_val) :
-		I(), root(NULL), tree_depth(tree_depth), tree_max_val(tree_max_val),
-		resolution(resolution), tree_size(0)
+	QuadTreeBaseImpl<NODE, I>::QuadTreeBaseImpl(double in_resolution, unsigned int in_tree_depth, unsigned int in_tree_max_val) :
+		I(), root(NULL), tree_depth(in_tree_depth), tree_max_val(in_tree_max_val),
+		resolution(in_resolution), tree_size(0)
 	{
 		init();
 
@@ -129,10 +129,10 @@ namespace quadmap {
 		}
 
 		// traverse all nodes, check if structure the same
-		QuadTreeBaseImpl<NODE, I>::tree_iterator it = this->begin_tree();
-		QuadTreeBaseImpl<NODE, I>::tree_iterator end = this->end_tree();
-		QuadTreeBaseImpl<NODE, I>::tree_iterator other_it = other.begin_tree();
-		QuadTreeBaseImpl<NODE, I>::tree_iterator other_end = other.end_tree();
+		typename QuadTreeBaseImpl<NODE, I>::tree_iterator it = this->begin_tree();
+        typename QuadTreeBaseImpl<NODE, I>::tree_iterator end = this->end_tree();
+        typename QuadTreeBaseImpl<NODE, I>::tree_iterator other_it = other.begin_tree();
+        typename QuadTreeBaseImpl<NODE, I>::tree_iterator other_end = other.end_tree();
 
 		for (; it != end; ++it, ++other_it){
 			if (other_it == other_end)
@@ -607,13 +607,7 @@ namespace quadmap {
 			unsigned int dim;
 
 			// find minimum tMax:
-			// dim = tMax[0] < tMax[1] ? 0 : 1;
-			if (tMax[0] < tMax[1]){
-				dim = 0;
-			}
-			else {
-				dim = 1;
-			}
+			dim = tMax[0] < tMax[1] ? 0 : 1;
 
 			// advance in direction "dim"
 			current_key[dim] += step[dim];
@@ -1039,16 +1033,19 @@ namespace quadmap {
 		if (depth == 0)
 			depth = tree_depth;
 
+        point2d pmin_clamped = this->keyToCoord(this->coordToKey(pmin, depth), depth);
+        point2d pmax_clamped = this->keyToCoord(this->coordToKey(pmax, depth), depth);
+
 		float diff[2];
 		unsigned int steps[2];
 		float step_size = this->resolution * pow(2, tree_depth - depth);
 		for (int i = 0; i < 2; ++i) {
-			diff[i] = pmax(i) - pmin(i);
+            diff[i] = pmax_clamped(i) - pmin_clamped(i);
 			steps[i] = floor(diff[i] / step_size);
 			//      std::cout << "bbx " << i << " size: " << diff[i] << " " << steps[i] << " steps\n";
 		}
 
-		point2d p = pmin;
+		point2d p = pmin_clamped;
 		NODE* res;
 		for (unsigned int x = 0; x < steps[0]; ++x) {
 			p.x() += step_size;
@@ -1059,7 +1056,7 @@ namespace quadmap {
 					node_centers.push_back(p);
 				}
 			}
-			p.y() = pmin.y();
+			p.y() = pmin_clamped.y();
 		}
 	}
 

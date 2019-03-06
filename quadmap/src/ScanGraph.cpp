@@ -55,7 +55,9 @@ namespace quadmap {
 
 		scan->writeBinary(s);
 		pose.writeBinary(s);
-		s.write((char*)&id, sizeof(id));
+
+		uint32_t uintId = static_cast<uint32_t>(id);
+		s.write((char*)&uintId, sizeof(uintId));
 
 		return s;
 	}
@@ -66,7 +68,9 @@ namespace quadmap {
 
 		this->pose.readBinary(s);
 
-		s.read((char*)&this->id, sizeof(this->id));
+		uint32_t uintId;
+		s.read((char*)&uintId, sizeof(uintId));
+		this->id = uintId;
 
 		return s;
 	}
@@ -432,7 +436,6 @@ namespace quadmap {
 	std::istream& ScanGraph::readPlainASCII(std::istream& s){
 		std::string currentLine;
 		ScanNode* currentNode = NULL;
-		int scan_id = 0;
 		while (true){
 			getline(s, currentLine);
 			if (s.good() && !s.eof()){
@@ -454,7 +457,6 @@ namespace quadmap {
 
 					currentNode = new ScanNode();
 					currentNode->scan = new Pointcloud();
-					currentNode->id = scan_id++;
 
 					float x, y, rot;
 					std::string tmp;
@@ -464,6 +466,7 @@ namespace quadmap {
 				}
 				else{
 					if (currentNode == NULL){
+						// TODO: allow "simple" pc files by setting initial Scan Pose to (0,0,0)
 						QUADMAP_ERROR_STR("Error parsing log file, no Scan to add point to!");
 						break;
 					}

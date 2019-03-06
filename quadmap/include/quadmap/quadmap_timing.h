@@ -45,7 +45,7 @@ void gettimeofday(struct timeval* t, void* timezone) {
 	t->tv_sec = (long)timebuffer.time;
 	t->tv_usec = 1000 * timebuffer.millitm;
 }
-#else 
+#else
 // GCC and minGW
 #include <sys/time.h>
 #endif

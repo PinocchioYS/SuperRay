@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include <vector>
 #include <list>
+#include <inttypes.h>
 
 #include <quadmap/math/Vector2.h>
 #include <quadmap/math/Pose3D.h>
@@ -51,7 +52,7 @@ namespace quadmap {
 	typedef std::vector<quadmath::Vector2>  point2d_collection;
 	typedef std::list<quadmath::Vector2>    point2d_list;
 
-	/// A voxel defined by its center point2d and its side length
+	/// A pixel defined by its center point2d and its side length
 	typedef std::pair<point2d, double>		QuadTreeVolume;
 
 }

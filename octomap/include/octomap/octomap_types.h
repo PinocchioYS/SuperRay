@@ -61,13 +61,13 @@ namespace octomap {
 // no debug output if not in debug mode:
 #ifdef NDEBUG
 #ifndef OCTOMAP_NODEBUGOUT
-      #define OCTOMAP_NODEBUGOUT
-    #endif
+#define OCTOMAP_NODEBUGOUT
+#endif
 #endif
 
 #ifdef OCTOMAP_NODEBUGOUT
 #define OCTOMAP_DEBUG(...)       (void)0
-    #define OCTOMAP_DEBUG_STR(...)   (void)0
+#define OCTOMAP_DEBUG_STR(...)   (void)0
 #else
 #define OCTOMAP_DEBUG(...)        fprintf(stderr, __VA_ARGS__), fflush(stderr)
 #define OCTOMAP_DEBUG_STR(args)   std::cerr << args << std::endl

@@ -52,11 +52,11 @@ public:
 	 * @param tree QuadTreeBaseImpl on which the iterator is used on
 	 * @param depth Maximum depth to traverse the tree. 0 (default): unlimited
 	 */
-	iterator_base(QuadTreeBaseImpl<NodeType, INTERFACE> const* tree, uint8_t depth = 0)
-		: tree((tree && tree->root) ? tree : NULL), maxDepth(depth)
+	iterator_base(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, uint8_t depth = 0)
+		: tree((ptree && ptree->root) ? ptree : NULL), maxDepth(depth)
 	{
-		if (tree && maxDepth == 0)
-			maxDepth = tree->getTreeDepth();
+		if (ptree && maxDepth == 0)
+			maxDepth = ptree->getTreeDepth();
 
 		if (tree && tree->root){ // tree is not empty
 			StackElement s;
@@ -209,7 +209,7 @@ public:
 	 * @param tree QuadTreeBaseImpl on which the iterator is used on
 	 * @param depth Maximum depth to traverse the tree. 0 (default): unlimited
 	 */
-	tree_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* tree, uint8_t depth = 0) : iterator_base(tree, depth) {};
+	tree_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, uint8_t depth = 0) : iterator_base(ptree, depth) {};
 
 	/// postfix increment operator of iterator (it++)
 	tree_iterator operator++(int){
@@ -266,7 +266,7 @@ public:
 	* @param tree QuadTreeBaseImpl on which the iterator is used on
 	* @param depth Maximum depth to traverse the tree. 0 (default): unlimited
 	*/
-	leaf_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* tree, uint8_t depth = 0) : iterator_base(tree, depth) {
+	leaf_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, uint8_t depth = 0) : iterator_base(ptree, depth) {
 		// tree could be empty (= no stack)
 		if (this->stack.size() > 0){
 			// skip forward to next valid leaf node:
@@ -334,7 +334,7 @@ public:
 	leaf_bbx_iterator() : iterator_base() {};
 	/**
 	* Constructor of the iterator. The bounding box corners min and max are
-	* converted into an QuadTreeKey first.
+	* converted into a QuadTreeKey first.
 	*
 	* @note Due to rounding and discretization
 	* effects, nodes may be traversed that have float coordinates appearing
@@ -347,14 +347,14 @@ public:
 	* @param max Maximum point2d of the axis-aligned boundingbox
 	* @param depth Maximum depth to traverse the tree. 0 (default): unlimited
 	*/
-	leaf_bbx_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* tree, const point2d& min, const point2d& max, uint8_t depth = 0)
-		: iterator_base(tree, depth)
+	leaf_bbx_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, const point2d& min, const point2d& max, uint8_t depth = 0)
+		: iterator_base(ptree, depth)
 	{
 		if (this->stack.size() > 0){
-			assert(tree);
+			assert(ptree);
 			if (!this->tree->coordToKeyChecked(min, minKey) || !this->tree->coordToKeyChecked(max, maxKey)){
 				// coordinates invalid, set to end iterator
-				tree = NULL;
+				this->tree = NULL;
 				this->maxDepth = 0;
 			}
 			else{  // else: keys are generated and stored
@@ -376,8 +376,8 @@ public:
 	* @param max Maximum QuadTreeKey to be included in the axis-aligned boundingbox
 	* @param depth Maximum depth to traverse the tree. 0 (default): unlimited
 	*/
-	leaf_bbx_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* tree, const QuadTreeKey& min, const QuadTreeKey& max, uint8_t depth = 0)
-		: iterator_base(tree, depth), minKey(min), maxKey(max)
+	leaf_bbx_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, const QuadTreeKey& min, const QuadTreeKey& max, uint8_t depth = 0)
+		: iterator_base(ptree, depth), minKey(min), maxKey(max)
 	{
 		// tree could be empty (= no stack)
 		if (this->stack.size() > 0){

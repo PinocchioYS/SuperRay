@@ -99,10 +99,10 @@ namespace octomap{
 	std::ofstream& SuperRayCloud::write(std::ofstream &s) const {
 		OCTOMAP_DEBUG("Writing %d super rays to binary file...", this->size());
 		// Write origin
-		s << origin(0) << "\t" << origin(1) << "\t" << origin(2) << std::endl;
+		s << origin(0) << " " << origin(1) << " " << origin(2) << std::endl;
 		// Write super rays
 		for (SuperRayCloud::const_iterator it = this->begin(); it != this->end(); it++) {
-			s << it->p(0) << "\t" << it->p(1) << "\t" << it->p(2) << "\t" << it->w << std::endl;
+			s << it->p(0) << " " << it->p(1) << " " << it->p(2) << " " << it->w << std::endl;
 		}
 		OCTOMAP_DEBUG("done.\n");
 

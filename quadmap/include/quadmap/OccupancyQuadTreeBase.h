@@ -93,7 +93,7 @@ namespace quadmap {
 		*   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.*
 		*/
 		virtual void insertPointCloud(const Pointcloud& scan, const quadmap::point2d& sensor_origin,
-			double maxrange = -1., bool lazy_eval = false, bool discretize = false);
+									  double maxrange = -1., bool lazy_eval = false, bool discretize = false);
 
 		/**
 		* Integrate a 2d scan (transform scan before tree update), parallelized with OpenMP.
@@ -114,7 +114,7 @@ namespace quadmap {
 		*   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.*
 		*/
 		virtual void insertPointCloud(const Pointcloud& scan, const point2d& sensor_origin, const pose3d& frame_origin,
-			double maxrange = -1., bool lazy_eval = false, bool discretize = false);
+									  double maxrange = -1., bool lazy_eval = false, bool discretize = false);
 
 		/**
 		* Insert a 2d scan (given as a ScanNode) into the tree, parallelized with OpenMP.
@@ -296,7 +296,7 @@ namespace quadmap {
 		 * @return true if an occupied cell was hit, false if the maximum range or quadtree bounds are reached, or if an unknown node was hit.
 		 */
 		virtual bool castRay(const point2d& origin, const point2d& direction, point2d& end,
-			bool ignoreUnknownCells = false, double maxRange = -1.0) const;
+							 bool ignoreUnknownCells = false, double maxRange = -1.0) const;
 
 		/**
 		 * Retrieves the entry point of a ray into a pixel. This is the closest intersection point of the ray
@@ -310,7 +310,7 @@ namespace quadmap {
 		 * @return Whether or not an intesection point has been found. Either, the ray never cross the pixel or the ray is exactly parallel to the only surface it intersect.
 		 */
 		virtual bool getRayIntersection(const point2d& origin, const point2d& direction, const point2d& center,
-			point2d& intersection, double delta = 0.0) const;
+										point2d& intersection, double delta = 0.0) const;
 
 		//-- set BBX limit (limits tree updates to this bounding box)
 
@@ -365,9 +365,9 @@ namespace quadmap {
 		 * @param maxrange maximum range for raycasting (-1: unlimited)
 		 */
 		void computeUpdate(const Pointcloud& scan, const quadmap::point2d& origin,
-			KeySet& free_cells,
-			KeySet& occupied_cells,
-			double maxrange);
+						   KeySet& free_cells,
+						   KeySet& occupied_cells,
+						   double maxrange);
 
 
 		/**
@@ -383,9 +383,9 @@ namespace quadmap {
 		 * @param maxrange maximum range for raycasting (-1: unlimited)
 		 */
 		void computeDiscreteUpdate(const Pointcloud& scan, const quadmap::point2d& origin,
-			KeySet& free_cells,
-			KeySet& occupied_cells,
-			double maxrange);
+								   KeySet& free_cells,
+								   KeySet& occupied_cells,
+								   double maxrange);
 
 
 		// -- I/O  -----------------------------------------
@@ -461,10 +461,10 @@ namespace quadmap {
 		// recursive calls ----------------------------
 
 		NODE* updateNodeRecurs(NODE* node, bool node_just_created, const QuadTreeKey& key,
-			unsigned int depth, const float& log_odds_update, bool lazy_eval = false);
+							   unsigned int depth, const float& log_odds_update, bool lazy_eval = false);
 
 		NODE* setNodeValueRecurs(NODE* node, bool node_just_created, const QuadTreeKey& key,
-			unsigned int depth, const float& log_odds_value, bool lazy_eval = false);
+								 unsigned int depth, const float& log_odds_value, bool lazy_eval = false);
 
 		void updateInnerOccupancyRecurs(NODE* node, unsigned int depth);
 

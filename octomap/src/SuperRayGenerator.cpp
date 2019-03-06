@@ -47,7 +47,7 @@ namespace octomap{
 		originKey = coordToKey(_origin);
 
 		// Voxelize point clouds
-		Vexelized_Pointclouds voxels;
+		Voxelized_Pointclouds voxels;
 		for (unsigned int i = 0; i < _pc.size(); i++){
 			voxels[coordToKey(_pc[i])].push_back(_pc[i]);
 		}
@@ -78,8 +78,7 @@ namespace octomap{
 			GenerateSuperRay(pointlist, _srcloud);
 		}
 	#else
-		// unordered_ns::unordered_map< unsigned int, std::vector<octomap::point3d> >::iterator it;
-		Vexelized_Pointclouds::iterator it;
+		Voxelized_Pointclouds::iterator it;
 		for (it = voxels.begin(); it != voxels.end(); ++it){
 			std::vector<octomap::point3d>& pointlist = it->second;
 
@@ -132,13 +131,6 @@ namespace octomap{
 			}
 			return;
 		}
-
-		// Check whether we generate super rays or not
-		/*if (!GenerateSuperRays2D(_pointlist.size(), _axis, _voxelinfo)){
-			for (unsigned int j = 0; j < _pointlist.size(); ++j)
-				_srcloud.push_back(_pointlist[j], 1);
-			return;
-		}*/
 
 		// 1. Generate one mapping line in 2-D
 		std::vector<double> mappingPlaneY;
@@ -198,12 +190,7 @@ namespace octomap{
 		const unsigned int& axisY = _axis.axisV;
 		const unsigned int& axisZ = _axis.axisK;	// Traversal Direction
 		octomap::point3d originT(originW(axisX), originW(axisY), originW(axisZ));
-		// Check whether we generate super rays or not
-		/*if (!GenerateSuperRays3D(_pointlist.size(), _axis, _voxelinfo)){
-			for (unsigned int j = 0; j < _pointlist.size(); ++j)
-				_srcloud.push_back(_pointlist[j], 1);
-			return;
-		}*/
+
 
 		// 1. Generate mapping lines of three 2-D sub spaces.
 		std::vector<double> mappingPlaneXY, mappingPlaneZX, mappingPlaneZY;
@@ -294,8 +281,8 @@ namespace octomap{
 		verticesT[3].x() = maxW(_axisX);	verticesT[3].y() = maxW(_axisY);	verticesT[3].z() = (float)0.0;
 		// Traversal directioin
 		int dir = 0;
-		if (abs(originT.x() - verticesT[0].x()) < abs(originT.x() - verticesT[3].x()))	dir = 1;
-		else																			dir = -1;
+		if (fabs(originT.x() - verticesT[0].x()) < fabs(originT.x() - verticesT[3].x()))	dir = 1;
+		else																			    dir = -1;
 		// Start and goal line of traversal axis
 		int curXKey, mappingXKey;
 		double curX, mappingX;
@@ -354,8 +341,8 @@ namespace octomap{
 
 		double nearDist[3];
 		for (unsigned int i = 0; i < 3; i++){
-			if (abs(originW(i) - _min(i)) < abs(originW(i) - _max(i)))	nearDist[i] = abs(originW(i) - _min(i));
-			else 														nearDist[i] = abs(originW(i) - _max(i));
+			if (fabs(originW(i) - _min(i)) < fabs(originW(i) - _max(i)))	nearDist[i] = fabs(originW(i) - _min(i));
+			else 														    nearDist[i] = fabs(originW(i) - _max(i));
 		}
 
 		if (nearDist[0] < nearDist[1]){
@@ -394,97 +381,5 @@ namespace octomap{
 				_axis.axisK = 0;
 			}
 		}
-	}
-
-	bool SuperRayGenerator::GenerateSuperRays3D(const int _num_points, Axis3D& _axis, VoxelInfo& _voxelinfo)
-	{
-		/*const unsigned int& axisX = _axis.axisU;
-		const unsigned int& axisY = _axis.axisV;
-		const unsigned int& axisZ = _axis.axisK;	// Traversal Direction
-		
-		const int DEL_X = abs((int)originKey[axisX] - (int)_voxelinfo.voxelKey[axisX]);
-		const int DEL_Y = abs((int)originKey[axisY] - (int)_voxelinfo.voxelKey[axisY]);
-		const int DEL_Z = abs((int)originKey[axisZ] - (int)_voxelinfo.voxelKey[axisZ]);
-
-		const int G_XY = DEL_X + DEL_Y;
-		const int G_ZX = DEL_Z + DEL_X;
-		const int G_ZY = DEL_Z + DEL_Y;
-		
-		const double LOG_G_XY = log((double)G_XY);
-		const double LOG_G_ZX = log((double)G_ZX);
-		const double LOG_G_ZY = log((double)G_ZY);
-
-		const double OVERHEAD_GML_XY = G_XY + G_XY * LOG_G_XY;
-		const double OVERHEAD_GML_ZX = G_ZX + G_ZX * LOG_G_ZX;
-		const double OVERHEAD_GML_ZY = G_ZY + G_ZY * LOG_G_ZY;
-
-		const double OVERHEAD_GML = OVERHEAD_GML_XY + OVERHEAD_GML_ZX + OVERHEAD_GML_ZY + _num_points * (LOG_G_XY + LOG_G_ZX + LOG_G_ZY);
-
-		const int COST = (DEL_X + DEL_Y + DEL_Z) * 9;
-		const int NON_SR_COST = _num_points * COST;
-		const double USE_SR_COST = OVERHEAD_GML + (double)(G_XY * G_ZX * G_ZY * COST);
-
-		if ((double)NON_SR_COST > USE_SR_COST)
-			return true;
-		else
-			return false;*/
-
-		/*const unsigned int& axisX = _axis.axisU;
-		const unsigned int& axisY = _axis.axisV;
-		const unsigned int& axisZ = _axis.axisK;	// Traversal Direction
-
-		const int DEL_X = abs((int)originKey[axisX] - (int)_voxelinfo.voxelKey[axisX]);
-		const int DEL_Y = abs((int)originKey[axisY] - (int)_voxelinfo.voxelKey[axisY]);
-		const int DEL_Z = abs((int)originKey[axisZ] - (int)_voxelinfo.voxelKey[axisZ]);
-
-		const int G_XY = DEL_X + DEL_Y;
-		const int G_ZX = DEL_Z + DEL_X;
-		const int G_ZY = DEL_Z + DEL_Y;
-
-		if (_num_points > G_XY * G_ZX * G_ZY)
-			return true;
-		else
-			return false;*/
-		return true;
-	}
-
-	bool SuperRayGenerator::GenerateSuperRays2D(const int _num_points, Axis3D& _axis, VoxelInfo& _voxelinfo)
-	{
-		/*const unsigned int& axisX = _axis.axisV;		// Traversal Axis
-		const unsigned int& axisY = _axis.axisK;		// Mapping Axis
-
-		const int DEL_X = abs((int)originKey[axisX] - (int)_voxelinfo.voxelKey[axisX]);
-		const int DEL_Y = abs((int)originKey[axisY] - (int)_voxelinfo.voxelKey[axisY]);
-
-		const int G_XY = DEL_X + DEL_Y;
-
-		const double LOG_G_XY = log((double)G_XY);
-
-		const double OVERHEAD_GML_XY = G_XY + G_XY * LOG_G_XY;
-
-		const double OVERHEAD_GML = OVERHEAD_GML_XY + _num_points * LOG_G_XY;
-
-		const int COST = DEL_X + DEL_Y * 9;
-		const int NON_SR_COST = _num_points * COST;
-		const double USE_SR_COST = OVERHEAD_GML + (double)(G_XY * COST);
-
-		if ((double)NON_SR_COST > USE_SR_COST)
-			return true;
-		else
-			return false;*/
-
-		/*const unsigned int& axisX = _axis.axisV;		// Traversal Axis
-		const unsigned int& axisY = _axis.axisK;		// Mapping Axis
-
-		const int DEL_X = abs((int)originKey[axisX] - (int)_voxelinfo.voxelKey[axisX]);
-		const int DEL_Y = abs((int)originKey[axisY] - (int)_voxelinfo.voxelKey[axisY]);
-
-		const int G_XY = DEL_X + DEL_Y;
-
-		if (_num_points > G_XY)
-			return true;
-		else
-			return false;*/
-		return true;
 	}
 }

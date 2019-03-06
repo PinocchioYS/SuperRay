@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
 PROJECT( quadmap )
 
-ENABLE_TESTING()
+include(CTest)
 
 # version (e.g. for packaging)
 set(QUADMAP_MAJOR_VERSION 1)
@@ -11,6 +11,10 @@ set(QUADMAP_VERSION ${QUADMAP_MAJOR_VERSION}.${QUADMAP_MINOR_VERSION}.${QUADMAP_
 set(QUADMAP_SOVERSION ${QUADMAP_MAJOR_VERSION}.${QUADMAP_MINOR_VERSION})
 if(COMMAND cmake_policy)
   cmake_policy(SET CMP0003 NEW)
+  if(POLICY CMP0042)
+    # Enable MACOSX_RPATH by default.
+    cmake_policy(SET CMP0042 NEW)
+  endif(POLICY CMP0042)
 endif(COMMAND cmake_policy)
 
 SET (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
