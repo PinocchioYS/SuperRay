@@ -36,62 +36,61 @@
 #include <math.h>
 #include <fstream>
 #include <stdlib.h>
-// #include <inttypes.h>
-#include <octomap/inttype.h>
+#include <inttypes.h>
 
 #include <octomap/OcTreeNode.h>
 
 namespace octomap {
 
-	OcTreeNode::OcTreeNode()
-		: OcTreeDataNode<float>(0.0)
-	{
-		}
+    OcTreeNode::OcTreeNode()
+            : OcTreeDataNode<float>(0.0)
+    {
+    }
 
-	OcTreeNode::~OcTreeNode(){
-	}
+    OcTreeNode::~OcTreeNode(){
+    }
 
 
-	// ============================================================
-	// =  occupancy probability  ==================================
-	// ============================================================
+    // ============================================================
+    // =  occupancy probability  ==================================
+    // ============================================================
 
-	double OcTreeNode::getMeanChildLogOdds() const{
-		double mean = 0;
-		uint8_t c = 0;
-		if (children != NULL){
-			for (unsigned int i = 0; i<8; i++) {
-				if (children[i] != NULL) {
-					mean += static_cast<OcTreeNode*>(children[i])->getOccupancy(); // TODO check if works generally
-					++c;
-				}
-			}
-		}
+    double OcTreeNode::getMeanChildLogOdds() const{
+      double mean = 0;
+      uint8_t c = 0;
+      if (children !=NULL){
+        for (unsigned int i=0; i<8; i++) {
+          if (children[i] != NULL) {
+            mean += static_cast<OcTreeNode*>(children[i])->getOccupancy(); // TODO check if works generally
+            ++c;
+          }
+        }
+      }
 
-		if (c > 0)
-			mean /= (double)c;
+      if (c > 0)
+        mean /= (double) c;
 
-		return log(mean / (1 - mean));
-	}
+      return log(mean/(1-mean));
+    }
 
-	float OcTreeNode::getMaxChildLogOdds() const{
-		float max = -std::numeric_limits<float>::max();
+    float OcTreeNode::getMaxChildLogOdds() const{
+      float max = -std::numeric_limits<float>::max();
 
-		if (children != NULL){
-			for (unsigned int i = 0; i<8; i++) {
-				if (children[i] != NULL) {
-					float l = static_cast<OcTreeNode*>(children[i])->getLogOdds(); // TODO check if works generally
-					if (l > max)
-						max = l;
-				}
-			}
-		}
-		return max;
-	}
+      if (children !=NULL){
+        for (unsigned int i=0; i<8; i++) {
+          if (children[i] != NULL) {
+            float l = static_cast<OcTreeNode*>(children[i])->getLogOdds(); // TODO check if works generally
+            if (l > max)
+              max = l;
+          }
+        }
+      }
+      return max;
+    }
 
-	void OcTreeNode::addValue(const float& logOdds) {
-		value += logOdds;
-	}
+    void OcTreeNode::addValue(const float& logOdds) {
+      value += logOdds;
+    }
 
 } // end namespace
 

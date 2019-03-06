@@ -40,88 +40,88 @@
 #include <ctime>
 
 namespace octomap {
-  
-  // node definition
-  class OcTreeNodeStamped : public OcTreeNode {    
 
-  public:
-    OcTreeNodeStamped() : OcTreeNode(), timestamp(0) {}
+    // node definition
+    class OcTreeNodeStamped : public OcTreeNode {
 
-    OcTreeNodeStamped(const OcTreeNodeStamped& rhs) : OcTreeNode(rhs), timestamp(rhs.timestamp) {}
-
-    bool operator==(const OcTreeNodeStamped& rhs) const{
-      return (rhs.value == value && rhs.timestamp == timestamp);
-    }
-    
-    void copyData(const OcTreeNodeStamped& from){
-      OcTreeNode::copyData(from);
-      timestamp = from.getTimestamp();
-    }
-      
-    // timestamp
-    inline unsigned int getTimestamp() const { return timestamp; }
-    inline void updateTimestamp() { timestamp = (unsigned int) time(NULL);}
-    inline void setTimestamp(unsigned int timestamp) {this->timestamp = timestamp; }
-
-    // update occupancy and timesteps of inner nodes 
-    inline void updateOccupancyChildren() {      
-      this->setLogOdds(this->getMaxChildLogOdds());  // conservative
-      updateTimestamp();
-    }
-
-  protected:
-    unsigned int timestamp;
-  };
-
-
-  // tree definition
-  class OcTreeStamped : public OccupancyOcTreeBase <OcTreeNodeStamped> {    
-
-  public:
-    /// Default constructor, sets resolution of leafs
-	  OcTreeStamped(double resolution);
-      
-    /// virtual constructor: creates a new object of same type
-    /// (Covariant return type requires an up-to-date compiler)
-    OcTreeStamped* create() const {return new OcTreeStamped(resolution); }
-
-    std::string getTreeType() const {return "OcTreeStamped";}
-
-    //! \return timestamp of last update
-    unsigned int getLastUpdateTime();
-
-    void degradeOutdatedNodes(unsigned int time_thres);
-    
-    virtual void updateNodeLogOdds(OcTreeNodeStamped* node, const float& update) const;
-    void integrateMissNoTime(OcTreeNodeStamped* node) const;
-
-  protected:
-    /**
-     * Static member object which ensures that this OcTree's prototype
-     * ends up in the classIDMapping only once. You need this as a 
-     * static member in any derived octree class in order to read .ot
-     * files through the AbstractOcTree factory. You should also call
-     * ensureLinking() once from the constructor.
-     */
-    class StaticMemberInitializer{
     public:
-      StaticMemberInitializer() {
-        OcTreeStamped* tree = new OcTreeStamped(0.1);
-        tree->clearKeyRays();
-        AbstractOcTree::registerTreeType(tree);
-      }
+        OcTreeNodeStamped() : OcTreeNode(), timestamp(0) {}
 
-      /**
-      * Dummy function to ensure that MSVC does not drop the
-      * StaticMemberInitializer, causing this tree failing to register.
-      * Needs to be called from the constructor of this octree.
-      */
-      void ensureLinking() {};
+        OcTreeNodeStamped(const OcTreeNodeStamped& rhs) : OcTreeNode(rhs), timestamp(rhs.timestamp) {}
+
+        bool operator==(const OcTreeNodeStamped& rhs) const{
+            return (rhs.value == value && rhs.timestamp == timestamp);
+        }
+
+        void copyData(const OcTreeNodeStamped& from){
+            OcTreeNode::copyData(from);
+            timestamp = from.getTimestamp();
+        }
+
+        // timestamp
+        inline unsigned int getTimestamp() const { return timestamp; }
+        inline void updateTimestamp() { timestamp = (unsigned int) time(NULL);}
+        inline void setTimestamp(unsigned int t) {timestamp = t; }
+
+        // update occupancy and timesteps of inner nodes
+        inline void updateOccupancyChildren() {
+            this->setLogOdds(this->getMaxChildLogOdds());  // conservative
+            updateTimestamp();
+        }
+
+    protected:
+        unsigned int timestamp;
     };
-    /// to ensure static initialization (only once)
-    static StaticMemberInitializer ocTreeStampedMemberInit;
-    
-  };
+
+
+    // tree definition
+    class OcTreeStamped : public OccupancyOcTreeBase <OcTreeNodeStamped> {
+
+    public:
+        /// Default constructor, sets resolution of leafs
+        OcTreeStamped(double resolution);
+
+        /// virtual constructor: creates a new object of same type
+        /// (Covariant return type requires an up-to-date compiler)
+        OcTreeStamped* create() const {return new OcTreeStamped(resolution); }
+
+        std::string getTreeType() const {return "OcTreeStamped";}
+
+        //! \return timestamp of last update
+        unsigned int getLastUpdateTime();
+
+        void degradeOutdatedNodes(unsigned int time_thres);
+
+        virtual void updateNodeLogOdds(OcTreeNodeStamped* node, const float& update) const;
+        void integrateMissNoTime(OcTreeNodeStamped* node) const;
+
+    protected:
+        /**
+         * Static member object which ensures that this OcTree's prototype
+         * ends up in the classIDMapping only once. You need this as a
+         * static member in any derived octree class in order to read .ot
+         * files through the AbstractOcTree factory. You should also call
+         * ensureLinking() once from the constructor.
+         */
+        class StaticMemberInitializer{
+        public:
+            StaticMemberInitializer() {
+                OcTreeStamped* tree = new OcTreeStamped(0.1);
+                tree->clearKeyRays();
+                AbstractOcTree::registerTreeType(tree);
+            }
+
+            /**
+            * Dummy function to ensure that MSVC does not drop the
+            * StaticMemberInitializer, causing this tree failing to register.
+            * Needs to be called from the constructor of this octree.
+            */
+            void ensureLinking() {};
+        };
+        /// to ensure static initialization (only once)
+        static StaticMemberInitializer ocTreeStampedMemberInit;
+
+    };
 
 } // end namespace
 

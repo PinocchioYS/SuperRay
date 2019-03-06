@@ -40,94 +40,94 @@
 
 namespace octomap {
 
-  class AbstractOcTreeNode {
+    class AbstractOcTreeNode {
 
 
-  };
-  
-  // forward declaration for friend in OcTreeDataNode
-  template<typename NODE,typename I> class OcTreeBaseImpl;
+    };
 
-  /**
-   * Basic node in the OcTree that can hold arbitrary data of type T in value.
-   * This is the base class for nodes used in an OcTree. The used implementation
-   * for occupancy mapping is in OcTreeNode.#
-   * \tparam T data to be stored in the node (e.g. a float for probabilities)
-   * 
-   * Note: If you derive a class (directly or indirectly) from OcTreeDataNode, 
-   * you have to implement (at least) the following functions to avoid slicing
-   * errors and memory-related bugs:
-   * createChild(), getChild(), getChild() const, expandNode() 
-   * See ColorOcTreeNode in ColorOcTree.h for an example. 
-   */
-  template<typename T> class OcTreeDataNode: public AbstractOcTreeNode {
-    template<typename NODE, typename I>
-    friend class OcTreeBaseImpl;
+    // forward declaration for friend in OcTreeDataNode
+    template<typename NODE,typename I> class OcTreeBaseImpl;
 
-  public:
+    /**
+     * Basic node in the OcTree that can hold arbitrary data of type T in value.
+     * This is the base class for nodes used in an OcTree. The used implementation
+     * for occupancy mapping is in OcTreeNode.#
+     * \tparam T data to be stored in the node (e.g. a float for probabilities)
+     *
+     * Note: If you derive a class (directly or indirectly) from OcTreeDataNode,
+     * you have to implement (at least) the following functions to avoid slicing
+     * errors and memory-related bugs:
+     * createChild(), getChild(), getChild() const, expandNode()
+     * See ColorOcTreeNode in ColorOcTree.h for an example.
+     */
+    template<typename T> class OcTreeDataNode: public AbstractOcTreeNode {
+        template<typename NODE, typename I>
+        friend class OcTreeBaseImpl;
 
-    OcTreeDataNode();
-    OcTreeDataNode(T initVal);
-    
-    /// Copy constructor, performs a recursive deep-copy of all children 
-    /// including node data in "value"
-    OcTreeDataNode(const OcTreeDataNode& rhs);
+    public:
 
-    /// Delete only own members. 
-    /// OcTree maintains tree structure and must have deleted children already
-    ~OcTreeDataNode();
+        OcTreeDataNode();
+        OcTreeDataNode(T initVal);
 
-    /// Copy the payload (data in "value") from rhs into this node
-    /// Opposed to copy ctor, this does not clone the children as well
-    void copyData(const OcTreeDataNode& from);
-    
-    /// Equals operator, compares if the stored value is identical
-    bool operator==(const OcTreeDataNode& rhs) const;
-    
-    
-    
+        /// Copy constructor, performs a recursive deep-copy of all children
+        /// including node data in "value"
+        OcTreeDataNode(const OcTreeDataNode& rhs);
+
+        /// Delete only own members.
+        /// OcTree maintains tree structure and must have deleted children already
+        ~OcTreeDataNode();
+
+        /// Copy the payload (data in "value") from rhs into this node
+        /// Opposed to copy ctor, this does not clone the children as well
+        void copyData(const OcTreeDataNode& from);
+
+        /// Equals operator, compares if the stored value is identical
+        bool operator==(const OcTreeDataNode& rhs) const;
 
 
-    // -- children  ----------------------------------
-
-    /// Test whether the i-th child exists. 
-    /// @deprecated Replaced by tree->nodeChildExists(...)
-    /// \return true if the i-th child exists
-    OCTOMAP_DEPRECATED(bool childExists(unsigned int i) const);
-
-    /// @deprecated Replaced by tree->nodeHasChildren(...)
-    /// \return true if the node has at least one child
-    OCTOMAP_DEPRECATED(bool hasChildren() const);
-
-    /// @return value stored in the node
-    T getValue() const{return value;};
-    /// sets value to be stored in the node
-    void setValue(T v) {value = v;};
-
-    // file IO:
-
-    /// Read node payload (data only) from binary stream
-    std::istream& readData(std::istream &s);
-
-    /// Write node payload (data only) to binary stream
-    std::ostream& writeData(std::ostream &s) const;
 
 
-    /// Make the templated data type available from the outside
-    typedef T DataType;
+
+        // -- children  ----------------------------------
+
+        /// Test whether the i-th child exists.
+        /// @deprecated Replaced by tree->nodeChildExists(...)
+        /// \return true if the i-th child exists
+        OCTOMAP_DEPRECATED(bool childExists(unsigned int i) const);
+
+        /// @deprecated Replaced by tree->nodeHasChildren(...)
+        /// \return true if the node has at least one child
+        OCTOMAP_DEPRECATED(bool hasChildren() const);
+
+        /// @return value stored in the node
+        T getValue() const{return value;};
+        /// sets value to be stored in the node
+        void setValue(T v) {value = v;};
+
+        // file IO:
+
+        /// Read node payload (data only) from binary stream
+        std::istream& readData(std::istream &s);
+
+        /// Write node payload (data only) to binary stream
+        std::ostream& writeData(std::ostream &s) const;
 
 
-  protected:
-    void allocChildren();
+        /// Make the templated data type available from the outside
+        typedef T DataType;
 
-    /// pointer to array of children, may be NULL
-    /// @note The tree class manages this pointer, the array, and the memory for it!
-    /// The children of a node are always enforced to be the same type as the node
-    AbstractOcTreeNode** children;
-    /// stored data (payload)
-    T value;
 
-  };
+    protected:
+        void allocChildren();
+
+        /// pointer to array of children, may be NULL
+        /// @note The tree class manages this pointer, the array, and the memory for it!
+        /// The children of a node are always enforced to be the same type as the node
+        AbstractOcTreeNode** children;
+        /// stored data (payload)
+        T value;
+
+    };
 
 
 } // end namespace

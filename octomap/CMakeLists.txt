@@ -1,16 +1,20 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
 PROJECT( octomap )
 
-ENABLE_TESTING()
+include(CTest)
 
 # version (e.g. for packaging)
 set(OCTOMAP_MAJOR_VERSION 1)
-set(OCTOMAP_MINOR_VERSION 8)
+set(OCTOMAP_MINOR_VERSION 9)
 set(OCTOMAP_PATCH_VERSION 0)
 set(OCTOMAP_VERSION ${OCTOMAP_MAJOR_VERSION}.${OCTOMAP_MINOR_VERSION}.${OCTOMAP_PATCH_VERSION})
 set(OCTOMAP_SOVERSION ${OCTOMAP_MAJOR_VERSION}.${OCTOMAP_MINOR_VERSION})
 if(COMMAND cmake_policy)
   cmake_policy(SET CMP0003 NEW)
+  if(POLICY CMP0042)
+    # Enable MACOSX_RPATH by default.
+    cmake_policy(SET CMP0042 NEW)
+  endif(POLICY CMP0042)
 endif(COMMAND cmake_policy)
 
 SET (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
@@ -51,10 +55,10 @@ LINK_DIRECTORIES(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 # Installation
 
 set(INSTALL_TARGETS_DEFAULT_ARGS
-	RUNTIME DESTINATION bin
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib
-)
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        )
 
 ADD_SUBDIRECTORY( src/math )
 ADD_SUBDIRECTORY( src )
@@ -154,4 +158,3 @@ MESSAGE ("\n")
 MESSAGE (STATUS "Compile octomap using: make")
 MESSAGE (STATUS "Install octomap using: make install")
 MESSAGE (STATUS "    (be sure to set the correct CMAKE_INSTALL_PREFIX before)")
-MESSAGE (STATUS "Compile API-documentation using: make docs\n")

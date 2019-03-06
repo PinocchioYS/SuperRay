@@ -40,18 +40,18 @@
 
 
 namespace octomap {
-  template <class NODE>
-  class OcTreeBase : public OcTreeBaseImpl<NODE,AbstractOcTree> {
-  public:
-    OcTreeBase<NODE>(double res) : OcTreeBaseImpl<NODE,AbstractOcTree>(res) {};
+    template <class NODE>
+    class OcTreeBase : public OcTreeBaseImpl<NODE,AbstractOcTree> {
+    public:
+        OcTreeBase<NODE>(double res) : OcTreeBaseImpl<NODE,AbstractOcTree>(res) {};
 
-    /// virtual constructor: creates a new object of same type
-    /// (Covariant return type requires an up-to-date compiler)
-    OcTreeBase<NODE>* create() const {return new OcTreeBase<NODE>(this->resolution); }
-    std::string getTreeType() const {return "OcTreeBase";}
-  };
+        /// virtual constructor: creates a new object of same type
+        /// (Covariant return type requires an up-to-date compiler)
+        OcTreeBase<NODE>* create() const {return new OcTreeBase<NODE>(this->resolution); }
+        std::string getTreeType() const {return "OcTreeBase";}
+    };
 
-  };
+};
 
 
 #endif

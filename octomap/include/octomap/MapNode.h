@@ -40,40 +40,40 @@
 
 namespace octomap {
 
-  template <class TREETYPE>
+    template <class TREETYPE>
     class MapNode {
-    
-  public:
-    MapNode();
-    MapNode(TREETYPE* node_map, pose6d origin);
-    MapNode(std::string filename, pose6d origin);
-    MapNode(const Pointcloud& cloud, pose6d origin);
-    ~MapNode();
 
-    typedef TREETYPE TreeType;
+    public:
+        MapNode();
+        MapNode(TREETYPE* node_map, pose6d origin);
+        MapNode(std::string filename, pose6d origin);
+        MapNode(const Pointcloud& cloud, pose6d origin);
+        ~MapNode();
 
-    TREETYPE* getMap() { return  node_map; }
-    
-    void updateMap(const Pointcloud& cloud, point3d sensor_origin);
+        typedef TREETYPE TreeType;
 
-    inline std::string getId() { return id; }
-    inline void setId(std::string newid) { id = newid; }
+        TREETYPE* getMap() { return  node_map; }
 
-    inline pose6d getOrigin() { return origin; }
+        void updateMap(const Pointcloud& cloud, point3d sensor_origin);
 
-    // returns cloud of voxel centers in global reference frame
-    Pointcloud generatePointcloud();
-    bool writeMap(std::string filename);
+        inline std::string getId() { return id; }
+        inline void setId(std::string newid) { id = newid; }
 
-  protected:
-    TREETYPE*    node_map;  // occupancy grid map
-    pose6d       origin;    // origin and orientation relative to parent
-    std::string  id;
+        inline pose6d getOrigin() { return origin; }
 
-    void clear();
-    bool readMap(std::string filename);
+        // returns cloud of voxel centers in global reference frame
+        Pointcloud generatePointcloud();
+        bool writeMap(std::string filename);
 
-  };
+    protected:
+        TREETYPE*    node_map;  // occupancy grid map
+        pose6d       origin;    // origin and orientation relative to parent
+        std::string  id;
+
+        void clear();
+        bool readMap(std::string filename);
+
+    };
 
 } // end namespace
 

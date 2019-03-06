@@ -35,39 +35,38 @@
 
 namespace octomap {
 
-  OcTreeStamped::OcTreeStamped(double resolution)
-   : OccupancyOcTreeBase<OcTreeNodeStamped>(resolution) {
-    ocTreeStampedMemberInit.ensureLinking();
-  }
-
-  unsigned int OcTreeStamped::getLastUpdateTime() {
-    // this value is updated whenever inner nodes are 
-    // updated using updateOccupancyChildren()
-    return root->getTimestamp();
-  }
-
-  void OcTreeStamped::degradeOutdatedNodes(unsigned int time_thres) {
-    unsigned int query_time = (unsigned int) time(NULL); 
-
-    for(leaf_iterator it = this->begin_leafs(), end=this->end_leafs(); 
-        it!= end; ++it) {
-      if ( this->isNodeOccupied(*it) 
-           && ((query_time - it->getTimestamp()) > time_thres) ) {
-        integrateMissNoTime(&*it);
-      }
+    OcTreeStamped::OcTreeStamped(double in_resolution)
+            : OccupancyOcTreeBase<OcTreeNodeStamped>(in_resolution) {
+        ocTreeStampedMemberInit.ensureLinking();
     }
-  }  
 
-  void OcTreeStamped::updateNodeLogOdds(OcTreeNodeStamped* node, const float& update) const {
-    OccupancyOcTreeBase<OcTreeNodeStamped>::updateNodeLogOdds(node, update);
-    node->updateTimestamp();
-  }
+    unsigned int OcTreeStamped::getLastUpdateTime() {
+        // this value is updated whenever inner nodes are
+        // updated using updateOccupancyChildren()
+        return root->getTimestamp();
+    }
 
-  void OcTreeStamped::integrateMissNoTime(OcTreeNodeStamped* node) const{
-    OccupancyOcTreeBase<OcTreeNodeStamped>::updateNodeLogOdds(node, prob_miss_log);
-  }
+    void OcTreeStamped::degradeOutdatedNodes(unsigned int time_thres) {
+        unsigned int query_time = (unsigned int) time(NULL);
 
-  OcTreeStamped::StaticMemberInitializer OcTreeStamped::ocTreeStampedMemberInit;
+        for(leaf_iterator it = this->begin_leafs(), end=this->end_leafs();
+            it!= end; ++it) {
+            if ( this->isNodeOccupied(*it)
+                 && ((query_time - it->getTimestamp()) > time_thres) ) {
+                integrateMissNoTime(&*it);
+            }
+        }
+    }
+
+    void OcTreeStamped::updateNodeLogOdds(OcTreeNodeStamped* node, const float& update) const {
+        OccupancyOcTreeBase<OcTreeNodeStamped>::updateNodeLogOdds(node, update);
+        node->updateTimestamp();
+    }
+
+    void OcTreeStamped::integrateMissNoTime(OcTreeNodeStamped* node) const{
+        OccupancyOcTreeBase<OcTreeNodeStamped>::updateNodeLogOdds(node, prob_miss_log);
+    }
+
+    OcTreeStamped::StaticMemberInitializer OcTreeStamped::ocTreeStampedMemberInit;
 
 } // end namespace
-

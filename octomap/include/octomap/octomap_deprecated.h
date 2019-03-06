@@ -36,14 +36,14 @@
 
 // define multi-platform deprecation mechanism
 #ifndef OCTOMAP_DEPRECATED
-  #ifdef __GNUC__
-    #define OCTOMAP_DEPRECATED(func) func __attribute__ ((deprecated))
-  #elif defined(_MSC_VER)
-    #define OCTOMAP_DEPRECATED(func) __declspec(deprecated) func
+#ifdef __GNUC__
+#define OCTOMAP_DEPRECATED(func) func __attribute__ ((deprecated))
+#elif defined(_MSC_VER)
+#define OCTOMAP_DEPRECATED(func) __declspec(deprecated) func
   #else
     #pragma message("WARNING: You need to implement OCTOMAP_DEPRECATED for this compiler")
     #define OCTOMAP_DEPRECATED(func) func
-  #endif
+#endif
 #endif
 
 #endif

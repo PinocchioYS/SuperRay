@@ -88,12 +88,12 @@ namespace octomap{
 
 	protected:
 		/**
-		* Static member object which ensures that this OcTree's prototype
-		* ends up in the classIDMapping only once. You need this as a
-		* static member in any derived octree class in order to read .ot
-		* files through the AbstractOcTree factory. You should also call
-		* ensureLinking() once from the constructor.
-		*/
+         * Static member object which ensures that this OcTree's prototype
+         * ends up in the classIDMapping only once. You need this as a
+         * static member in any derived octree class in order to read .ot
+         * files through the AbstractOcTree factory. You should also call
+         * ensureLinking() once from the constructor.
+         */
 		class StaticMemberInitializer{
 		public:
 			StaticMemberInitializer() {
@@ -109,8 +109,7 @@ namespace octomap{
 			*/
 			void ensureLinking() {};
 		};
-
-		/// to ensure static initialization (only once)
+		/// static member to ensure static initialization (only once)
 		static StaticMemberInitializer superrayOcTreeMemberInit;
 	};
 }

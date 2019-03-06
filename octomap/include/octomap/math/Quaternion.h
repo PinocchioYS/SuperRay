@@ -42,161 +42,161 @@
 
 namespace octomath {
 
-  /*!
-   * \brief This class represents a Quaternion.
-   *
-   * The Unit Quaternion is one possible representation of the
-   * attitude of an object in tree-dimensional space.
-   *
-   * This Quaternion class is implemented according to Diebel,
-   * James. Representing Attitude: Euler Angle, Unit Quaternions, and
-   * Rotation Vectors. Stanford University. 2006. - Technical Report.
-   */
-
-  class Quaternion {
-
-  public:
-
     /*!
-     * \brief Default constructor
+     * \brief This class represents a Quaternion.
      *
-     * Constructs the (1,0,0,0) Unit Quaternion
-     * representing the identity rotation.
-     */
-    inline Quaternion() { u() = 1;  x() = 0; y() = 0; z() = 0;  }
-
-    /*!
-     * \brief Copy constructor
-     */
-    Quaternion(const Quaternion& other);
-
-    /*!
-     * \brief Constructor
+     * The Unit Quaternion is one possible representation of the
+     * attitude of an object in tree-dimensional space.
      *
-     * Constructs a Quaternion from four single
-     * values
+     * This Quaternion class is implemented according to Diebel,
+     * James. Representing Attitude: Euler Angle, Unit Quaternions, and
+     * Rotation Vectors. Stanford University. 2006. - Technical Report.
      */
-    Quaternion(float u, float x, float y, float z);
 
-    /*!
-     * \brief Constructor
-     *
-     * @param other a vector containing euler angles
-     */
-    Quaternion(const Vector3& other);
+    class Quaternion {
 
-    /*!
-     * \brief Constructor from Euler angles
-     *
-     * Constructs a Unit Quaternion from Euler angles / Tait Bryan
-     * angles (in radians) according to the 1-2-3 convention.
-     * @param roll phi/roll angle (rotation about x-axis)
-     * @param pitch theta/pitch angle (rotation about y-axis)
-     * @param yaw psi/yaw angle (rotation about z-axis)
-     */
-    Quaternion(double roll, double pitch, double yaw);
+    public:
 
+        /*!
+         * \brief Default constructor
+         *
+         * Constructs the (1,0,0,0) Unit Quaternion
+         * representing the identity rotation.
+         */
+        inline Quaternion() { u() = 1;  x() = 0; y() = 0; z() = 0;  }
 
-     
-    //! Constructs a Unit Quaternion from a rotation angle and axis.  
-    Quaternion(const Vector3& axis, double angle);
+        /*!
+         * \brief Copy constructor
+         */
+        Quaternion(const Quaternion& other);
 
+        /*!
+         * \brief Constructor
+         *
+         * Constructs a Quaternion from four single
+         * values
+         */
+        Quaternion(float u, float x, float y, float z);
 
-    /*!
-     * \brief Conversion to Euler angles
-     *
-     * Converts the attitude represented by this to
-     * Euler angles (roll, pitch, yaw).
-     */
-    Vector3 toEuler() const;
+        /*!
+         * \brief Constructor
+         *
+         * @param other a vector containing euler angles
+         */
+        Quaternion(const Vector3& other);
 
-    void toRotMatrix(std::vector <double>& rot_matrix_3_3) const;
-
-
-    inline const float& operator() (unsigned int i) const { return data[i]; }
-    inline float& operator() (unsigned int i) { return data[i]; }
-
-    float norm () const;
-    Quaternion  normalized () const;
-    Quaternion& normalize ();
-
-
-    void operator/= (float x);
-    Quaternion& operator= (const Quaternion& other);
-    bool operator== (const Quaternion& other) const;
-
-    /*!
-     * \brief Quaternion multiplication
-     *
-     * Standard Quaternion multiplication which is not
-     * commutative.
-     * @return this * other
-     */
-    Quaternion operator* (const Quaternion& other) const;
-
-    /*!
-     * \brief Quaternion multiplication with extended vector
-     *
-     * @return q * (0, v)
-     */
-    Quaternion operator* (const Vector3 &v) const;
-
-    /*!
-     * \brief Quaternion multiplication with extended vector
-     *
-     * @return (0, v) * q
-     */
-    friend Quaternion operator* (const Vector3 &v, const Quaternion &q);
-
-    /*!
-     * \brief Inversion
-     *
-     * @return A copy of this Quaterion inverted
-     */
-    inline Quaternion inv() const {  return Quaternion(u(), -x(), -y(), -z()); }
+        /*!
+         * \brief Constructor from Euler angles
+         *
+         * Constructs a Unit Quaternion from Euler angles / Tait Bryan
+         * angles (in radians) according to the 1-2-3 convention.
+         * @param roll phi/roll angle (rotation about x-axis)
+         * @param pitch theta/pitch angle (rotation about y-axis)
+         * @param yaw psi/yaw angle (rotation about z-axis)
+         */
+        Quaternion(double roll, double pitch, double yaw);
 
 
-    /*!
-     * \brief Inversion
-     *
-     * Inverts this Quaternion
-     * @return a reference to this Quaternion
-     */
-    Quaternion& inv_IP();
 
-    /*!
-     * \brief Rotate a vector
-     *
-     * Rotates a vector to the body fixed coordinate
-     * system according to the attitude represented by
-     * this Quaternion.
-     * @param v a vector represented in world coordinates
-     * @return v represented in body-fixed coordinates
-     */
-    Vector3 rotate(const Vector3 &v) const;
+        //! Constructs a Unit Quaternion from a rotation angle and axis.
+        Quaternion(const Vector3& axis, double angle);
 
-    inline float& u() { return data[0]; }
-    inline float& x() { return data[1]; }
-    inline float& y() { return data[2]; }
-    inline float& z() { return data[3]; }
 
-    inline const float& u() const { return data[0]; }
-    inline const float& x() const { return data[1]; }
-    inline const float& y() const { return data[2]; }
-    inline const float& z() const { return data[3]; }
+        /*!
+         * \brief Conversion to Euler angles
+         *
+         * Converts the attitude represented by this to
+         * Euler angles (roll, pitch, yaw).
+         */
+        Vector3 toEuler() const;
 
-    std::istream& read(std::istream &s);
-    std::ostream& write(std::ostream &s) const;
-    std::istream& readBinary(std::istream &s);
-    std::ostream& writeBinary(std::ostream &s) const;
+        void toRotMatrix(std::vector <double>& rot_matrix_3_3) const;
 
-  protected:
-    float data[4];
 
-  };
+        inline const float& operator() (unsigned int i) const { return data[i]; }
+        inline float& operator() (unsigned int i) { return data[i]; }
 
-  //! user friendly output in format (u x y z)
-  std::ostream& operator<<(std::ostream& s, const Quaternion& q);
+        float norm () const;
+        Quaternion  normalized () const;
+        Quaternion& normalize ();
+
+
+        void operator/= (float x);
+        Quaternion& operator= (const Quaternion& other);
+        bool operator== (const Quaternion& other) const;
+
+        /*!
+         * \brief Quaternion multiplication
+         *
+         * Standard Quaternion multiplication which is not
+         * commutative.
+         * @return this * other
+         */
+        Quaternion operator* (const Quaternion& other) const;
+
+        /*!
+         * \brief Quaternion multiplication with extended vector
+         *
+         * @return q * (0, v)
+         */
+        Quaternion operator* (const Vector3 &v) const;
+
+        /*!
+         * \brief Quaternion multiplication with extended vector
+         *
+         * @return (0, v) * q
+         */
+        friend Quaternion operator* (const Vector3 &v, const Quaternion &q);
+
+        /*!
+         * \brief Inversion
+         *
+         * @return A copy of this Quaterion inverted
+         */
+        inline Quaternion inv() const {  return Quaternion(u(), -x(), -y(), -z()); }
+
+
+        /*!
+         * \brief Inversion
+         *
+         * Inverts this Quaternion
+         * @return a reference to this Quaternion
+         */
+        Quaternion& inv_IP();
+
+        /*!
+         * \brief Rotate a vector
+         *
+         * Rotates a vector to the body fixed coordinate
+         * system according to the attitude represented by
+         * this Quaternion.
+         * @param v a vector represented in world coordinates
+         * @return v represented in body-fixed coordinates
+         */
+        Vector3 rotate(const Vector3 &v) const;
+
+        inline float& u() { return data[0]; }
+        inline float& x() { return data[1]; }
+        inline float& y() { return data[2]; }
+        inline float& z() { return data[3]; }
+
+        inline const float& u() const { return data[0]; }
+        inline const float& x() const { return data[1]; }
+        inline const float& y() const { return data[2]; }
+        inline const float& z() const { return data[3]; }
+
+        std::istream& read(std::istream &s);
+        std::ostream& write(std::ostream &s) const;
+        std::istream& readBinary(std::istream &s);
+        std::ostream& writeBinary(std::ostream &s) const;
+
+    protected:
+        float data[4];
+
+    };
+
+    //! user friendly output in format (u x y z)
+    std::ostream& operator<<(std::ostream& s, const Quaternion& q);
 
 }
 

@@ -30,18 +30,10 @@
 #ifndef OCTOMAP_SUPERRAY_SUPERRAY_GENERATOR_H
 #define OCTOMAP_SUPERRAY_SUPERRAY_GENERATOR_H
 
+#include <octomap/octomap_types.h>
 #include <octomap/OcTreeKey.h>
 #include <octomap/Pointcloud.h>
 #include <octomap_superray/SuperRayCloud.h>
-
-/* Libc++ does not implement the TR1 namespace, all c++11 related functionality
- * is instead implemented in the std namespace.
- */
-/*#if defined(__GNUC__) && ! defined(_LIBCPP_VERSION)
-namespace unordered_ns = std::tr1;
-#else
-namespace unordered_ns = std;
-#endif*/
 
 #ifdef _OPENMP
 #include <omp.h>
