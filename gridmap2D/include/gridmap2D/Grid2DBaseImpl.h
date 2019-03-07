@@ -46,7 +46,7 @@
 
 namespace gridmap2D {
 
-	// forward declaration for NODE children array
+	// forward declaration for NODE
 	class AbstractGrid2DNode;
 
 	/**
@@ -73,10 +73,6 @@ namespace gridmap2D {
 	public:
 		/// Make the templated NODE type available from the outside
 		typedef NODE NodeType;
-
-		// the actual iterator implementation is included here
-		// as a member from this file
-// #include <gridmap2D/Grid2DIterator.hxx>
 
 		Grid2DBaseImpl(double resolution);
 		virtual ~Grid2DBaseImpl();
@@ -165,8 +161,8 @@ namespace gridmap2D {
 		/// \return The number of nodes in the grid
 		virtual inline size_t size() const { return gridmap->size(); }
 
-		/// \return Memory usage of the complete grid2D in bytes (may vary between architectures)
-		virtual size_t memoryUsage() const;	// Add HashTable?
+		/// \return Memory usage of the grid2D in bytes (may vary between architectures)
+		virtual size_t memoryUsage() const;     // TODO: add the memory usage of hash table
 
 		/// \return Memory usage of a single grid2D node
 		virtual inline size_t memoryUsageNode() const { return sizeof(NODE); };
@@ -232,31 +228,10 @@ namespace gridmap2D {
 		/// Write complete state of grid to stream (without file header) unmodified.
 		std::ostream& writeData(std::ostream &s) const;
 
-		/// @return beginning of the tree as leaf iterator
+		/// @return beginning of the grid as iterator
 //		const OccupancyGridMap::iterator begin() const { return gridmap->begin(); }
-		/// @return end of the tree as leaf iterator
-//		const OccupancyGridMap::iterator end() const { return gridmap->end(); } // TODO: RVE?
-
-		/// @return beginning of the tree as leaf iterator
-		// leaf_iterator begin_leafs(unsigned char maxDepth = 0) const { return leaf_iterator(this, maxDepth); };
-		/// @return end of the tree as leaf iterator
-		// const leaf_iterator end_leafs() const { return leaf_iterator_end; }
-
-		/// @return beginning of the tree as leaf iterator in a bounding box
-		/*leaf_bbx_iterator begin_leafs_bbx(const QuadTreeKey& min, const QuadTreeKey& max, unsigned char maxDepth = 0) const {
-			return leaf_bbx_iterator(this, min, max, maxDepth);
-		}*/
-		/// @return beginning of the tree as leaf iterator in a bounding box
-		/*leaf_bbx_iterator begin_leafs_bbx(const point2d& min, const point2d& max, unsigned char maxDepth = 0) const {
-			return leaf_bbx_iterator(this, min, max, maxDepth);
-		}*/
-		/// @return end of the tree as leaf iterator in a bounding box
-		// const leaf_bbx_iterator end_leafs_bbx() const { return leaf_iterator_bbx_end; }
-
-		/// @return beginning of the tree as iterator to all nodes (incl. inner)
-		// tree_iterator begin_tree(unsigned char maxDepth = 0) const { return tree_iterator(this, maxDepth); }
-		/// @return end of the tree as iterator to all nodes (incl. inner)
-		// const tree_iterator end_tree() const { return tree_iterator_end; }*/
+		/// @return end of the grid as iterator
+//		const OccupancyGridMap::iterator end() const { return gridmap->end(); }
 
 		//
 		// Key / coordinate conversion functions
@@ -339,7 +314,6 @@ namespace gridmap2D {
 		double resolution;  ///< in meters
 		double resolution_factor; ///< = 1. / resolution
 
-		// size_t grid_size; ///< number of nodes in grid ( does not need, use gridmap->size();
 		/// flag to denote whether the grid2D extent changed (for lazy min/max eval)
 		bool size_changed;
 
@@ -350,10 +324,6 @@ namespace gridmap2D {
 
 		/// data structure for ray casting, array for multithreading
 		std::vector<KeyRay> keyrays;
-
-		// const leaf_iterator leaf_iterator_end;
-		// const leaf_bbx_iterator leaf_iterator_bbx_end;
-		// const tree_iterator tree_iterator_end;
 	};
 
 }

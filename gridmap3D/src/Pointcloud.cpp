@@ -58,13 +58,11 @@ namespace gridmap3D {
 	}
 
 	void Pointcloud::clear() {
-
 		// delete the points
 		if (points.size()) {
 			points.clear();
 		}
 	}
-
 
 	Pointcloud::Pointcloud(const Pointcloud& other) {
 		for (Pointcloud::const_iterator it = other.begin(); it != other.end(); it++) {
@@ -95,7 +93,6 @@ namespace gridmap3D {
 	}
 
 	void Pointcloud::transform(gridmath3D::Pose6D transform) {
-
 		for (unsigned int i = 0; i < points.size(); i++) {
 			points[i] = transform.transform(points[i]);
 		}
@@ -106,7 +103,6 @@ namespace gridmap3D {
 
 
 	void Pointcloud::transformAbsolute(pose6d transform) {
-
 		// undo previous transform, then apply current transform
 		pose6d transf = current_inv_transform * transform;
 
@@ -119,7 +115,6 @@ namespace gridmap3D {
 
 
 	void Pointcloud::rotate(double roll, double pitch, double yaw) {
-
 		for (unsigned int i = 0; i < points.size(); i++) {
 			points[i].rotate_IP(roll, pitch, yaw);
 		}
@@ -135,7 +130,6 @@ namespace gridmap3D {
 		float x, y, z;
 
 		for (Pointcloud::const_iterator it = begin(); it != end(); it++) {
-
 			x = (*it)(0);
 			y = (*it)(1);
 			z = (*it)(2);
@@ -182,7 +176,6 @@ namespace gridmap3D {
 
 		this->clear();
 		this->push_back(result);
-
 	}
 
 
@@ -218,54 +211,6 @@ namespace gridmap3D {
 #endif
 	}
 
-
-	void Pointcloud::writeVrml(std::string filename){
-
-		std::ofstream outfile(filename.c_str());
-
-		outfile << "#VRML V2.0 utf8" << std::endl;
-		outfile << "Transform {" << std::endl;
-		outfile << "translation 0 0 0" << std::endl;
-		outfile << "rotation 0 0 0 0" << std::endl;
-		outfile << "  children [" << std::endl;
-		outfile << "     Shape{" << std::endl;
-		outfile << "  geometry PointSet {" << std::endl;
-		outfile << "      coord Coordinate {" << std::endl;
-		outfile << "          point [" << std::endl;
-
-		GRIDMAP3D_DEBUG_STR("PointCloud::writeVrml writing "
-			<< points.size() << " points to "
-			<< filename.c_str() << ".");
-
-		for (unsigned int i = 0; i < (points.size()); i++){
-			outfile << "\t\t" << (points[i])(0)
-				<< " " << (points[i])(1)
-				<< " " << (points[i])(2)
-				<< "\n";
-		}
-
-		outfile << "                 ]" << std::endl;
-		outfile << "      }" << std::endl;
-		outfile << "    color Color{" << std::endl;
-		outfile << "              color [" << std::endl;
-
-		for (unsigned int i = 0; i < points.size(); i++){
-			outfile << "\t\t 1.0 1.0 1.0 \n";
-		}
-
-		outfile << "                 ]" << std::endl;
-		outfile << "      }" << std::endl;
-
-		outfile << "   }" << std::endl;
-		outfile << "     }" << std::endl;
-
-
-		outfile << "  ]" << std::endl;
-		outfile << "}" << std::endl;
-
-
-	}
-
 	std::istream& Pointcloud::read(std::istream &s){
 		while (!s.eof()){
 			point3d p;
@@ -284,7 +229,6 @@ namespace gridmap3D {
 	}
 
 	std::istream& Pointcloud::readBinary(std::istream &s) {
-
 		size_t pc_size = 0;
 		s.read((char*)&pc_size, sizeof(pc_size));
 		GRIDMAP3D_DEBUG("Reading %d points from binary file...", pc_size);
@@ -310,7 +254,6 @@ namespace gridmap3D {
 
 
 	std::ostream& Pointcloud::writeBinary(std::ostream &s) const {
-
 		size_t pc_size = this->size();
 		GRIDMAP3D_DEBUG("Writing %lu points to binary file...", (unsigned long)pc_size);
 		s.write((char*)&pc_size, sizeof(pc_size));

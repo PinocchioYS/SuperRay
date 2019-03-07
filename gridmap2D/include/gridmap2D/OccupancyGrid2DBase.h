@@ -53,13 +53,10 @@ namespace gridmap2D {
 	 * Each class used as NODE type needs to be derived from
 	 * OccupancyGrid2DNode.
 	 *
-	 * Coordinates values are below +/- 327.68 meters (2^15) at a maximum 
-	 * resolution of 0.01m.
+	 * At a resolution of 1 cm, values have to be < +/- 327.68 meters (2^15)
 	 *
 	 * This limitation enables the use of an efficient key generation
 	 * method which uses the binary representation of the data.
-	 *
-	 * \note The grid does not save individual points.
 	 *
 	 * \tparam NODE Node class to be used in grid (usually derived from
 	 *    Grid2DDataNode)
@@ -212,7 +209,7 @@ namespace gridmap2D {
 		 * @param[out] end returns the center of the last cell on the ray. If the function returns true, it is occupied.
 		 * @param[in] ignoreUnknownCells whether unknown cells are ignored (= treated as free). If false (default), the raycast aborts when an unknown cell is hit and returns false.
 		 * @param[in] maxRange Maximum range after which the raycast is aborted (<= 0: no limit, default)
-		 * @return true if an occupied cell was hit, false if the maximum range or grid2D bounds are reached, or if an unknown node was hit.
+		 * @return true if an occupied cell was hit, false if the maximum range or grid bounds are reached, or if an unknown node was hit.
 		 */
 		virtual bool castRay(const point2d& origin, const point2d& direction, point2d& end,
 			bool ignoreUnknownCells = false, double maxRange = -1.0) const;
@@ -270,6 +267,40 @@ namespace gridmap2D {
 		/// Number of changes since last reset.
 		size_t numChangesDetected() const { return changed_keys.size(); }
 
+		// -- I/O  -----------------------------------------
+
+		/**
+         * Reads only the data (=complete grid structure) from the input stream.
+         * The grid needs to be constructed with the proper header information
+         * beforehand, see readBinary().
+         */
+		// std::istream& readBinaryData(std::istream &s);
+
+		/**
+         * Read node from binary stream (max-likelihood value).
+         *
+         * This will set the log_odds_occupancy value of
+         * all cells to either free or occupied.
+         */
+		// std::istream& readBinaryNode(std::istream &s, NODE* node);
+
+		/**
+         * Write node to binary stream (max-likelihood value).
+         *
+         * This will discard the log_odds_occupancy value, writing
+         * all cells as either free or occupied.
+         *
+         * @param s
+         * @param node Grid2DNode to write out
+         * @return
+         */
+		// std::ostream& writeBinaryNode(std::ostream &s, const NODE* node) const;
+
+		/**
+         * Writes the data of the grid (without header) to the stream.
+         */
+		// std::ostream& writeBinaryData(std::ostream &s) const;
+
 		/// integrate a "hit" measurement according to the grid's sensor model
 		virtual void integrateHit(NODE* occupancyNode) const;
 		/// integrate a "miss" measurement according to the grid's sensor model
@@ -301,7 +332,7 @@ namespace gridmap2D {
 		Grid2DKey bbx_max_key;
 
 		bool use_change_detection;
-		/// Set of leaf keys (lowest level) which changed since last resetChangeDetection
+		/// Set of keys which changed since last resetChangeDetection
 		KeyBoolMap changed_keys;
 	};
 

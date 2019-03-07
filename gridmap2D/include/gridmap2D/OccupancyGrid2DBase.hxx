@@ -1,4 +1,5 @@
 /*
+/*
  * OctoMap - An Efficient Probabilistic 3D Mapping Framework Based on Octrees
  * http://octomap.github.com/
  *
@@ -37,16 +38,16 @@
 namespace gridmap2D {
 
 	template <class NODE>
-	OccupancyGrid2DBase<NODE>::OccupancyGrid2DBase(double resolution)
-		: Grid2DBaseImpl<NODE, AbstractOccupancyGrid2D>(resolution), use_bbx_limit(false), use_change_detection(false)
+	OccupancyGrid2DBase<NODE>::OccupancyGrid2DBase(double in_resolution)
+		: Grid2DBaseImpl<NODE, AbstractOccupancyGrid2D>(in_resolution), use_bbx_limit(false), use_change_detection(false)
 	{
 		if (this->gridmap == NULL)
 			this->gridmap = new typename Grid2DBaseImpl<NODE, AbstractOccupancyGrid2D>::OccupancyGridMap;
 	}
 
 	template <class NODE>
-	OccupancyGrid2DBase<NODE>::OccupancyGrid2DBase(double resolution, unsigned int grid_max_val)
-		: Grid2DBaseImpl<NODE, AbstractOccupancyGrid2D>(resolution, grid_max_val), use_bbx_limit(false), use_change_detection(false)
+	OccupancyGrid2DBase<NODE>::OccupancyGrid2DBase(double in_resolution, unsigned int in_grid_max_val)
+		: Grid2DBaseImpl<NODE, AbstractOccupancyGrid2D>(in_resolution, in_grid_max_val), use_bbx_limit(false), use_change_detection(false)
 	{
 		if (this->gridmap == NULL)
 			this->gridmap = new typename Grid2DBaseImpl<NODE, AbstractOccupancyGrid2D>::OccupancyGridMap;
@@ -235,7 +236,7 @@ namespace gridmap2D {
 		if (startingNode){
 			if (this->isNodeOccupied(startingNode)){
 				// Occupied node found at origin 
-				// (need to convert from key, since origin does not need to be a voxel center)
+				// (need to convert from key, since origin does not need to be a pixel center)
 				end = this->keyToCoord(current_key);
 				return true;
 			}
@@ -289,12 +290,7 @@ namespace gridmap2D {
 			unsigned int dim;
 
 			// find minimum tMax:
-			if (tMax[0] < tMax[1]){
-				dim = 0;
-			}
-			else {
-				dim = 1;
-			}
+			dim = tMax[0] < tMax[1] ? 0 : 1;
 
 			// check for overflow:
 			if ((step[dim] < 0 && current_key[dim] == 0)
@@ -396,7 +392,7 @@ namespace gridmap2D {
 			}
 		}
 
-		// Substract (add) a fraction to ensure no ambiguity on the starting voxel
+		// Substract (add) a fraction to ensure no ambiguity on the starting pixel
 		// Don't start on a bondary.
 		if (found)
 			intersection = direction * float(outD + delta) + origin;

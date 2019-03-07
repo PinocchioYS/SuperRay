@@ -36,7 +36,7 @@
 namespace gridmap3D{
 	class SuperRayGrid3D : public OccupancyGrid3DBase<Grid3DNode> {
 	public:
-		/// Default constructor, sets resolution of leafs
+		/// Default constructor, sets resolution of grid
 		SuperRayGrid3D(double resolution);
 
 		/**

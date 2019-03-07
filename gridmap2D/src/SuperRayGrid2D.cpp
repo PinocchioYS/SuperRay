@@ -30,8 +30,8 @@
 #include <gridmap2D_superray/SuperRayGrid2D.h>
 
 namespace gridmap2D{
-	SuperRayGrid2D::SuperRayGrid2D(double resolution)
-	: OccupancyGrid2DBase<Grid2DNode>(resolution) {
+	SuperRayGrid2D::SuperRayGrid2D(double in_resolution)
+	: OccupancyGrid2DBase<Grid2DNode>(in_resolution) {
 		superrayGrid2DMemberInit.ensureLinking();
 	};
 

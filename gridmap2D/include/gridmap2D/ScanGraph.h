@@ -47,8 +47,8 @@ namespace gridmap2D {
 
 
 	/**
-	* A 3D scan as Pointcloud, performed from a Pose3D.
-	*/
+	 * A 3D scan as Pointcloud, performed from a Pose3D.
+	 */
 	class ScanNode {
 
 	public:
@@ -102,10 +102,10 @@ namespace gridmap2D {
 
 
 	/**
-	* A ScanGraph is a collection of ScanNodes, connected by ScanEdges.
-	* Each ScanNode contains a 2D scan performed from a 3D pose.
-	*
-	*/
+	 * A ScanGraph is a collection of ScanNodes, connected by ScanEdges.
+	 * Each ScanNode contains a 2D scan performed from a 3D pose.
+	 *
+	 */
 	class ScanGraph {
 
 	public:
@@ -117,24 +117,24 @@ namespace gridmap2D {
 		void clear();
 
 		/**
-		* Creates a new ScanNode in the graph from a Pointcloud.
-		*
-		* @param scan Pointer to a pointcloud to be added to the ScanGraph.
-		*        ScanGraph will delete the object when it's no longer needed, don't delete it yourself.
-		* @param pose 6D pose of the origin of the Pointcloud
-		* @return Pointer to the new node
-		*/
+		 * Creates a new ScanNode in the graph from a Pointcloud.
+		 *
+		 * @param scan Pointer to a pointcloud to be added to the ScanGraph.
+		 *        ScanGraph will delete the object when it's no longer needed, don't delete it yourself.
+		 * @param pose 6D pose of the origin of the Pointcloud
+		 * @return Pointer to the new node
+		 */
 		ScanNode* addNode(Pointcloud* scan, pose3d pose);
 
 		/**
-		* Creates an edge between two ScanNodes.
-		* ScanGraph will delete the object when it's no longer needed, don't delete it yourself.
-		*
-		* @param first ScanNode
-		* @param second ScanNode
-		* @param constraint 6D transform between the two nodes
-		* @return
-		*/
+		 * Creates an edge between two ScanNodes.
+		 * ScanGraph will delete the object when it's no longer needed, don't delete it yourself.
+		 *
+		 * @param first ScanNode
+		 * @param second ScanNode
+		 * @param constraint 6D transform between the two nodes
+		 * @return
+		 */
 		ScanEdge* addEdge(ScanNode* first, ScanNode* second, pose3d constraint);
 
 		ScanEdge* addEdge(unsigned int first_id, unsigned int second_id);
@@ -196,25 +196,26 @@ namespace gridmap2D {
 		std::istream& readNodePosesASCII(std::istream &s);
 
 		/**
-		* Reads in a ScanGraph from a "plain" ASCII file of the form
-		* NODE x y Y
-		* x y
-		* x y
-		* x y
-		* NODE x y Y
-		* x y z
-		*
-		* Lines starting with the NODE keyword contain the 3D pose of a scan node,
-		* all 2D point following until the next NODE keyword (or end of file) are
-		* inserted into that scan node as pointcloud in its local coordinate frame
-		*
-		* @param s input stream to read from
-		* @return read stream
-		*/
+		 * Reads in a ScanGraph from a "plain" ASCII file of the form
+		 * NODE x y r
+		 * x y
+		 * x y
+		 * x y
+		 * NODE x y r
+		 * x y
+		 *
+		 * Lines starting with the NODE keyword contain the 3D pose of a scan node,
+		 * all 2D point following until the next NODE keyword (or end of file) are
+		 * inserted into that scan node as pointcloud in its local coordinate frame
+		 *
+		 * @param s input stream to read from
+		 * @return read stream
+		 */
 		std::istream& readPlainASCII(std::istream& s);
 		void readPlainASCII(const std::string& filename);
 
 	protected:
+
 		std::vector<ScanNode*> nodes;
 		std::vector<ScanEdge*> edges;
 	};

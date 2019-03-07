@@ -40,43 +40,43 @@
 namespace gridmath2D {
 
 	/*!
-	* \brief This class represents a two-dimensional vector
-	*/
+	 * \brief This class represents a two-dimensional vector
+	 */
 
 	class Vector2 {
 	public:
 
 		/*!
-		* \brief Default constructor
-		*/
+		 * \brief Default constructor
+		 */
 		Vector2() { data[0] = data[1] = 0.0; }
 
 		/*!
-		* \brief Copy constructor
-		*
-		* @param other a vector of dimension 2
-		*/
+		 * \brief Copy constructor
+		 *
+		 * @param other a vector of dimension 2
+		 */
 		Vector2(const Vector2& other) {
 			data[0] = other(0);
 			data[1] = other(1);
 		}
 
 		/*!
-		* \brief Constructor
-		*
-		* Constructs a two-dimensional vector from
-		* three single values x, y
-		*/
+		 * \brief Constructor
+		 *
+		 * Constructs a two-dimensional vector from
+		 * three single values x, y
+		 */
 		Vector2(float x, float y) {
 			data[0] = x;
 			data[1] = y;
 		}
 
 		/*!
-		* \brief Assignment operator
-		*
-		* @param other a vector of dimension 2
-		*/
+		 * \brief Assignment operator
+		 *
+		 * @param other a vector of dimension 2
+		 */
 		inline Vector2& operator= (const Vector2& other)  {
 			data[0] = other(0);
 			data[1] = other(1);

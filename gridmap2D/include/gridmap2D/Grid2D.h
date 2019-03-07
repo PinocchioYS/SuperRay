@@ -51,6 +51,13 @@ namespace gridmap2D {
 		/// Default constructor, sets resolution of leafs
 		Grid2D(double resolution);
 
+		/**
+         * Reads a Grid2D from a binary file
+         * @param _filename
+         *
+         */
+		// Grid2D(std::string _filename);
+
 		virtual ~Grid2D(){};
 
 		/// virtual constructor: creates a new object of same type

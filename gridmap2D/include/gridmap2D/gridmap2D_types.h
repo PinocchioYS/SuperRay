@@ -37,15 +37,16 @@
 #include <stdio.h>
 #include <vector>
 #include <list>
+#include <inttypes.h>
 
 #include <gridmap2D/math/Vector2.h>
 #include <gridmap2D/math/Pose3D.h>
 
 namespace gridmap2D {
 
-	/// Use Vector2 (float precision) as a point2d in quadmap
+	/// Use Vector2 (float precision) as a point2d in gridmap2D
 	typedef gridmath2D::Vector2               point2d;
-	/// Use our Pose3D (float precision) as pose3d in quadmap
+	/// Use our Pose3D (float precision) as pose3d in gridmap2D
 	typedef gridmath2D::Pose3D                pose3d;
 
 	typedef std::vector<gridmath2D::Vector2>  point2d_collection;

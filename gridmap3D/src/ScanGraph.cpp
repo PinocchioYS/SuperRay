@@ -571,7 +571,6 @@ namespace gridmap3D {
 
 
 	void ScanGraph::cropEachScan(point3d lowerBound, point3d upperBound) {
-
 		for (ScanGraph::iterator it = this->begin(); it != this->end(); it++) {
 			((*it)->scan)->crop(lowerBound, upperBound);
 		}
@@ -579,8 +578,6 @@ namespace gridmap3D {
 
 
 	void ScanGraph::crop(point3d lowerBound, point3d upperBound) {
-
-
 		// for all node in graph...
 		for (ScanGraph::iterator it = this->begin(); it != this->end(); it++) {
 			pose6d scan_pose = (*it)->pose;

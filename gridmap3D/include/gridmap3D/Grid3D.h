@@ -53,7 +53,7 @@ namespace gridmap3D {
 
 		/**
          * Reads a Grid3D from a binary file
-        * @param _filename
+         * @param _filename
          *
          */
 		// Grid3D(std::string _filename);

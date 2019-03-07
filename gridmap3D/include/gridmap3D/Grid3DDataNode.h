@@ -52,7 +52,6 @@ namespace gridmap3D {
 	 * This is the base class for nodes used in a Grid3D. The used implementation
 	 * for occupancy mapping is in Grid3DNode.#
 	 * \tparam T data to be stored in the node (e.g. a float for probabilities)
-	 *
 	 */
 	template<typename T> class Grid3DDataNode : public AbstractGrid3DNode {
 		template<typename NODE, typename I>

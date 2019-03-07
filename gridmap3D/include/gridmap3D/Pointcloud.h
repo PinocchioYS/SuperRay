@@ -45,9 +45,7 @@ namespace gridmap3D {
 	 * 3D laser scan.
 	 */
 	class Pointcloud {
-
 	public:
-
 		Pointcloud();
 		~Pointcloud();
 
@@ -70,9 +68,6 @@ namespace gridmap3D {
 
 		/// Add points from other Pointcloud
 		void push_back(const Pointcloud& other);
-
-		/// Export the Pointcloud to a VRML file
-		void writeVrml(std::string filename);
 
 		/// Apply transform to each point
 		void transform(pose6d transform);
@@ -119,7 +114,6 @@ namespace gridmap3D {
 		pose6d               current_inv_transform;
 		point3d_collection   points;
 	};
-
 }
 
 

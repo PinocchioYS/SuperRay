@@ -46,5 +46,7 @@ namespace gridmap2D {
 		setClampingThresMax(0.971); // = 3.5 in log odds
 	}
 
+	// TODO: implement IO functions
+
 	const std::string AbstractOccupancyGrid2D::binaryFileHeader = "# GridMap2D Grid2D binary file";
 }

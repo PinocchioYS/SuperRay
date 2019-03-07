@@ -72,11 +72,6 @@ namespace gridmap2D {
 
 		virtual void clear() = 0;
 
-		//-- Iterator grid access
-
-		// default iterator is leaf_iterator
-//		class iterator_base;
-
 		/// Write file header and complete grid to file (serialization)
 		bool write(const std::string& filename) const;
 		/// Write file header and complete grid to stream (serialization)
@@ -119,7 +114,7 @@ namespace gridmap2D {
 
 	protected:
 		static bool readHeader(std::istream &s, std::string& id, unsigned& size, double& res);
-		static void registerGridType(AbstractGrid2D* map);
+		static void registerGridType(AbstractGrid2D* grid);
 
 		static const std::string fileHeader;
 	};

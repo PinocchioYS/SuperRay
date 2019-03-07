@@ -30,18 +30,10 @@
 #ifndef GRIDMAP2D_SUPERRAY_SUPERRAY_GENERATOR_H
 #define GRIDMAP2D_SUPERRAY_SUPERRAY_GENERATOR_H
 
+#include <gridmap2D/gridmap2D_types.h>
 #include <gridmap2D/Grid2DKey.h>
 #include <gridmap2D/Pointcloud.h>
 #include <gridmap2D_superray/SuperRayCloud.h>
-
-/* Libc++ does not implement the TR1 namespace, all c++11 related functionality
- * is instead implemented in the std namespace.
- */
-/*#if defined(__GNUC__) && ! defined(_LIBCPP_VERSION)
-namespace unordered_ns = std::tr1;
-#else
-namespace unordered_ns = std;
-#endif*/
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -56,7 +48,7 @@ namespace gridmap2D{
 		void GenerateSuperRay(const Pointcloud& _pc, const point2d& _origin, SuperRayCloud& _srcloud);
 
 	protected:
-		struct VoxelInfo;
+		struct PixelInfo;
 		struct Axis2D;
 
 		point2d		originW;	// origin point in World Space
@@ -66,17 +58,17 @@ namespace gridmap2D{
 		double			RESOLUTION;			// resolution
 		double			RESOLUTION_FACTOR;	// 1.0 / resolution
 		unsigned int	GRID_MAX_VAL;		// offset
-		unsigned int	THRESHOLD;			// threshold for limiting to generate super rays for each voxel
+		unsigned int	THRESHOLD;			// threshold for limiting to generate super rays for each pixel
 
 		// Functions for generating super rays
 		void GenerateSuperRay(const point2d_collection& _pointlist, SuperRayCloud& _srcloud);
-		void GenerateSuperRay2D(const point2d_collection& _pointlist, Axis2D& _axis, VoxelInfo& _voxelinfo, SuperRayCloud& _srcloud);
+		void GenerateSuperRay2D(const point2d_collection& _pointlist, Axis2D& _axis, PixelInfo& _pixelinfo, SuperRayCloud& _srcloud);
 
 		// Function for generating mapping line in 2-D
-		double GenerateMappingLine(VoxelInfo& _voxelinfo, const unsigned int& _axisX, const unsigned int& _axisY, std::vector<double>& _mappingPlane);
+		double GenerateMappingLine(PixelInfo& _pixelinfo, const unsigned int& _axisX, const unsigned int& _axisY, std::vector<double>& _mappingPlane);
 
 		// Utility functions
-		typedef unordered_ns::unordered_map<Grid2DKey, std::vector<point2d>, Grid2DKey::KeyHash> Vexelized_Pointclouds;
+		typedef unordered_ns::unordered_map<Grid2DKey, std::vector<point2d>, Grid2DKey::KeyHash> Voxelized_Pointclouds;
 		void ComputeAxis(const point2d& _min, const point2d& _max, Axis2D& _axis);
 
 		// Re-implmentation for Key / coordinate conversion functions
@@ -88,19 +80,19 @@ namespace gridmap2D{
 		}
 
 		// Structures that represents the traversal information
-		struct VoxelInfo{
-			VoxelInfo(void) {};
-			// Voxel Info.
-			point2d minW;		// min position of voxel
-			point2d maxW;		// max position of voxel
-			Grid2DKey voxelKey;	// key of voxel
+		struct PixelInfo{
+			PixelInfo(void) {};
+			// Pixel Info.
+			point2d minW;		// min position of pixel
+			point2d maxW;		// max position of pixel
+			Grid2DKey pixelKey;	// key of pixel
 		};
 
 		struct Axis2D{
 			Axis2D(void) : axisU(0), axisV(1) {};
 
 			unsigned int axisU;	// Nearest Axis
-			unsigned int axisV;	// Farest Axis
+			unsigned int axisV;	// Farthest Axis
 		};
 	};
 }

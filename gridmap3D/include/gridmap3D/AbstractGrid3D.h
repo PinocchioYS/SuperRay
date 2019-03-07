@@ -72,9 +72,6 @@ namespace gridmap3D {
 
 		virtual void clear() = 0;
 
-		//-- Iterator grid access
-//		class iterator_base;
-
 		/// Write file header and complete grid to file (serialization)
 		bool write(const std::string& filename) const;
 		/// Write file header and complete grid to stream (serialization)

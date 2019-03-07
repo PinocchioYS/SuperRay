@@ -47,7 +47,7 @@ namespace gridmap2D{
 		originKey = coordToKey(_origin);
 
 		// Voxelize point clouds
-		Vexelized_Pointclouds voxels;
+		Voxelized_Pointclouds voxels;
 		for (unsigned int i = 0; i < _pc.size(); i++){
 			voxels[coordToKey(_pc[i])].push_back(_pc[i]);
 		}
@@ -78,7 +78,7 @@ namespace gridmap2D{
 			GenerateSuperRay(pointlist, _srcloud);
 		}
 	#else
-		Vexelized_Pointclouds::iterator it;
+		Voxelized_Pointclouds::iterator it;
 		for (it = voxels.begin(); it != voxels.end(); ++it){
 			std::vector<point2d>& pointlist = it->second;
 
@@ -96,31 +96,31 @@ namespace gridmap2D{
 	}
 
 	void SuperRayGenerator::GenerateSuperRay(const point2d_collection& _pointlist, SuperRayCloud& _srcloud) {
-		// 0. Initialize vertices of voxel
-		VoxelInfo voxelinfo;
-		voxelinfo.voxelKey = coordToKey(_pointlist[0]);
-		voxelinfo.minW.x() = (float)((voxelinfo.voxelKey.k[0] - (unsigned short)GRID_MAX_VAL) * RESOLUTION);	// Min X of voxel
-		voxelinfo.minW.y() = (float)((voxelinfo.voxelKey.k[1] - (unsigned short)GRID_MAX_VAL) * RESOLUTION);	// Min Y of voxel
-		voxelinfo.maxW.x() = (float)(voxelinfo.minW.x() + RESOLUTION);
-		voxelinfo.maxW.y() = (float)(voxelinfo.minW.y() + RESOLUTION);
+		// 0. Initialize vertices of pixel
+		PixelInfo pixelinfo;
+		pixelinfo.pixelKey = coordToKey(_pointlist[0]);
+		pixelinfo.minW.x() = (float)((pixelinfo.pixelKey.k[0] - (unsigned short)GRID_MAX_VAL) * RESOLUTION);	// Min X of pixel
+		pixelinfo.minW.y() = (float)((pixelinfo.pixelKey.k[1] - (unsigned short)GRID_MAX_VAL) * RESOLUTION);	// Min Y of pixel
+		pixelinfo.maxW.x() = (float)(pixelinfo.minW.x() + RESOLUTION);
+		pixelinfo.maxW.y() = (float)(pixelinfo.minW.y() + RESOLUTION);
 
 		// 1. Compute the traversal axis for finding all grid points in a frustum efficiently
 		Axis2D axis;
-		ComputeAxis(voxelinfo.minW, voxelinfo.maxW, axis);
+		ComputeAxis(pixelinfo.minW, pixelinfo.maxW, axis);
 
 		// 2. Generate super rays in 2-D
-		GenerateSuperRay2D(_pointlist, axis, voxelinfo, _srcloud);
+		GenerateSuperRay2D(_pointlist, axis, pixelinfo, _srcloud);
 	}
 
-	void SuperRayGenerator::GenerateSuperRay2D(const point2d_collection& _pointlist, Axis2D& _axis, VoxelInfo& _voxelinfo, SuperRayCloud& _srcloud) {
+	void SuperRayGenerator::GenerateSuperRay2D(const point2d_collection& _pointlist, Axis2D& _axis, PixelInfo& _pixelinfo, SuperRayCloud& _srcloud) {
 		// 0. Initialize Constants - Re-mapping two axes to X and Y axis
 		const unsigned int AXISX = _axis.axisU;		// Traversal Axis
 		const unsigned int AXISY = _axis.axisV;		// Mapping Axis
-		Grid2DKey& voxelKey = _voxelinfo.voxelKey;	// Key Coordinate
+		Grid2DKey& pixelKey = _pixelinfo.pixelKey;	// Key Coordinate
 		point2d originT(originW(AXISX), originW(AXISY));
 
 		// Special case - Only one super ray
-		if (originKey.k[AXISX] == voxelKey.k[AXISX]){
+		if (originKey.k[AXISX] == pixelKey.k[AXISX]){
 	#ifdef _OPENMP
 	#pragma omp critical
 	#endif
@@ -132,7 +132,7 @@ namespace gridmap2D{
 
 		// 1. Generate one mapping line in 2-D
 		std::vector<double> mappingPlaneY;
-		double mappingX = GenerateMappingLine(_voxelinfo, AXISX, AXISY, mappingPlaneY);
+		double mappingX = GenerateMappingLine(_pixelinfo, AXISX, AXISY, mappingPlaneY);
 
 		// 2. Generate super rays using the mapping line
 		std::map<unsigned int, SuperRay> superrays;
@@ -176,37 +176,37 @@ namespace gridmap2D{
 		}
 	}
 
-	double SuperRayGenerator::GenerateMappingLine(VoxelInfo& _voxelinfo, const unsigned int& _axisX, const unsigned int& _axisY, std::vector<double>& _mappingPlane) {
+	double SuperRayGenerator::GenerateMappingLine(PixelInfo& _pixelinfo, const unsigned int& _axisX, const unsigned int& _axisY, std::vector<double>& _mappingPlane) {
 		// Find all grid points in a frustum, and then generate a mapping line
 		// If you want the details, see "Ray Tracing Animated Scenes using Coherent Grid Traversal" by Ingo Wald et al.
 
 		// 0. Initialize information used in frustum traversal
-		Grid2DKey& voxelKey = _voxelinfo.voxelKey;	// Key Coordinate
-		point2d& minW = _voxelinfo.minW;
-		point2d& maxW = _voxelinfo.maxW;
+		Grid2DKey& pixelKey = _pixelinfo.pixelKey;	// Key Coordinate
+		point2d& minW = _pixelinfo.minW;
+		point2d& maxW = _pixelinfo.maxW;
 		point2d originT(originW(_axisX), originW(_axisY));	// Traversal Cooridnate
-		point2d verticesT[4];									// Traversal Coordinate
+		point2d verticesT[4];								// Traversal Coordinate
 		verticesT[0].x() = minW(_axisX);	verticesT[0].y() = minW(_axisY);
 		verticesT[1].x() = minW(_axisX);	verticesT[1].y() = maxW(_axisY);
 		verticesT[2].x() = maxW(_axisX);	verticesT[2].y() = minW(_axisY);
 		verticesT[3].x() = maxW(_axisX);	verticesT[3].y() = maxW(_axisY);
 		// Traversal directioin
 		int dir = 0;
-		if (abs(originT.x() - verticesT[0].x()) < abs(originT.x() - verticesT[3].x()))	dir = 1;
-		else																			dir = -1;
+		if (fabs(originT.x() - verticesT[0].x()) < fabs(originT.x() - verticesT[3].x()))	dir = 1;
+		else																			    dir = -1;
 		// Start and goal line of traversal axis
 		int curXKey, mappingXKey;
 		double curX, mappingX;
 		if (dir == 1){
 			curXKey = originKey.k[_axisX] + 1;
 			curX = (curXKey - (int)GRID_MAX_VAL) * RESOLUTION;
-			mappingXKey = voxelKey.k[_axisX];
+			mappingXKey = pixelKey.k[_axisX];
 			mappingX = verticesT[0].x();
 		}
 		else{
 			curXKey = originKey.k[_axisX];
 			curX = (curXKey - (int)GRID_MAX_VAL) * RESOLUTION;
-			mappingXKey = voxelKey.k[_axisX] - 1;
+			mappingXKey = pixelKey.k[_axisX] - 1;
 			mappingX = verticesT[3].x();
 		}
 		// Compute min & max of frustum traversal range
@@ -252,8 +252,8 @@ namespace gridmap2D{
 
 		double nearDist[2];
 		for (unsigned int i = 0; i < 2; i++){
-			if (abs(originW(i) - _min(i)) < abs(originW(i) - _max(i)))	nearDist[i] = abs(originW(i) - _min(i));
-			else 														nearDist[i] = abs(originW(i) - _max(i));
+			if (fabs(originW(i) - _min(i)) < fabs(originW(i) - _max(i)))	nearDist[i] = fabs(originW(i) - _min(i));
+			else 														    nearDist[i] = fabs(originW(i) - _max(i));
 		}
 
 		if (nearDist[0] < nearDist[1]){

@@ -16,5 +16,17 @@ SET_TARGET_PROPERTIES( gridmath2D PROPERTIES
 ADD_LIBRARY( gridmath2D-static STATIC ${gridmath2D_SRCS})
 SET_TARGET_PROPERTIES(gridmath2D-static PROPERTIES OUTPUT_NAME "gridmath2D")
 
-install(TARGETS gridmath2D gridmath2D-static ${INSTALL_TARGETS_DEFAULT_ARGS})
+if(NOT EXISTS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap2D")
+    file(MAKE_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap2D")
+endif()
+
+export(TARGETS gridmath2D gridmath2D-static
+    APPEND FILE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap2D/gridmap2D-targets.cmake"
+)
+
+install(TARGETS gridmath2D gridmath2D-static
+    EXPORT gridmap2D-targets
+    INCLUDES DESTINATION include
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
  

@@ -35,8 +35,8 @@
 
 namespace gridmap2D {
 
-	Grid2D::Grid2D(double resolution)
-	: OccupancyGrid2DBase<Grid2DNode>(resolution) {
+	Grid2D::Grid2D(double in_resolution)
+	: OccupancyGrid2DBase<Grid2DNode>(in_resolution) {
 		grid2DMemberInit.ensureLinking();
 	};
 

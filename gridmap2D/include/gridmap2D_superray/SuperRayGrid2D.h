@@ -36,8 +36,15 @@
 namespace gridmap2D{
 	class SuperRayGrid2D : public OccupancyGrid2DBase<Grid2DNode> {
 	public:
-		/// Default constructor, sets resolution of leafs
+		/// Default constructor, sets resolution of grid
 		SuperRayGrid2D(double resolution);
+
+		/**
+		 * Reads a Grid2D from a binary file
+		 * @param _filename
+		 *
+		 */
+		// SuperRayGrid2D(std::string _filename);
 
 		virtual ~SuperRayGrid2D(){};
 
@@ -102,8 +109,7 @@ namespace gridmap2D{
 			*/
 			void ensureLinking() {};
 		};
-
-		/// to ensure static initialization (only once)
+		/// static member to ensure static initialization (only once)
 		static StaticMemberInitializer superrayGrid2DMemberInit;
 	};
 }

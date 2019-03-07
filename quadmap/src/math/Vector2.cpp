@@ -86,7 +86,7 @@ namespace quadmath {
 		return s;
 	}
 
-	std::ostream& operator<<(std::ostream& out, quadmath::Vector2 const& v) {
+	std::ostream& operator<<(std::ostream& out, Vector2 const& v) {
 		return out << '(' << v.x() << ' ' << v.y() << ')';
 	}
 

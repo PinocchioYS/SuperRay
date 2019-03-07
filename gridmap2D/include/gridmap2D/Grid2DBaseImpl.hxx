@@ -42,17 +42,17 @@
 namespace gridmap2D {
 
 	template <class NODE, class I>
-	Grid2DBaseImpl<NODE, I>::Grid2DBaseImpl(double resolution) :
+	Grid2DBaseImpl<NODE, I>::Grid2DBaseImpl(double in_resolution) :
 		I(), gridmap(NULL), grid_max_val(32768),
-		resolution(resolution)
+		resolution(in_resolution)
 	{
 		init();
 	}
 
 	template <class NODE, class I>
-	Grid2DBaseImpl<NODE, I>::Grid2DBaseImpl(double resolution, unsigned int grid_max_val) :
-		I(), gridmap(NULL), grid_max_val(grid_max_val),
-		resolution(resolution)
+	Grid2DBaseImpl<NODE, I>::Grid2DBaseImpl(double in_resolution, unsigned int in_grid_max_val) :
+		I(), gridmap(NULL), grid_max_val(in_grid_max_val),
+		resolution(in_resolution)
 	{
 		init();
 	}
@@ -73,6 +73,7 @@ namespace gridmap2D {
 
 		// Copy all of node
 		if (rhs.gridmap){
+			// TODO: copy operator?
 			for (typename OccupancyGridMap::iterator it = rhs.gridmap->begin(); it != rhs.gridmap->end(); it++){
 				gridmap->insert(std::pair<Grid2DKey, NODE*>(it->first, new NODE(*(it->second))));
 			}
@@ -112,33 +113,22 @@ namespace gridmap2D {
 		other.gridamp = this_gridmap;
 	}
 
-	// Imlement operator==() - To do.
 	/*template <class NODE, class I>
-	bool Grid2DBaseImpl<NODE, I>::operator== (const Grid2DBaseImpl<NODE, I>& other) const{
-		if (grid_max_val != other.grid_max_val || resolution != other.resolution){
+	bool Grid3DBaseImpl<NODE, I>::operator== (const Grid3DBaseImpl<NODE, I>& other) const{
+		if (grid_max_val != other.grid_max_val || resolution != other.resolution || this->size() != other.size()){
 			return false;
 		}
 
 		// traverse all nodes, check if structure the same
-		Grid2DBaseImpl<NODE, I>::tree_iterator it = this->begin_tree();
-		Grid2DBaseImpl<NODE, I>::tree_iterator end = this->end_tree();
-		Grid2DBaseImpl<NODE, I>::tree_iterator other_it = other.begin_tree();
-		Grid2DBaseImpl<NODE, I>::tree_iterator other_end = other.end_tree();
+		OccupancyGridMap::iterator it = this->gridmap->begin();
+		OccupancyGridMap::iterator end = this->gridmap->end();
+		OccupancyGridMap::iterator other_it = other.gridmap->begin();
+		OccupancyGridMap::iterator other_end = other.gridmap->begin();
 
 		for (; it != end; ++it, ++other_it){
 			if (other_it == other_end)
 				return false;
-
-			if (it.getDepth() != other_it.getDepth()
-				|| it.getKey() != other_it.getKey()
-				|| !(*it == *other_it))
-			{
-				return false;
-			}
 		}
-
-		if (other_it != other_end)
-			return false;
 
 		return true;
 	}*/
@@ -176,8 +166,7 @@ namespace gridmap2D {
 
 	template <class NODE, class I>
 	bool Grid2DBaseImpl<NODE, I>::coordToKeyChecked(double x, double y, Grid2DKey& key) const{
-		if (!(coordToKeyChecked(x, key[0]) && coordToKeyChecked(y, key[1])))
-		{
+		if (!(coordToKeyChecked(x, key[0]) && coordToKeyChecked(y, key[1]))) {
 			return false;
 		}
 		else {
@@ -329,13 +318,7 @@ namespace gridmap2D {
 			unsigned int dim;
 
 			// find minimum tMax:
-			// dim = tMax[0] < tMax[1] ? 0 : 1;
-			if (tMax[0] < tMax[1]){
-				dim = 0;
-			}
-			else {
-				dim = 1;
-			}
+			dim = tMax[0] < tMax[1] ? 0 : 1;
 
 			// advance in direction "dim"
 			current_key[dim] += step[dim];
@@ -384,7 +367,6 @@ namespace gridmap2D {
 
 	template <class NODE, class I>
 	std::ostream& Grid2DBaseImpl<NODE, I>::writeData(std::ostream &s) const{
-		// Implement writeData() - Need to check
 		if (gridmap){
 			size_t node_size = gridmap->size();
 			s.write((char*)&node_size, sizeof(node_size));
@@ -404,7 +386,6 @@ namespace gridmap2D {
 
 	template <class NODE, class I>
 	std::istream& Grid2DBaseImpl<NODE, I>::readData(std::istream &s) {
-		// Implement readData() - To do.
 		if (!s.good()){
 			GRIDMAP2D_WARNING_STR(__FILE__ << ":" << __LINE__ << "Warning: Input filestream not \"good\"");
 		}
@@ -461,7 +442,6 @@ namespace gridmap2D {
 		y = maxY - minY;
 	}
 
-	// Implement getMetricSize() - To do.
 	template <class NODE, class I>
 	void Grid2DBaseImpl<NODE, I>::getMetricSize(double& x, double& y) const{
 
@@ -551,7 +531,6 @@ namespace gridmap2D {
 		}
 	}
 
-	// Implement getMetricMax() - To do.
 	template <class NODE, class I>
 	void Grid2DBaseImpl<NODE, I>::getMetricMax(double& mx, double& my) const {
 		mx = my = -std::numeric_limits<double>::max();
@@ -578,7 +557,7 @@ namespace gridmap2D {
 
 	template <class NODE, class I>
 	size_t Grid2DBaseImpl<NODE, I>::memoryUsage() const{
-		return (sizeof(Grid2DBaseImpl<NODE, I>) + memoryUsageNode() * this->size());	// Add HashTable?
+		return (sizeof(Grid2DBaseImpl<NODE, I>) + memoryUsageNode() * this->size());
 	}
 
 	// Implement getUnknownLeafCenters - To do.
@@ -586,38 +565,46 @@ namespace gridmap2D {
 	void Grid2DBaseImpl<NODE, I>::getUnknownLeafCenters(point2d_list& node_centers, point2d pmin, point2d pmax, unsigned int depth) const {
 
 		assert(depth <= tree_depth);
-		if (depth == 0)
-			depth = tree_depth;
+      if (depth == 0)
+        depth = tree_depth;
 
-		float diff[2];
-		unsigned int steps[2];
-		float step_size = this->resolution * pow(2, tree_depth - depth);
-		for (int i = 0; i < 2; ++i) {
-			diff[i] = pmax(i) - pmin(i);
-			steps[i] = floor(diff[i] / step_size);
-			//      std::cout << "bbx " << i << " size: " << diff[i] << " " << steps[i] << " steps\n";
-		}
+      point3d pmin_clamped = this->keyToCoord(this->coordToKey(pmin, depth), depth);
+      point3d pmax_clamped = this->keyToCoord(this->coordToKey(pmax, depth), depth);
 
-		point2d p = pmin;
-		NODE* res;
-		for (unsigned int x = 0; x < steps[0]; ++x) {
-			p.x() += step_size;
-			for (unsigned int y = 0; y < steps[1]; ++y) {
-				p.y() += step_size;
-				res = this->search(p, depth);
-				if (res == NULL) {
-					node_centers.push_back(p);
-				}
-			}
-			p.y() = pmin.y();
-		}
+      float diff[3];
+      unsigned int steps[3];
+      float step_size = this->resolution * pow(2, tree_depth-depth);
+      for (int i=0;i<3;++i) {
+        diff[i] = pmax_clamped(i) - pmin_clamped(i);
+        steps[i] = floor(diff[i] / step_size);
+        //      std::cout << "bbx " << i << " size: " << diff[i] << " " << steps[i] << " steps\n";
+      }
+
+      point3d p = pmin_clamped;
+      NODE* res;
+      for (unsigned int x=0; x<steps[0]; ++x) {
+        p.x() += step_size;
+        for (unsigned int y=0; y<steps[1]; ++y) {
+          p.y() += step_size;
+          for (unsigned int z=0; z<steps[2]; ++z) {
+            //          std::cout << "querying p=" << p << std::endl;
+            p.z() += step_size;
+            res = this->search(p,depth);
+            if (res == NULL) {
+              node_centers.push_back(p);
+            }
+          }
+          p.z() = pmin_clamped.z();
+        }
+        p.y() = pmin_clamped.y();
+      }
 	}*/
 
 	template <class NODE, class I>
 	double Grid2DBaseImpl<NODE, I>::volume() {
 		double x, y;
 		getMetricSize(x, y);
-		return x*y;
+		return x * y;
 	}
 
 

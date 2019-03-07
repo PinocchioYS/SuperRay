@@ -230,10 +230,8 @@ namespace quadmath {
 		float data[2];
 	};
 
-
 	//! user friendly output in format (x y)
-	std::ostream& operator<<(std::ostream& out, quadmath::Vector2 const& v);
-
+	std::ostream& operator<<(std::ostream& out, Vector2 const& v);
 }
 
 

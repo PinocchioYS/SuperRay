@@ -43,11 +43,12 @@
 #endif
 #include <fstream>
 #include <math.h>
+#include <assert.h>
+#include <limits>
 
 #include <gridmap2D/Pointcloud.h>
 
 namespace gridmap2D {
-
 	Pointcloud::Pointcloud() {
 
 	}
@@ -129,7 +130,6 @@ namespace gridmap2D {
 		float x, y;
 
 		for (Pointcloud::const_iterator it = begin(); it != end(); it++) {
-
 			x = (*it)(0);
 			y = (*it)(1);
 
@@ -170,7 +170,6 @@ namespace gridmap2D {
 
 		this->clear();
 		this->push_back(result);
-
 	}
 
 
@@ -223,7 +222,6 @@ namespace gridmap2D {
 	}
 
 	std::istream& Pointcloud::readBinary(std::istream &s) {
-
 		size_t pc_size = 0;
 		s.read((char*)&pc_size, sizeof(pc_size));
 		GRIDMAP2D_DEBUG("Reading %d points from binary file...", pc_size);
@@ -249,7 +247,6 @@ namespace gridmap2D {
 
 
 	std::ostream& Pointcloud::writeBinary(std::ostream &s) const {
-
 		size_t pc_size = this->size();
 		GRIDMAP2D_DEBUG("Writing %lu points to binary file...", (unsigned long)pc_size);
 		s.write((char*)&pc_size, sizeof(pc_size));

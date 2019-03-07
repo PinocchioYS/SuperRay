@@ -36,8 +36,7 @@
 #include <math.h>
 #include <fstream>
 #include <stdlib.h>
-// #include <inttypes.h>
-#include <gridmap2D/inttype.h>
+#include <inttypes.h>
 
 #include <gridmap2D/Grid2DNode.h>
 

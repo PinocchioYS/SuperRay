@@ -228,31 +228,10 @@ namespace gridmap3D {
 		/// Write complete state of tree to stream (without file header) unmodified.
 		std::ostream& writeData(std::ostream &s) const;
 
-		/// @return beginning of the tree as leaf iterator
+		/// @return beginning of the grid as iterator
 //		const OccupancyGridMap::iterator begin() const { return gridmap->begin(); }
-		/// @return end of the tree as leaf iterator
-//		const OccupancyGridMap::iterator end() const { return gridmap->end(); } // TODO: RVE?
-
-		/// @return beginning of the tree as leaf iterator
-		// leaf_iterator begin_leafs(unsigned char maxDepth = 0) const { return leaf_iterator(this, maxDepth); };
-		/// @return end of the tree as leaf iterator
-		// const leaf_iterator end_leafs() const { return leaf_iterator_end; }
-
-		/// @return beginning of the tree as leaf iterator in a bounding box
-		/*leaf_bbx_iterator begin_leafs_bbx(const Grid3DKey& min, const Grid3DKey& max, unsigned char maxDepth = 0) const {
-			return leaf_bbx_iterator(this, min, max, maxDepth);
-		}*/
-		/// @return beginning of the tree as leaf iterator in a bounding box
-		/*leaf_bbx_iterator begin_leafs_bbx(const point3d& min, const point3d& max, unsigned char maxDepth = 0) const {
-			return leaf_bbx_iterator(this, min, max, maxDepth);
-		}*/
-		/// @return end of the tree as leaf iterator in a bounding box
-		// const leaf_bbx_iterator end_leafs_bbx() const { return leaf_iterator_bbx_end; }
-
-		/// @return beginning of the tree as iterator to all nodes (incl. inner)
-		// tree_iterator begin_tree(unsigned char maxDepth = 0) const { return tree_iterator(this, maxDepth); }
-		/// @return end of the tree as iterator to all nodes (incl. inner)
-		// const tree_iterator end_tree() const { return tree_iterator_end; }*/
+		/// @return end of the grid as iterator
+//		const OccupancyGridMap::iterator end() const { return gridmap->end(); }
 
 		//
 		// Key / coordinate conversion functions
@@ -346,10 +325,6 @@ namespace gridmap3D {
 
 		/// data structure for ray casting, array for multithreading
 		std::vector<KeyRay> keyrays;
-
-		// const leaf_iterator leaf_iterator_end;
-		// const leaf_bbx_iterator leaf_iterator_bbx_end;
-		// const tree_iterator tree_iterator_end;
 	};
 
 }

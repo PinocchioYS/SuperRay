@@ -187,7 +187,7 @@ namespace quadmath {
 		double	rotation;
 	};
 
-	//! user friendly output in format (x y z, u x y z) which is (translation, rotation)
+	//! user friendly output in format (x y, r) which is (translation, rotation)
 	std::ostream& operator<<(std::ostream& s, const Pose3D& p);
 
 }

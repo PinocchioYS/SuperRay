@@ -96,7 +96,7 @@ namespace gridmap3D{
 	}
 
 	void SuperRayGenerator::GenerateSuperRay(const point3d_collection& _pointlist, SuperRayCloud& _srcloud) {
-		// 0. Initialize vertices of voxel
+		// 0. Initialize vertices of pixel
 		VoxelInfo voxelinfo;
 		voxelinfo.voxelKey = coordToKey(_pointlist[0]);
 		voxelinfo.minW.x() = (float)((voxelinfo.voxelKey.k[0] - (unsigned short)GRID_MAX_VAL) * RESOLUTION);	// Min X of voxel

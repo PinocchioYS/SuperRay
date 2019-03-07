@@ -79,7 +79,6 @@ namespace gridmap2D {
 			return NULL;
 		}
 		else {
-			// TODO: check is_good of finished stream, warn?
 			return read(file);
 		}
 	}
@@ -197,15 +196,15 @@ namespace gridmap2D {
 	}
 
 	std::map<std::string, AbstractGrid2D*>& AbstractGrid2D::classIDMapping(){
-		// we will "leak" the memory of the map and all trees until program exits,
+		// we will "leak" the memory of the map and all grids until program exits,
 		// but this ensures all static objects are there as long as needed
 		// http://www.parashift.com/c++-faq-lite/ctors.html#faq-10.15
 		static std::map<std::string, AbstractGrid2D*>* map = new std::map<std::string, AbstractGrid2D*>();
 		return *map;
 	}
 
-	void AbstractGrid2D::registerGridType(AbstractGrid2D* tree){
-		classIDMapping()[tree->getGridType()] = tree;
+	void AbstractGrid2D::registerGridType(AbstractGrid2D* grid){
+		classIDMapping()[grid->getGridType()] = grid;
 	}
 
 

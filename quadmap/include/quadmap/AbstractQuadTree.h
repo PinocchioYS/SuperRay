@@ -59,8 +59,6 @@ namespace quadmap {
 		/// returns actual class name as string for identification
 		virtual std::string getTreeType() const = 0;
 
-
-
 		virtual double getResolution() const = 0;
 		virtual void setResolution(double res) = 0;
 		virtual size_t size() const = 0;

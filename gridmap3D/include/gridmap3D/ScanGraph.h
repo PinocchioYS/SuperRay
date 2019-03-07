@@ -73,7 +73,6 @@ namespace gridmap3D {
 		Pointcloud* scan;
 		pose6d pose; ///< 6D pose from which the scan was performed
 		unsigned int id;
-
 	};
 
 	/**

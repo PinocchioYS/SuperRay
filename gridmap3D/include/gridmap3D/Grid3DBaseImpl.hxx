@@ -113,7 +113,7 @@ namespace gridmap3D {
 		other.gridamp = this_gridmap;
 	}
 
-/*	template <class NODE, class I>
+    /*template <class NODE, class I>
 	bool Grid3DBaseImpl<NODE, I>::operator== (const Grid3DBaseImpl<NODE, I>& other) const{
 		if (grid_max_val != other.grid_max_val || resolution != other.resolution || this->size() != other.size()){
 			return false;
@@ -273,7 +273,7 @@ namespace gridmap3D {
 
 
 		if (key_origin == key_end)
-			return true; // same tree cell, we're done.
+			return true; // same grid cell, we're done.
 
 		ray.addKey(key_origin);
 
@@ -527,7 +527,7 @@ namespace gridmap3D {
 	void Grid3DBaseImpl<NODE, I>::getMetricMin(double& mx, double& my, double& mz) const {
 		mx = my = mz = std::numeric_limits<double>::max();
 		if (size_changed) {
-			// empty tree
+			// empty grid
 			if (gridmap->size() == 0){
 				mx = my = mz = 0.0;
 				return;
@@ -554,7 +554,7 @@ namespace gridmap3D {
 	void Grid3DBaseImpl<NODE, I>::getMetricMax(double& mx, double& my, double& mz) const {
 		mx = my = mz = -std::numeric_limits<double>::max();
 		if (size_changed) {
-			// empty tree
+			// empty grid
 			if (gridmap->size() == 0){
 				mx = my = mz = 0.0;
 				return;
@@ -579,7 +579,7 @@ namespace gridmap3D {
 
 	template <class NODE, class I>
 	size_t Grid3DBaseImpl<NODE, I>::memoryUsage() const{
-		return (sizeof(Grid3DBaseImpl<NODE, I>) + memoryUsageNode() * this->size());	// Add HashTable?
+		return (sizeof(Grid3DBaseImpl<NODE, I>) + memoryUsageNode() * this->size());
 	}
 
 	// Implement getUnknownLeafCenters - To do.
