@@ -82,7 +82,7 @@ namespace octomap{
 			// Skip to generate super rays -> insert all rays
 			if (pointlist.size() < THRESHOLD){
 				for (unsigned int j = 0; j < pointlist.size(); ++j)
-					_srcloud.push_back(pointlist[j], 1);
+                    superrays.push_back(SuperRay(pointlist[j], 1));
 				continue;
 			}
 

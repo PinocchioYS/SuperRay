@@ -53,49 +53,46 @@ namespace quadmap{
 		}
 
 		_srcloud.origin = _origin;
-	#ifdef _OPENMP
+		std::vector<SuperRay>& superrays = _srcloud.superrays;
+
+#ifdef _OPENMP
 		std::vector< std::vector<point2d>* > pointlistvector;
-		Vexelized_Pointclouds::iterator it;
-		for (it = voxels.begin(); it != voxels.end(); ++it){
+		for (Voxelized_Pointclouds::iterator it = voxels.begin(); it != voxels.end(); ++it){
 			pointlistvector.push_back(&(it->second));
 		}
 
-	#pragma omp parallel for
+#pragma omp parallel for schedule(guided) reduction(merge : superrays)
 		for (int i = 0; i < (int)pointlistvector.size(); i++){
 			std::vector<point2d>& pointlist = *(pointlistvector[i]);
 
 			// Skip to generate super rays -> insert all rays
 			if (pointlist.size() < THRESHOLD){
-	#pragma omp critical
-				{
-					for (unsigned int j = 0; j < pointlist.size(); ++j)
-						_srcloud.push_back(pointlist[j], 1);
-				}
+                for (unsigned int j = 0; j < pointlist.size(); ++j)
+                	superrays.push_back(SuperRay(pointlist[j], 1));
 				continue;
 			}
 
 			// Generate super rays from point clouds
-			GenerateSuperRay(pointlist, _srcloud);
+			GenerateSuperRay(pointlist, superrays);
 		}
-	#else
-		Voxelized_Pointclouds::iterator it;
-		for (it = voxels.begin(); it != voxels.end(); ++it){
+#else
+		for (Voxelized_Pointclouds::iterator it = voxels.begin(); it != voxels.end(); ++it){
 			std::vector<point2d>& pointlist = it->second;
 
 			// Skip to generate super rays -> insert all rays
 			if (pointlist.size() < THRESHOLD){
 				for (unsigned int j = 0; j < pointlist.size(); ++j)
-					_srcloud.push_back(pointlist[j], 1);
+                    superrays.push_back(SuperRay(pointlist[j], 1));
 				continue;
 			}
 
 			// Generate super rays from point clouds
-			GenerateSuperRay(pointlist, _srcloud);
+			GenerateSuperRay(pointlist, superrays);
 		}
-	#endif
+#endif
 	}
 
-	void SuperRayGenerator::GenerateSuperRay(const point2d_collection& _pointlist, SuperRayCloud& _srcloud) {
+	void SuperRayGenerator::GenerateSuperRay(const point2d_collection& _pointlist, std::vector<SuperRay>& _srcloud) {
 		// 0. Initialize vertices of voxel
 		PixelInfo pixelinfo;
 		pixelinfo.pixelKey = coordToKey(_pointlist[0]);
@@ -112,7 +109,7 @@ namespace quadmap{
 		GenerateSuperRay2D(_pointlist, axis, pixelinfo, _srcloud);
 	}
 
-	void SuperRayGenerator::GenerateSuperRay2D(const point2d_collection& _pointlist, Axis2D& _axis, PixelInfo& _pixelinfo, SuperRayCloud& _srcloud) {
+	void SuperRayGenerator::GenerateSuperRay2D(const point2d_collection& _pointlist, Axis2D& _axis, PixelInfo& _pixelinfo, std::vector<SuperRay>& _srcloud) {
 		// 0. Initialize Constants - Re-mapping two axes to X and Y axis
 		const unsigned int AXISX = _axis.axisU;		// Traversal Axis
 		const unsigned int AXISY = _axis.axisV;		// Mapping Axis
@@ -121,12 +118,7 @@ namespace quadmap{
 
 		// Special case - Only one super ray
 		if (originKey.k[AXISX] == pixelKey.k[AXISX]){
-	#ifdef _OPENMP
-	#pragma omp critical
-	#endif
-			{
-				_srcloud.push_back(_pointlist[0], (int)_pointlist.size());
-			}
+            _srcloud.push_back(SuperRay(_pointlist[0], (int)_pointlist.size()));
 			return;
 		}
 
@@ -165,15 +157,10 @@ namespace quadmap{
 		}
 
 		// 3. Push back the generated super rays into super ray cloud
-	#ifdef _OPENMP
-	#pragma omp critical
-	#endif
-		{
-			std::map<unsigned int, SuperRay>::iterator rayIt;
-			for (rayIt = superrays.begin(); rayIt != superrays.end(); rayIt++){
-				_srcloud.push_back(rayIt->second);
-			}
-		}
+        std::map<unsigned int, SuperRay>::iterator rayIt;
+        for (rayIt = superrays.begin(); rayIt != superrays.end(); rayIt++){
+            _srcloud.push_back(rayIt->second);
+        }
 	}
 
 	double SuperRayGenerator::GenerateMappingLine(PixelInfo& _pixelinfo, const unsigned int& _axisX, const unsigned int& _axisY, std::vector<double>& _mappingPlane) {
