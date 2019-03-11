@@ -9,7 +9,7 @@ You can see the technical details of super rays and culling region based updates
 
 License
 -------
-* SuperRay: [New BSD License](LICENSE.txt)
+* SuperRay: [New BSD License](LICENSE)
 * OctoMap: [New BSD License](octomap/LICENSE.txt)
 
 BUILD
