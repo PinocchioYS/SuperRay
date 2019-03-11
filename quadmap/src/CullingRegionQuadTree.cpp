@@ -27,22 +27,22 @@
 *
 */
 
-#include <octomap_cullingregion/CullingRegionOcTree.h>
+#include <quadmap_cullingregion/CullingRegionQuadTree.h>
 
-namespace octomap{
-    CullingRegionOcTree::CullingRegionOcTree(double in_resolution)
-            : OccupancyOcTreeBase<OcTreeNode>(in_resolution) {
-        cullingregionOcTreeMemberInit.ensureLinking();
+namespace quadmap{
+    CullingRegionQuadTree::CullingRegionQuadTree(double in_resolution)
+            : OccupancyQuadTreeBase<QuadTreeNode>(in_resolution) {
+        cullingregionQuadTreeMemberInit.ensureLinking();
     };
 
-    CullingRegionOcTree::CullingRegionOcTree(std::string _filename)
-            : OccupancyOcTreeBase<OcTreeNode>(0.1)  { // resolution will be set according to tree file
+    CullingRegionQuadTree::CullingRegionQuadTree(std::string _filename)
+            : OccupancyQuadTreeBase<QuadTreeNode>(0.1)  { // resolution will be set according to tree file
         readBinary(_filename);
     }
 
-    CullingRegionOcTree::StaticMemberInitializer CullingRegionOcTree::cullingregionOcTreeMemberInit;
+    CullingRegionQuadTree::StaticMemberInitializer CullingRegionQuadTree::cullingregionQuadTreeMemberInit;
 
-    void CullingRegionOcTree::insertPointCloudRays(const Pointcloud& pc, const point3d& origin)
+    void CullingRegionQuadTree::insertPointCloudRays(const Pointcloud& pc, const point2d& origin)
     {
         if (pc.size() < 1)
             return;
@@ -54,10 +54,10 @@ namespace octomap{
         KeyIntMap free_cells, occupied_cells;
 #ifdef _OPENMP
         omp_set_num_threads(this->keyrays.size());
-#pragma omp parallel for
+	#pragma omp parallel for
 #endif
         for (int i = 0; i < (int)pc.size(); ++i) {
-            const point3d& p = pc[i];
+            const point2d& p = pc[i];
             unsigned threadIdx = 0;
 #ifdef _OPENMP
             threadIdx = omp_get_thread_num();
@@ -73,7 +73,7 @@ namespace octomap{
                     for (KeyRay::iterator it = keyray->begin(); it != keyray->end(); ++it){
                         const KeyIntMap::iterator& cell = free_cells.find(*it);
                         if (cell == free_cells.end())
-                            free_cells.insert(std::pair<OcTreeKey, int>(*it, 1));
+                            free_cells.insert(std::pair<QuadTreeKey, int>(*it, 1));
                         else
                             cell->second = cell->second + 1;
                     }
@@ -84,10 +84,10 @@ namespace octomap{
 #endif
                 {
                     // Batch the cells to be updated into the occupied states
-                    OcTreeKey key = coordToKey(p);
+                    QuadTreeKey key = coordToKey(p);
                     const KeyIntMap::iterator& cell = occupied_cells.find(key);
                     if (cell == occupied_cells.end())
-                        occupied_cells.insert(std::pair<OcTreeKey, int>(key, 1));
+                        occupied_cells.insert(std::pair<QuadTreeKey, int>(key, 1));
                     else
                         cell->second = cell->second + 1;
                 }
@@ -103,7 +103,7 @@ namespace octomap{
         }
     }
 
-    void CullingRegionOcTree::insertSuperRayCloudRays(const Pointcloud& pc, const point3d& origin, const int threshold)
+    void CullingRegionQuadTree::insertSuperRayCloudRays(const Pointcloud& pc, const point2d& origin, const int threshold)
     {
         if (pc.size() < 1)
             return;
@@ -123,7 +123,7 @@ namespace octomap{
 	#pragma omp parallel for
 #endif
         for (int i = 0; i < (int)srcloud.size(); ++i) {
-            const point3d& p = srcloud[i].p;
+            const point2d& p = srcloud[i].p;
             unsigned threadIdx = 0;
 #ifdef _OPENMP
             threadIdx = omp_get_thread_num();
@@ -139,7 +139,7 @@ namespace octomap{
                     for (KeyRay::iterator it = keyray->begin(); it != keyray->end(); ++it){
                         const KeyIntMap::iterator& cell = free_cells.find(*it);
                         if (cell == free_cells.end())
-                            free_cells.insert(std::pair<OcTreeKey, int>(*it, srcloud[i].w));
+                            free_cells.insert(std::pair<QuadTreeKey, int>(*it, srcloud[i].w));
                         else
                             cell->second = cell->second + srcloud[i].w;
                     }
@@ -150,10 +150,10 @@ namespace octomap{
 #endif
                 {
                     // Batch the cells to be updated into the occupied states
-                    OcTreeKey key = coordToKey(p);
+                    QuadTreeKey key = coordToKey(p);
                     const KeyIntMap::iterator& cell = occupied_cells.find(key);
                     if (cell == occupied_cells.end())
-                        occupied_cells.insert(std::pair<OcTreeKey, int>(key, srcloud[i].w));
+                        occupied_cells.insert(std::pair<QuadTreeKey, int>(key, srcloud[i].w));
                     else
                         cell->second = cell->second + srcloud[i].w;
                 }
@@ -169,11 +169,11 @@ namespace octomap{
         }
     }
 
-    KeySet CullingRegionOcTree::buildCullingRegion(const point3d& origin, const int max_propagation)
+    KeySet CullingRegionQuadTree::buildCullingRegion(const point2d& origin, const int max_propagation)
     {
         KeySet cullingregion;
 
-        OcTreeKey originKey = coordToKey(origin);
+        QuadTreeKey originKey = coordToKey(origin);
 
         KeySet* cur_candidates = new KeySet;
         cur_candidates->insert(originKey);
@@ -182,24 +182,24 @@ namespace octomap{
             KeySet* next_candidates = new KeySet;
             for(KeySet::iterator it = cur_candidates->begin(); it != cur_candidates->end(); it++){
                 // Check the insertion of the cell into the culling region
-                const OcTreeKey& key = *it;
+                const QuadTreeKey& key = *it;
 
                 // The first condition: does the cell have a fully free state?
-                int step[3] = {0, 0, 0};
-                OcTreeNode* node = search(key);
+                int step[2] = {0, 0};
+                QuadTreeNode* node = search(key);
                 if (!node || node->getLogOdds() > clamping_thres_min)
                     continue;
 
                 // The second condition: are all the neighbor cells in the culling region?
                 bool insertion = true;
-                for (int axis = 0; axis < 3; axis++){
+                for (int axis = 0; axis < 2; axis++){
                     // Find a neighbor cell in the direction of the axis
                     if (key[axis] > originKey[axis])		step[axis] = -1;
                     else if (key[axis] < originKey[axis])	step[axis] = 1;
 
                     if (step[axis] != 0){
                         // Check a neighbor cell
-                        OcTreeKey checkKey = key;
+                        QuadTreeKey checkKey = key;
                         checkKey[axis] += step[axis];
 
                         // The neighbor cell is not in culling region
@@ -217,8 +217,8 @@ namespace octomap{
 
                 // Find the candidates in the next level
                 if(cur_level != max_propagation){
-                    for (int axis = 0; axis < 3; axis++){
-                        OcTreeKey candidate = key;
+                    for (int axis = 0; axis < 2; axis++){
+                        QuadTreeKey candidate = key;
 
                         if (step[axis] != 0){
                             candidate[axis] += (-step[axis]);
@@ -247,46 +247,46 @@ namespace octomap{
         return cullingregion;
     }
 
-    KeySet CullingRegionOcTree::buildCullingRegion(const Pointcloud& pc, const point3d& origin)
+    KeySet CullingRegionQuadTree::buildCullingRegion(const Pointcloud& pc, const point2d& origin)
     {
         // Find the maximum distance between the sensor origin and the end point
         double max_dist = 0.0;
         for(int i = 0; i < (int)pc.size(); i++){
-            const point3d& p = pc[i];
+            const point2d& p = pc[i];
             double distance = (p - origin).norm();
             if(distance > max_dist)
                 max_dist = distance;
         }
 
-        // Build a culling region limited the minimum distance
+        // Build a culling region limited by the range of sensor measurements
         return buildCullingRegion(origin, (int)(max_dist / resolution));
     }
 
-    KeySet CullingRegionOcTree::buildCullingRegion(const SuperRayCloud& superrays, const point3d& origin)
+    KeySet CullingRegionQuadTree::buildCullingRegion(const SuperRayCloud& superrays, const point2d& origin)
     {
         // Find the maximum distance between the sensor origin and the end point
         double max_dist = 0.0;
         for(int i = 0; i < (int)superrays.size(); i++){
-            const point3d& p = superrays[i].p;
+            const point2d& p = superrays[i].p;
             double distance = (p - origin).norm();
             if(distance > max_dist)
                 max_dist = distance;
         }
 
-        // Build a culling region limited the minimum distance
+        // Build a culling region limited by the range of sensor measurements
         return buildCullingRegion(origin, (int)(max_dist / resolution));
     }
 
-    bool CullingRegionOcTree::computeInverseRayKeys(const point3d& origin, const point3d& end, KeyRay& ray, KeySet& cullingregion)
+    bool CullingRegionQuadTree::computeInverseRayKeys(const point2d& origin, const point2d& end, KeyRay& ray, KeySet& cullingregion)
     {
         // see "A Faster Voxel Traversal Algorithm for Ray Tracing" by Amanatides & Woo
         // basically: DDA in 3D
 
         ray.reset();
 
-        OcTreeKey key_origin, key_end;
+        QuadTreeKey key_origin, key_end;
         if ( !coordToKeyChecked(origin, key_origin) || !coordToKeyChecked(end, key_end) ) {
-            OCTOMAP_WARNING_STR("coordinates ( " << origin << " -> " << end << ") out of bounds in computeRayKeys");
+            QUADMAP_WARNING_STR("coordinates ( " << origin << " -> " << end << ") out of bounds in computeRayKeys");
             return false;
         }
 
@@ -294,17 +294,17 @@ namespace octomap{
             return true; // same tree cell, we're done.
 
         // Initialization phase -------------------------------------------------------
-        point3d direction = (end - origin);
+        point2d direction = (end - origin);
         float length = (float) direction.norm();
         direction /= length; // normalize vector
 
-        int    step[3];
-        double tMax[3];
-        double tDelta[3];
+        int    step[2];
+        double tMax[2];
+        double tDelta[2];
 
-        OcTreeKey current_key = key_origin;
+        QuadTreeKey current_key = key_origin;
 
-        for(unsigned int i = 0; i < 3; ++i) {
+        for(unsigned int i = 0; i < 2; ++i) {
             // compute step direction
             if (direction(i) > 0.0)         step[i] = 1;
             else if (direction(i) < 0.0)    step[i] = -1;
@@ -329,15 +329,7 @@ namespace octomap{
         bool done = false;
         while (!done) {
             // find minimum tMax:
-            unsigned int dim;
-            if (tMax[0] < tMax[1]){
-                if (tMax[0] < tMax[2]) dim = 0;
-                else                   dim = 2;
-            }
-            else {
-                if (tMax[1] < tMax[2]) dim = 1;
-                else                   dim = 2;
-            }
+            unsigned int dim = tMax[0] < tMax[1] ? 0 : 1;
 
             // advance in direction "dim"
             current_key[dim] += step[dim];
@@ -359,7 +351,7 @@ namespace octomap{
             else {
                 // reached endpoint world coords?
                 // dist_from_origin now contains the length of the ray when traveled until the border of the current voxel
-                double dist_from_origin = std::min(std::min(tMax[0], tMax[1]), tMax[2]);
+                double dist_from_origin = std::min(tMax[0], tMax[1]);
                 // if this is longer than the expected ray length, we should have already hit the voxel containing the end point with the code above (key_end).
                 // However, we did not hit it due to accumulating discretization errors, so this is the point here to stop the ray as we would never reach the voxel key_end
                 if (dist_from_origin > length) {

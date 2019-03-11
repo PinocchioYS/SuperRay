@@ -131,6 +131,7 @@ namespace quadmap {
 	 *
 	 */
 	typedef unordered_ns::unordered_map<QuadTreeKey, bool, QuadTreeKey::KeyHash> KeyBoolMap;
+	typedef unordered_ns::unordered_map<QuadTreeKey, int, QuadTreeKey::KeyHash> KeyIntMap;
 
 	class KeyRay {
 	public:
