@@ -11,6 +11,7 @@ SET (octomap_SRCS
 	SuperRayCloud.cpp
 	SuperRayGenerator.cpp
 	SuperRayOcTree.cpp
+	CullingRegionOcTree.cpp
 )
 
 # dynamic and static libs, see CMake FAQ:
@@ -28,10 +29,14 @@ TARGET_LINK_LIBRARIES(octomap octomath)
 ADD_EXECUTABLE(example_superrayOcTree example_superrayOcTree.cpp)
 TARGET_LINK_LIBRARIES(example_superrayOcTree octomap)
 
+ADD_EXECUTABLE(example_cullingregionOcTree example_cullingregionOcTree.cpp)
+TARGET_LINK_LIBRARIES(example_cullingregionOcTree octomap)
+
 install(TARGETS
 	octomap
 	octomap-static
 	example_superrayOcTree
+	example_cullingregionOcTree
 	${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 

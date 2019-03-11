@@ -134,6 +134,7 @@ namespace octomap {
      *
      */
     typedef unordered_ns::unordered_map<OcTreeKey, bool, OcTreeKey::KeyHash> KeyBoolMap;
+    typedef unordered_ns::unordered_map<OcTreeKey, int, OcTreeKey::KeyHash> KeyIntMap;
 
 
     class KeyRay {
