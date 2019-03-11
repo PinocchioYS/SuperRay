@@ -35,6 +35,11 @@ namespace gridmap3D{
 		superrayGrid3DMemberInit.ensureLinking();
 	};
 
+	/*SuperRayGrid3D::SuperRayGrid3D(std::string _filename)
+    : OccupancyGrid3DBase<Grid3DNode>(0.1)  { // resolution will be set according to grid file
+		readBinary(_filename);
+	}*/
+
 	SuperRayGrid3D::StaticMemberInitializer SuperRayGrid3D::superrayGrid3DMemberInit;
 
 	void SuperRayGrid3D::insertPointCloudRays(const Pointcloud& pc, const point3d& origin)

@@ -37,6 +37,7 @@
 
 #ifdef _OPENMP
 #include <omp.h>
+#pragma omp declare reduction (merge : std::vector<gridmap3D::SuperRay> : omp_out.insert(omp_out.end(), omp_in.begin(), omp_in.end()))
 #endif
 
 namespace gridmap3D{
@@ -61,9 +62,9 @@ namespace gridmap3D{
 		unsigned int	THRESHOLD;			// threshold for limiting to generate super rays for each voxel
 
 		// Functions for generating super rays
-		void GenerateSuperRay(const point3d_collection& _pointlist, SuperRayCloud& _srcloud);
-		void GenerateSuperRay2D(const point3d_collection& _pointlist, Axis3D& _axis, VoxelInfo& _voxelinfo, SuperRayCloud& _srcloud);
-		void GenerateSuperRay3D(const point3d_collection& _pointlist, Axis3D& _axis, VoxelInfo& _voxelinfo, SuperRayCloud& _srcloud);
+		void GenerateSuperRay(const point3d_collection& _pointlist, std::vector<SuperRay>& _srcloud);
+		void GenerateSuperRay2D(const point3d_collection& _pointlist, Axis3D& _axis, VoxelInfo& _voxelinfo, std::vector<SuperRay>& _srcloud);
+		void GenerateSuperRay3D(const point3d_collection& _pointlist, Axis3D& _axis, VoxelInfo& _voxelinfo, std::vector<SuperRay>& _srcloud);
 
 		// Function for generating mapping line in 2-D
 		double GenerateMappingLine(VoxelInfo& _voxelinfo, const unsigned int& _axisX, const unsigned int& _axisY, std::vector<double>& _mappingPlane);

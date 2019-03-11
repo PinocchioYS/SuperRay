@@ -53,49 +53,46 @@ namespace gridmap3D{
 		}
 
 		_srcloud.origin = _origin;
-	#ifdef _OPENMP
+		std::vector<SuperRay>& superrays = _srcloud.superrays;
+
+#ifdef _OPENMP
 		std::vector< std::vector<point3d>* > pointlistvector;
-		Vexelized_Pointclouds::iterator it;
-		for (it = voxels.begin(); it != voxels.end(); ++it){
+		for (Voxelized_Pointclouds::iterator it = voxels.begin(); it != voxels.end(); ++it){
 			pointlistvector.push_back(&(it->second));
 		}
 
-	#pragma omp parallel for
+#pragma omp parallel for schedule(guided) reduction(merge : superrays)
 		for (int i = 0; i < (int)pointlistvector.size(); i++){
 			std::vector<point3d>& pointlist = *(pointlistvector[i]);
 
 			// Skip to generate super rays -> insert all rays
 			if (pointlist.size() < THRESHOLD){
-	#pragma omp critical
-				{
-					for (unsigned int j = 0; j < pointlist.size(); ++j)
-						_srcloud.push_back(pointlist[j], 1);
-				}
+                for (unsigned int j = 0; j < pointlist.size(); ++j)
+					superrays.push_back(SuperRay(pointlist[j], 1));
 				continue;
 			}
 
 			// Generate super rays from point clouds
-			GenerateSuperRay(pointlist, _srcloud);
+			GenerateSuperRay(pointlist, superrays);
 		}
-	#else
-		Voxelized_Pointclouds::iterator it;
-		for (it = voxels.begin(); it != voxels.end(); ++it){
+#else
+		for (Voxelized_Pointclouds::iterator it = voxels.begin(); it != voxels.end(); ++it){
 			std::vector<point3d>& pointlist = it->second;
 
 			// Skip to generate super rays -> insert all rays
 			if (pointlist.size() < THRESHOLD){
 				for (unsigned int j = 0; j < pointlist.size(); ++j)
-					_srcloud.push_back(pointlist[j], 1);
+					superrays.push_back(SuperRay(pointlist[j], 1));
 				continue;
 			}
 
 			// Generate super rays from point clouds
-			GenerateSuperRay(pointlist, _srcloud);
+			GenerateSuperRay(pointlist, superrays);
 		}
 	#endif
 	}
 
-	void SuperRayGenerator::GenerateSuperRay(const point3d_collection& _pointlist, SuperRayCloud& _srcloud) {
+	void SuperRayGenerator::GenerateSuperRay(const point3d_collection& _pointlist, std::vector<SuperRay>& _srcloud) {
 		// 0. Initialize vertices of pixel
 		VoxelInfo voxelinfo;
 		voxelinfo.voxelKey = coordToKey(_pointlist[0]);
@@ -114,7 +111,7 @@ namespace gridmap3D{
 		GenerateSuperRay3D(_pointlist, axis, voxelinfo, _srcloud);
 	}
 
-	void SuperRayGenerator::GenerateSuperRay2D(const point3d_collection& _pointlist, Axis3D& _axis, VoxelInfo& _voxelinfo, SuperRayCloud& _srcloud) {
+	void SuperRayGenerator::GenerateSuperRay2D(const point3d_collection& _pointlist, Axis3D& _axis, VoxelInfo& _voxelinfo, std::vector<SuperRay>& _srcloud) {
 		// 0. Initialize Constants - Re-mapping two axes to X and Y axis
 		const unsigned int AXISX = _axis.axisV;		// Traversal Axis
 		const unsigned int AXISY = _axis.axisK;		// Mapping Axis
@@ -123,12 +120,7 @@ namespace gridmap3D{
 
 		// Special case - Only one super ray
 		if (originKey.k[AXISX] == voxelKey.k[AXISX]){
-	#ifdef _OPENMP
-	#pragma omp critical
-	#endif
-			{
-				_srcloud.push_back(_pointlist[0], (int)_pointlist.size());
-			}
+            _srcloud.push_back(SuperRay(_pointlist[0], (int)_pointlist.size()));
 			return;
 		}
 
@@ -167,18 +159,13 @@ namespace gridmap3D{
 		}
 
 		// 3. Push back the generated super rays into super ray cloud
-	#ifdef _OPENMP
-	#pragma omp critical
-	#endif
-		{
-			std::map<unsigned int, SuperRay>::iterator rayIt;
-			for (rayIt = superrays.begin(); rayIt != superrays.end(); rayIt++){
-				_srcloud.push_back(rayIt->second);
-			}
-		}
+        std::map<unsigned int, SuperRay>::iterator rayIt;
+        for (rayIt = superrays.begin(); rayIt != superrays.end(); rayIt++){
+            _srcloud.push_back(rayIt->second);
+        }
 	}
 
-	void SuperRayGenerator::GenerateSuperRay3D(const point3d_collection& _pointlist, Axis3D& _axis, VoxelInfo& _voxelinfo, SuperRayCloud& _srcloud) {
+	void SuperRayGenerator::GenerateSuperRay3D(const point3d_collection& _pointlist, Axis3D& _axis, VoxelInfo& _voxelinfo, std::vector<SuperRay>& _srcloud) {
 		// Special case - We need only two axis for generating super rays in 3-D.
 		if (originKey.k[_axis.axisU] == _voxelinfo.voxelKey.k[_axis.axisU]) {
 			GenerateSuperRay2D(_pointlist, _axis, _voxelinfo, _srcloud);
@@ -212,8 +199,8 @@ namespace gridmap3D{
 				// Project a point onto the mapping line of X-Y plane
 				double mappingPointY = (pointY - originT.y()) * (mappingXY - originT.x()) / (pointX - originT.x()) + originT.y();
 				// Binary Search
-		  std::vector<double>::iterator it = std::lower_bound(mappingPlaneXY.begin(), mappingPlaneXY.end(), mappingPointY);
-		  idx[0] = (unsigned int)std::distance(mappingPlaneXY.begin(), it);
+		        std::vector<double>::iterator it = std::lower_bound(mappingPlaneXY.begin(), mappingPlaneXY.end(), mappingPointY);
+		        idx[0] = (unsigned int)std::distance(mappingPlaneXY.begin(), it);
 			}
 			else{	// XYspace.size() == 1
 				idx[0] = 0;
@@ -223,8 +210,8 @@ namespace gridmap3D{
 				// Project a point onto the mapping line of Z-X plane
 				double mappingPointX = (pointX - originT.x()) * (mappingZX - originT.z()) / (pointZ - originT.z()) + originT.x();
 				// Binary Search
-		  std::vector<double>::iterator it = std::lower_bound(mappingPlaneZX.begin(), mappingPlaneZX.end(), mappingPointX);
-		  idx[1] = (unsigned int)std::distance(mappingPlaneZX.begin(), it);
+		        std::vector<double>::iterator it = std::lower_bound(mappingPlaneZX.begin(), mappingPlaneZX.end(), mappingPointX);
+		        idx[1] = (unsigned int)std::distance(mappingPlaneZX.begin(), it);
 			}
 			else{	// XYspace.size() == 1
 				idx[1] = 0;
@@ -234,8 +221,8 @@ namespace gridmap3D{
 				// Project a point onto the mapping line of Z-Y plane
 				double mappingPointY = (pointY - originT.y()) * (mappingZY - originT.z()) / (pointZ - originT.z()) + originT.y();
 				// Binary Search
-		  std::vector<double>::iterator it = std::lower_bound(mappingPlaneZY.begin(), mappingPlaneZY.end(), mappingPointY);
-		  idx[2] = (unsigned int)std::distance(mappingPlaneZY.begin(), it);
+		        std::vector<double>::iterator it = std::lower_bound(mappingPlaneZY.begin(), mappingPlaneZY.end(), mappingPointY);
+		        idx[2] = (unsigned int)std::distance(mappingPlaneZY.begin(), it);
 			}
 			else{	// XYspace.size() == 1
 				idx[2] = 0;
@@ -253,15 +240,10 @@ namespace gridmap3D{
 		}
 
 		// 3. Push back the generated super rays into super ray cloud
-	#ifdef _OPENMP
-	#pragma omp critical
-	#endif
-		{
-			std::map<unsigned int, SuperRay>::iterator rayIt;
-			for (rayIt = superrays.begin(); rayIt != superrays.end(); rayIt++){
-				_srcloud.push_back(rayIt->second);
-			}
-		}
+        std::map<unsigned int, SuperRay>::iterator rayIt;
+        for (rayIt = superrays.begin(); rayIt != superrays.end(); rayIt++){
+            _srcloud.push_back(rayIt->second);
+        }
 	}
 
 	double SuperRayGenerator::GenerateMappingLine(VoxelInfo& _voxelinfo, const unsigned int& _axisX, const unsigned int& _axisY, std::vector<double>& _mappingPlane) {

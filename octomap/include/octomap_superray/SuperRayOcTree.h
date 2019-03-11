@@ -103,10 +103,10 @@ namespace octomap{
 			}
 
 			/**
-			* Dummy function to ensure that MSVC does not drop the
-			* StaticMemberInitializer, causing this tree failing to register.
-			* Needs to be called from the constructor of this octree.
-			*/
+			 * Dummy function to ensure that MSVC does not drop the
+			 * StaticMemberInitializer, causing this tree failing to register.
+			 * Needs to be called from the constructor of this octree.
+			 */
 			void ensureLinking() {};
 		};
 		/// static member to ensure static initialization (only once)
