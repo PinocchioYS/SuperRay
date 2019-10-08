@@ -121,7 +121,7 @@ namespace quadmap {
 		 *
 		 * @param scan Pointer to a pointcloud to be added to the ScanGraph.
 		 *        ScanGraph will delete the object when it's no longer needed, don't delete it yourself.
-		 * @param pose 6D pose of the origin of the Pointcloud
+		 * @param pose 3D pose of the origin of the Pointcloud
 		 * @return Pointer to the new node
 		 */
 		ScanNode* addNode(Pointcloud* scan, pose3d pose);
@@ -132,7 +132,7 @@ namespace quadmap {
 		 *
 		 * @param first ScanNode
 		 * @param second ScanNode
-		 * @param constraint 6D transform between the two nodes
+		 * @param constraint 3D transform between the two nodes
 		 * @return
 		 */
 		ScanEdge* addEdge(ScanNode* first, ScanNode* second, pose3d constraint);
