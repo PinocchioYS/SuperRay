@@ -637,4 +637,83 @@ namespace gridmap3D {
 			occupancyNode.setLogOdds(this->clamping_thres_min);
 	}
 
+	template <class NODE>
+	std::istream& OccupancyGrid3DBase<NODE>::readBinaryData(std::istream &s){
+		if (this->size() > 0) {
+			GRIDMAP3D_ERROR_STR("Trying to read into an existing grid.");
+			return s;
+		}
+
+		size_t number_of_cells = 0;
+		s.read((char*)&number_of_cells, sizeof(number_of_cells));
+
+		std::vector<Grid3DKey> key_list(8);
+		std::bitset<8> binary_occupancy;	// 1: occupied, 0: free
+		for(size_t i = 0; i < number_of_cells; i++){
+			s.read((char*)key_list[i%8].k, sizeof(key_list[i%8].k));
+
+			if(i % 8 == 7){
+				char binary_occupancy_char = 0;
+				s.read((char*)&binary_occupancy_char, sizeof(char));
+				std::bitset<8> binary_occupancy((unsigned long long) binary_occupancy_char);	// 1: occupied, 0: free
+
+				for(unsigned int j = 0; j < 8; j++){
+					Grid3DNode* new_node = new Grid3DNode();
+					if(binary_occupancy[j] == 1)
+						new_node->setLogOdds(this->clamping_thres_max);
+					else
+						new_node->setLogOdds(this->clamping_thres_min);
+					this->gridmap->insert(std::pair<Grid3DKey, Grid3DNode*>(key_list[j], new_node));
+				}
+			}
+		}
+
+		if(number_of_cells % 8 != 0){
+			char binary_occupancy_char = 0;
+			s.read((char*)&binary_occupancy_char, sizeof(char));
+			std::bitset<8> binary_occupancy((unsigned long long) binary_occupancy_char);	// 1: occupied, 0: free
+
+			for(unsigned int j = 0; j <= (number_of_cells % 8); j++){
+				Grid3DNode* new_node = new Grid3DNode();
+				if(binary_occupancy[j] == 1)
+					new_node->setLogOdds(this->clamping_thres_max);
+				else
+					new_node->setLogOdds(this->clamping_thres_min);
+				this->gridmap->insert(std::pair<Grid3DKey, Grid3DNode*>(key_list[j], new_node));
+			}
+		}
+
+		this->size_changed = true;
+
+		return s;
+	}
+
+	template <class NODE>
+	std::ostream& OccupancyGrid3DBase<NODE>::writeBinaryData(std::ostream &s) const{
+		GRIDMAP3D_DEBUG("Writing %zu nodes to output stream...", this->size());
+
+		size_t number_of_cells = this->size();
+		s.write((char*)&number_of_cells, sizeof(number_of_cells));
+
+		typename OccupancyGrid3DBase<NODE>::OccupancyGridMap::iterator it = this->gridmap->begin();
+		std::bitset<8> binary_occupancy;	// 1: occupied, 0: free
+		for(size_t i = 0; i < number_of_cells; i++, it++){
+			s.write((char*) it->first.k, sizeof(it->first.k));
+			binary_occupancy[i % 8] = this->isNodeOccupied(it->second) ? 1 : 0;
+
+			if(i % 8 == 7){
+				char binary_occupancy_char = (char)binary_occupancy.to_ulong();
+				s.write((char*)&binary_occupancy_char, sizeof(char));
+				binary_occupancy.reset();
+			}
+		}
+
+		if(this->size() % 8 != 0) {
+			char binary_occupancy_char = (char)binary_occupancy.to_ulong();
+			s.write((char*)&binary_occupancy_char, sizeof(char));
+		}
+
+		return s;
+	}
+
 } // namespace

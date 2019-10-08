@@ -277,32 +277,12 @@ namespace gridmap3D {
          * The grid needs to be constructed with the proper header information
          * beforehand, see readBinary().
          */
-		// std::istream& readBinaryData(std::istream &s);
-
-		/**
-         * Read node from binary stream (max-likelihood value).
-         *
-         * This will set the log_odds_occupancy value of
-         * all cells to either free or occupied.
-         */
-		// std::istream& readBinaryNode(std::istream &s, NODE* node);
-
-		/**
-         * Write node to binary stream (max-likelihood value).
-         *
-         * This will discard the log_odds_occupancy value, writing
-         * all cells as either free or occupied.
-         *
-         * @param s
-         * @param node Grid3DNode to write out
-         * @return
-         */
-		// std::ostream& writeBinaryNode(std::ostream &s, const NODE* node) const;
+		std::istream& readBinaryData(std::istream &s);
 
 		/**
          * Writes the data of the grid (without header) to the stream.
          */
-		// std::ostream& writeBinaryData(std::ostream &s) const;
+		std::ostream& writeBinaryData(std::ostream &s) const;
 
 		/// integrate a "hit" measurement according to the grid's sensor model
 		virtual void integrateHit(NODE* occupancyNode) const;

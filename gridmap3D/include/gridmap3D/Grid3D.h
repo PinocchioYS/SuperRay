@@ -56,7 +56,7 @@ namespace gridmap3D {
          * @param _filename
          *
          */
-		// Grid3D(std::string _filename);
+		Grid3D(std::string _filename);
 
 		virtual ~Grid3D(){};
 

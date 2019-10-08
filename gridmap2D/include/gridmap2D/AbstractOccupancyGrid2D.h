@@ -59,46 +59,46 @@ namespace gridmap2D {
          * The Grid2D is first converted to the maximum likelihood estimate.
          * @return success of operation
          */
-		// bool writeBinary(const std::string& filename);
+		bool writeBinary(const std::string& filename);
 
 		/**
          * Writes maximum likelihood Grid2D to a binary stream.
          * The Grid2D is first converted to the maximum likelihood estimate.
          * @return success of operation
          */
-		// bool writeBinary(std::ostream &s);
+		bool writeBinary(std::ostream &s);
 
 		/**
          * Writes Grid2D to a binary file using writeBinaryConst().
          * @return success of operation
          */
-		// bool writeBinaryConst(const std::string& filename) const;
+		bool writeBinaryConst(const std::string& filename) const;
 
 		/**
          * Writes the maximum likelihood Grid2D to a binary stream (const variant).
          * @return success of operation
          */
-		// bool writeBinaryConst(std::ostream &s) const;
+		bool writeBinaryConst(std::ostream &s) const;
 
 		/// Writes the actual data, implemented in OccupancyGrid2DBase::writeBinaryData()
-		// virtual std::ostream& writeBinaryData(std::ostream &s) const = 0;
+		virtual std::ostream& writeBinaryData(std::ostream &s) const = 0;
 
 		/**
          * Reads a Grid2D from an input stream.
          * Existing nodes of the grid are deleted before the grid is read.
          * @return success of operation
          */
-		// bool readBinary(std::istream &s);
+		bool readBinary(std::istream &s);
 
 		/**
          * Reads Grid2D from a binary file.
          * Existing nodes of the grid are deleted before the grid is read.
          * @return success of operation
          */
-		// bool readBinary(const std::string& filename);
+		bool readBinary(const std::string& filename);
 
 		/// Reads the actual data, implemented in OccupancyGrid2DBase::readBinaryData()
-		// virtual std::istream& readBinaryData(std::istream &s) = 0;
+		virtual std::istream& readBinaryData(std::istream &s) = 0;
 
 		// -- occupancy queries
 
@@ -203,7 +203,6 @@ namespace gridmap2D {
 		float getClampingThresMaxLog() const { return clamping_thres_max; }
 
 	protected:
-
 		// occupancy parameters of grid, stored in logodds:
 		float clamping_thres_min;
 		float clamping_thres_max;

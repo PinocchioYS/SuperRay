@@ -56,7 +56,7 @@ namespace gridmap2D {
          * @param _filename
          *
          */
-		// Grid2D(std::string _filename);
+		Grid2D(std::string _filename);
 
 		virtual ~Grid2D(){};
 

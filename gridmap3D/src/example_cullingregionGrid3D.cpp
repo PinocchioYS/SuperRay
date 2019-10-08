@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
     std::cout << "Time to insert scans (SR): " << time_to_update << " [sec]" << std::endl;
     std::cout << "Time to insert 100.000 points took (SR): " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
 
-//	grid->writeBinary(gridFilename);    // TODO:
+	grid->writeBinary(gridFilename);
 
     delete graph;
     delete grid;

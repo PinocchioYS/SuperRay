@@ -46,7 +46,95 @@ namespace gridmap2D {
 		setClampingThresMax(0.971); // = 3.5 in log odds
 	}
 
-	// TODO: implement IO functions
+	bool AbstractOccupancyGrid2D::writeBinary(const std::string& filename){
+		std::ofstream binary_outfile(filename.c_str(), std::ios_base::binary);
+
+		if (!binary_outfile.is_open()){
+			GRIDMAP2D_ERROR_STR("Filestream to " << filename << " not open, nothing written.");
+			return false;
+		}
+		return writeBinary(binary_outfile);
+	}
+
+	bool AbstractOccupancyGrid2D::writeBinaryConst(const std::string& filename) const{
+		std::ofstream binary_outfile(filename.c_str(), std::ios_base::binary);
+
+		if (!binary_outfile.is_open()){
+			GRIDMAP2D_ERROR_STR("Filestream to " << filename << " not open, nothing written.");
+			return false;
+		}
+		writeBinaryConst(binary_outfile);
+		binary_outfile.close();
+		return true;
+	}
+
+	bool AbstractOccupancyGrid2D::writeBinary(std::ostream &s){
+		// convert to max likelihood
+		this->toMaxLikelihood();
+		return writeBinaryConst(s);
+	}
+
+	bool AbstractOccupancyGrid2D::writeBinaryConst(std::ostream &s) const{
+		// write new header first:
+		s << binaryFileHeader << "\n# (feel free to add / change comments, but leave the first line as it is!)\n#\n";
+		s << "id " << this->getGridType() << std::endl;
+		s << "size " << this->size() << std::endl;
+		s << "res " << this->getResolution() << std::endl;
+		s << "data" << std::endl;
+
+		writeBinaryData(s);
+
+		if (s.good()){
+			GRIDMAP2D_DEBUG(" done.\n");
+			return true;
+		}
+		else {
+			GRIDMAP2D_WARNING_STR("Output stream not \"good\" after writing grid");
+			return false;
+		}
+	}
+
+	bool AbstractOccupancyGrid2D::readBinary(const std::string& filename){
+		std::ifstream binary_infile(filename.c_str(), std::ios_base::binary);
+		if (!binary_infile.is_open()){
+			GRIDMAP2D_ERROR_STR("Filestream to " << filename << " not open, nothing read.");
+			return false;
+		}
+		return readBinary(binary_infile);
+	}
+
+	bool AbstractOccupancyGrid2D::readBinary(std::istream &s) {
+		if (!s.good()){
+			GRIDMAP2D_WARNING_STR("Input filestream not \"good\" in Grid2D::readBinary");
+		}
+
+		// check if first line valid:
+		std::string line;
+		std::getline(s, line);
+		unsigned size;
+		double res;
+		if (line.compare(0, AbstractOccupancyGrid2D::binaryFileHeader.length(), AbstractOccupancyGrid2D::binaryFileHeader) == 0){
+			std::string id;
+			if (!AbstractGrid2D::readHeader(s, id, size, res))
+				return false;
+
+			GRIDMAP2D_DEBUG_STR("Reading binary grid2D type " << id);
+		}
+
+		// stream is now at binary data!
+		this->clear();
+		this->setResolution(res);
+
+		if (size > 0)
+			this->readBinaryData(s);
+
+		if (size != this->size()){
+			GRIDMAP2D_ERROR("Grid size mismatch: # read nodes (%zu) != # expected nodes (%d)\n", this->size(), size);
+			return false;
+		}
+
+		return true;
+	}
 
 	const std::string AbstractOccupancyGrid2D::binaryFileHeader = "# GridMap2D Grid2D binary file";
 }

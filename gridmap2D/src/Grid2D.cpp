@@ -35,10 +35,13 @@
 
 namespace gridmap2D {
 
-	Grid2D::Grid2D(double in_resolution)
-	: OccupancyGrid2DBase<Grid2DNode>(in_resolution) {
+	Grid2D::Grid2D(double in_resolution) : OccupancyGrid2DBase<Grid2DNode>(in_resolution) {
 		grid2DMemberInit.ensureLinking();
 	};
+
+	Grid2D::Grid2D(std::string _filename) : OccupancyGrid2DBase<Grid2DNode>(0.1)  {
+		readBinary(_filename);
+	}
 
 	Grid2D::StaticMemberInitializer Grid2D::grid2DMemberInit;
 
