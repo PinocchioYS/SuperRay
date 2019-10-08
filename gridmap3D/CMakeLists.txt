@@ -87,17 +87,17 @@ set(GRIDMAP3D_LIB_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 # Windows, spec. MSVC requires the .lib suffix for imported libs
 IF(WIN32)
   set(GRIDMAP3D_LIBRARY
-    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmap3D${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmap3d${CMAKE_IMPORT_LIBRARY_SUFFIX}"
   )
   set(GRIDMATH3D_LIBRARY
-    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmath3D${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmath3d${CMAKE_IMPORT_LIBRARY_SUFFIX}"
   )
 ELSE()
   set(GRIDMAP3D_LIBRARY
-    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmap3D${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmap3d${CMAKE_SHARED_LIBRARY_SUFFIX}"
   )
   set(GRIDMATH3D_LIBRARY
-    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmath3D${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmath3d${CMAKE_SHARED_LIBRARY_SUFFIX}"
   )
 ENDIF()
 
@@ -107,12 +107,12 @@ include(CMakePackageConfigHelpers)
 
 CONFIGURE_PACKAGE_CONFIG_FILE(
   gridmap3D-config.cmake.in
-  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap3D/gridmap3D-config.cmake"
+  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap3D/gridmap3d-config.cmake"
   PATH_VARS GRIDMAP3D_INCLUDE_DIRS GRIDMAP3D_LIB_DIR
   INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/gridmap3D)
 
 WRITE_BASIC_PACKAGE_VERSION_FILE(
-  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap3D/gridmap3D-config-version.cmake"
+  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap3D/gridmap3d-config-version.cmake"
   VERSION ${GRIDMAP3D_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
@@ -124,18 +124,18 @@ set(GRIDMAP3D_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 
 CONFIGURE_PACKAGE_CONFIG_FILE(
   gridmap3D-config.cmake.in
-  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap3D-config.cmake"
+  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap3d-config.cmake"
   PATH_VARS GRIDMAP3D_INCLUDE_DIRS GRIDMAP3D_LIB_DIR
   INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/gridmap3D)
 
 WRITE_BASIC_PACKAGE_VERSION_FILE(
-  ${PROJECT_BINARY_DIR}/InstallFiles/gridmap3D-config-version.cmake
+  ${PROJECT_BINARY_DIR}/InstallFiles/gridmap3d-config-version.cmake
   VERSION ${GRIDMAP3D_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
 install(FILES
-  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap3D-config.cmake"
-  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap3D-config-version.cmake" 
+  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap3d-config.cmake"
+  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap3d-config-version.cmake"
   DESTINATION share/gridmap3D/)
 
 # Write pkgconfig-file:

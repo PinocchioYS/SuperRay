@@ -87,17 +87,17 @@ set(GRIDMAP2D_LIB_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 # Windows, spec. MSVC requires the .lib suffix for imported libs
 IF(WIN32)
   set(GRIDMAP2D_LIBRARY
-    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmap2D${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmap2d${CMAKE_IMPORT_LIBRARY_SUFFIX}"
   )
   set(GRIDMATH2D_LIBRARY
-    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmath2D${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmath2d${CMAKE_IMPORT_LIBRARY_SUFFIX}"
   )
 ELSE()
   set(GRIDMAP2D_LIBRARY
-    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmap2D${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmap2d${CMAKE_SHARED_LIBRARY_SUFFIX}"
   )
   set(GRIDMATH2D_LIBRARY
-    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmath2D${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmath2d${CMAKE_SHARED_LIBRARY_SUFFIX}"
   )
 ENDIF()
 
@@ -107,12 +107,12 @@ include(CMakePackageConfigHelpers)
 
 CONFIGURE_PACKAGE_CONFIG_FILE(
   gridmap2D-config.cmake.in
-  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap2D/gridmap2D-config.cmake"
+  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap2D/gridmap2d-config.cmake"
   PATH_VARS GRIDMAP2D_INCLUDE_DIRS GRIDMAP2D_LIB_DIR
   INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/gridmap2D)
 
 WRITE_BASIC_PACKAGE_VERSION_FILE(
-  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap2D/gridmap2D-config-version.cmake"
+  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap2D/gridmap2d-config-version.cmake"
   VERSION ${GRIDMAP2D_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
@@ -124,18 +124,18 @@ set(GRIDMAP2D_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 
 CONFIGURE_PACKAGE_CONFIG_FILE(
   gridmap2D-config.cmake.in
-  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap2D-config.cmake"
+  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap2d-config.cmake"
   PATH_VARS GRIDMAP2D_INCLUDE_DIRS GRIDMAP2D_LIB_DIR
   INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/gridmap2D)
 
 WRITE_BASIC_PACKAGE_VERSION_FILE(
-  ${PROJECT_BINARY_DIR}/InstallFiles/gridmap2D-config-version.cmake
+  ${PROJECT_BINARY_DIR}/InstallFiles/gridmap2d-config-version.cmake
   VERSION ${GRIDMAP2D_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
 install(FILES
-  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap2D-config.cmake"
-  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap2D-config-version.cmake" 
+  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap2d-config.cmake"
+  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap2d-config-version.cmake"
   DESTINATION share/gridmap2D/)
 
 # Write pkgconfig-file:
