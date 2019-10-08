@@ -8,3 +8,5 @@ ADD_SUBDIRECTORY( octomap )
 ADD_SUBDIRECTORY( quadmap )
 ADD_SUBDIRECTORY( gridmap3D )
 ADD_SUBDIRECTORY( gridmap2D )
+
+ADD_SUBDIRECTORY( conversion )

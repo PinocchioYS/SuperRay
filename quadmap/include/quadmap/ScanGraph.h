@@ -182,6 +182,8 @@ namespace quadmap {
 		const_edge_iterator edges_begin() const { return edges.begin(); }
 		const_edge_iterator edges_end() const  { return edges.end(); }
 
+		size_t edge_size() const { return edges.size(); }
+
 
 		std::ostream& writeBinary(std::ostream &s) const;
 		std::istream& readBinary(std::ifstream &s);
