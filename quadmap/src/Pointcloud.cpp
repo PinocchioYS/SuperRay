@@ -225,15 +225,14 @@ namespace quadmap {
 	}
 
 	std::istream& Pointcloud::readBinary(std::istream &s) {
-
-		size_t pc_size = 0;
+		uint32_t pc_size = 0;
 		s.read((char*)&pc_size, sizeof(pc_size));
 		QUADMAP_DEBUG("Reading %d points from binary file...", pc_size);
 
 		if (pc_size > 0) {
 			this->points.reserve(pc_size);
 			point2d p;
-			for (unsigned int i = 0; i < pc_size; i++) {
+			for (uint32_t i = 0; i < pc_size; i++) {
 				p.readBinary(s);
 				if (!s.fail()) {
 					this->push_back(p);
@@ -253,7 +252,6 @@ namespace quadmap {
 
 
 	std::ostream& Pointcloud::writeBinary(std::ostream &s) const {
-
 		// check if written unsigned int can hold size
 		size_t orig_size = this->size();
 		if (orig_size > std::numeric_limits<uint32_t>::max()){
@@ -261,7 +259,7 @@ namespace quadmap {
 			return s;
 		}
 
-		size_t pc_size = static_cast<uint32_t>(this->size());
+		uint32_t pc_size = static_cast<uint32_t>(this->size());
 		QUADMAP_DEBUG("Writing %u points to binary file...", pc_size);
 		s.write((char*)&pc_size, sizeof(pc_size));
 
