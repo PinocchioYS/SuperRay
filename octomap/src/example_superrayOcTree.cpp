@@ -8,11 +8,12 @@ void printUsage(char* self){
 	std::cout << "USAGE: " << self << " [options]" << std::endl << std::endl;
 	std::cout << "This tool inserts the data of a scan graph file (point clouds with poses)" << std::endl;
 	std::cout << "into an octree using Super Ray based Updates method." << std::endl;
-	std::cout << "The output is a compact maximum-likelihood binary octree file(.bt, bonsai tree)." << std::endl;
+	std::cout << "The output is a compact maximum-likelihood binary octree file(.bt)" << std::endl;
+	std::cout << "or a full occupancy representation file(.ot)." << std::endl;
 
 	std::cout << "Options: " << std::endl;
 	std::cout << " -i <InputFile.graph> (required)" << std::endl;
-	std::cout << " -o <OutputFile.bt> (required)" << std::endl;
+	std::cout << " -o <OutputFile.bt or OutputFile.ot> (required)" << std::endl;
 	std::cout << " -res <resolution[m]> (optional, default 0.1m)" << std::endl;
 	std::cout << " -thr <threshold> (optional, default 20)" << std::endl;
 
@@ -46,6 +47,10 @@ int main(int argc, char** argv) {
 		}
 	}
 	if (graphFilename == "" || treeFilename == "")
+		printUsage(argv[0]);
+
+	std::string file_extension = treeFilename.substr(treeFilename.length() - 3, treeFilename.length());
+	if(file_extension != ".bt" && file_extension != ".ot")
 		printUsage(argv[0]);
 
 	// Verify input
@@ -93,10 +98,13 @@ int main(int argc, char** argv) {
 	}
 
 	std::cout << "Done building tree." << std::endl;
-	std::cout << "Time to insert scans (SR): " << time_to_update << " [sec]" << std::endl;
-	std::cout << "Time to insert 100.000 points took (SR): " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
+	std::cout << "Time to insert scans: " << time_to_update << " [sec]" << std::endl;
+	std::cout << "Time to insert 100.000 points took: " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
 
-	tree->writeBinary(treeFilename);
+    if(file_extension == ".bt")
+	    tree->writeBinary(treeFilename);
+    else if(file_extension == ".ot")
+    	tree->write(treeFilename);
 
 	delete graph;
 	delete tree;

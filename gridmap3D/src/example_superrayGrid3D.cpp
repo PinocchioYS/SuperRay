@@ -8,11 +8,12 @@ void printUsage(char* self){
 	std::cout << "USAGE: " << self << " [options]" << std::endl << std::endl;
 	std::cout << "This tool inserts the data of a scan graph file (point clouds with poses)" << std::endl;
 	std::cout << "into a grid in 3D using Super Ray based Updates method." << std::endl;
-	std::cout << "The output is a compact maximum-likelihood binary grid3D file(.bg3)." << std::endl;
+	std::cout << "The output is a compact maximum-likelihood binary grid3D file(.bg3)" << std::endl;
+	std::cout << "or a full occupancy representation file(.og3)." << std::endl;
 
 	std::cout << "Options: " << std::endl;
 	std::cout << " -i <InputFile.graph> (required)" << std::endl;
-	std::cout << " -o <OutputFile.bg3> (required)" << std::endl;
+	std::cout << " -o <OutputFile.bg3 or OutputFile.og3> (required)" << std::endl;
 	std::cout << " -res <resolution[m]> (optional, default 0.1m)" << std::endl;
 	std::cout << " -thr <threshold> (optional, default 20)" << std::endl;
 
@@ -46,6 +47,10 @@ int main(int argc, char** argv) {
 		}
 	}
 	if (graphFilename == "" || gridFilename == "")
+		printUsage(argv[0]);
+
+	std::string file_extension = gridFilename.substr(gridFilename.length() - 4, gridFilename.length());
+	if(file_extension != ".bg3" && file_extension != ".og3")
 		printUsage(argv[0]);
 
 	// Verify input
@@ -93,10 +98,13 @@ int main(int argc, char** argv) {
 	}
 
 	std::cout << "Done building grid." << std::endl;
-	std::cout << "Time to insert scans (SR): " << time_to_update << " [sec]" << std::endl;
-	std::cout << "Time to insert 100.000 points took (SR): " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
+	std::cout << "Time to insert scans: " << time_to_update << " [sec]" << std::endl;
+	std::cout << "Time to insert 100.000 points took: " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
 
-	grid->writeBinary(gridFilename);
+	if(file_extension == ".bg3")
+		grid->writeBinary(gridFilename);
+	else if(file_extension == ".og3")
+		grid->write(gridFilename);
 
 	delete graph;
 	delete grid;
