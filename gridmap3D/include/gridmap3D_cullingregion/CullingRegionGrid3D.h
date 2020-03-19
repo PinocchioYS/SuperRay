@@ -123,7 +123,7 @@ namespace gridmap3D{
         /**
          * Static member object which ensures that this Grid3D's prototype
          * ends up in the classIDMapping only once. You need this as a
-         * static member in any derived grid3D class in order to read .ot
+         * static member in any derived grid3D class in order to read .og3
          * files through the AbstractGrid3D factory. You should also call
          * ensureLinking() once from the constructor.
          */

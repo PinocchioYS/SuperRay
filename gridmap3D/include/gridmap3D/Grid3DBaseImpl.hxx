@@ -471,7 +471,7 @@ namespace gridmap3D {
 		if (!size_changed)
 			return;
 
-		// empty tree
+		// empty grid
 		if (gridmap->size() == 0){
 			min_value[0] = min_value[1] = min_value[2] = 0.0;
 			max_value[0] = max_value[1] = max_value[2] = 0.0;

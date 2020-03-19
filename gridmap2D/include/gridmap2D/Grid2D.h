@@ -71,7 +71,7 @@ namespace gridmap2D {
 		/**
 		 * Static member object which ensures that this Grid2D's prototype
 		 * ends up in the classIDMapping only once. You need this as a
-		 * static member in any derived grid2D class in order to read .ot
+		 * static member in any derived grid2D class in order to read .og2
 		 * files through the AbstractGrid2D factory. You should also call
 		 * ensureLinking() once from the constructor.
 		 */

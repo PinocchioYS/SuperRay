@@ -72,7 +72,7 @@ namespace quadmap {
 		/**
 		 * Static member object which ensures that this QuadTree's prototype
 		 * ends up in the classIDMapping only once. You need this as a
-		 * static member in any derived quadtree class in order to read .ot
+		 * static member in any derived quadtree class in order to read .ot2
 		 * files through the AbstractQuadTree factory. You should also call
 		 * ensureLinking() once from the constructor.
 		 */

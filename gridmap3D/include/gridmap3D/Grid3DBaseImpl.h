@@ -225,7 +225,7 @@ namespace gridmap3D {
 		 */
 		std::istream& readData(std::istream &s);
 
-		/// Write complete state of tree to stream (without file header) unmodified.
+		/// Write complete state of grid to stream (without file header) unmodified.
 		std::ostream& writeData(std::ostream &s) const;
 
 		/// @return beginning of the grid as iterator

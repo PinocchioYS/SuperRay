@@ -96,7 +96,7 @@ namespace quadmap {
 		 * This creates a new quadtree which you need to delete yourself. If you
 		 * expect or requre a specific kind of quadtree, use dynamic_cast afterwards:
 		 * @code
-		 * AbstractQuadTree* tree = AbstractQuadTree::read("filename.ot");
+		 * AbstractQuadTree* tree = AbstractQuadTree::read("filename.ot2");
 		 * QuadTree* quadtree = dynamic_cast<QuadTree*>(tree);
 		 *
 		 * @endcode

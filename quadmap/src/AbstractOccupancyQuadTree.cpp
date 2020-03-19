@@ -156,7 +156,6 @@ namespace quadmap {
 			s.seekg(streampos);
 			if (readBinaryLegacyHeader(s, size, res)){
 				QUADMAP_WARNING_STR("You are using an outdated binary tree file format.");
-				QUADMAP_WARNING_STR("Please convert your .bt files with convert_quadtree.");
 			}
 			else {
 				QUADMAP_ERROR_STR("First line of QuadTree file header does not start with \"" << AbstractOccupancyQuadTree::binaryFileHeader << "\"");
