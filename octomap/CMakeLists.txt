@@ -55,21 +55,25 @@ LINK_DIRECTORIES(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 # Installation
 
 set(INSTALL_TARGETS_DEFAULT_ARGS
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        )
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib/superray
+  ARCHIVE DESTINATION lib/superray
+)
 
 ADD_SUBDIRECTORY( src/math )
 ADD_SUBDIRECTORY( src )
 
 file(GLOB octomap_HDRS ${PROJECT_SOURCE_DIR}/include/octomap/*.h ${PROJECT_SOURCE_DIR}/include/octomap/*.hxx)
-install(FILES ${octomap_HDRS}	DESTINATION include/octomap)
+install(FILES ${octomap_HDRS}	DESTINATION include/superray/octomap)
 file(GLOB octomap_math_HDRS ${PROJECT_SOURCE_DIR}/include/octomap/math/*.h)
-install(FILES ${octomap_math_HDRS}	DESTINATION include/octomap/math)
+install(FILES ${octomap_math_HDRS}	DESTINATION include/superray/octomap/math)
+file(GLOB octomap_superray_HDRS ${PROJECT_SOURCE_DIR}/include/octomap_superray/*.h)
+install(FILES ${octomap_superray_HDRS}	DESTINATION include/superray/octomap_superray)
+file(GLOB octomap_cullingregion_HDRS ${PROJECT_SOURCE_DIR}/include/octomap_cullingregion/*.h)
+install(FILES ${octomap_cullingregion_HDRS}	DESTINATION include/superray/octomap_cullingregion)
 
 # Install catkin package.xml
-install(FILES package.xml DESTINATION share/octomap)
+install(FILES package.xml DESTINATION share/superray_octomap)
 
 # uninstall target
 configure_file(
@@ -82,7 +86,7 @@ add_custom_target(uninstall
 
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)
-export(PACKAGE octomap)
+export(PACKAGE superray_octomap)
  
 # Create a octomap-config.cmake file for the use from the build tree
 set(OCTOMAP_INCLUDE_DIRS "${INCLUDE_DIRS}")
@@ -105,8 +109,6 @@ ELSE()
   )
 ENDIF()
 
-# not used right now (export depends?)
-#set(OCTOMAP_CMAKE_DIR "${PROJECT_BINARY_DIR}")
 include(CMakePackageConfigHelpers)
 
 CONFIGURE_PACKAGE_CONFIG_FILE(
@@ -120,27 +122,27 @@ WRITE_BASIC_PACKAGE_VERSION_FILE(
   VERSION ${OCTOMAP_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
-# Create a octomap-config.cmake file for the use from the install tree
+# Create a superray_octomap-config.cmake file for the use from the install tree
 # and install it
-set(OCTOMAP_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
-set(OCTOMAP_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+set(OCTOMAP_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/superray")
+set(OCTOMAP_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib/superray")
 #set(OCTOMAP_CMAKE_DIR "${INSTALL_DATA_DIR}/FooBar/CMake")
 
 CONFIGURE_PACKAGE_CONFIG_FILE(
   octomap-config.cmake.in
-  "${PROJECT_BINARY_DIR}/InstallFiles/octomap-config.cmake"
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray_octomap-config.cmake"
   PATH_VARS OCTOMAP_INCLUDE_DIRS OCTOMAP_LIB_DIR
-  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/octomap)
+  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/superray_octomap)
 
 WRITE_BASIC_PACKAGE_VERSION_FILE(
-  ${PROJECT_BINARY_DIR}/InstallFiles/octomap-config-version.cmake
+  ${PROJECT_BINARY_DIR}/InstallFiles/superray_octomap-config-version.cmake
   VERSION ${OCTOMAP_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
 install(FILES
-  "${PROJECT_BINARY_DIR}/InstallFiles/octomap-config.cmake"
-  "${PROJECT_BINARY_DIR}/InstallFiles/octomap-config-version.cmake" 
-  DESTINATION share/octomap/)
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray_octomap-config.cmake"
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray_octomap-config-version.cmake"
+  DESTINATION share/superray_octomap/)
 
 # Write pkgconfig-file:
 include(InstallPkgConfigFile)

@@ -52,20 +52,24 @@ LINK_DIRECTORIES(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 set(INSTALL_TARGETS_DEFAULT_ARGS
 	RUNTIME DESTINATION bin
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib/superray
+    ARCHIVE DESTINATION lib/superray
 )
 
 ADD_SUBDIRECTORY( src/math )
 ADD_SUBDIRECTORY( src )
 
 file(GLOB gridmap2D_HDRS ${PROJECT_SOURCE_DIR}/include/gridmap2D/*.h ${PROJECT_SOURCE_DIR}/include/gridmap2D/*.hxx)
-install(FILES ${gridmap2D_HDRS}	DESTINATION include/gridmap2D)
+install(FILES ${gridmap2D_HDRS}	DESTINATION include/superray/gridmap2D)
 file(GLOB gridmap2D_math_HDRS ${PROJECT_SOURCE_DIR}/include/gridmap2D/math/*.h)
-install(FILES ${gridmap2D_math_HDRS}	DESTINATION include/gridmap2D/math)
+install(FILES ${gridmap2D_math_HDRS}	DESTINATION include/superray/gridmap2D/math)
+file(GLOB gridmap2D_superray_HDRS ${PROJECT_SOURCE_DIR}/include/gridmap2D_superray/*.h)
+install(FILES ${gridmap2D_superray_HDRS}	DESTINATION include/superray/gridmap2D_superray)
+file(GLOB gridmap2D_cullingregion_HDRS ${PROJECT_SOURCE_DIR}/include/gridmap2D_cullingregion/*.h)
+install(FILES ${gridmap2D_cullingregion_HDRS}	DESTINATION include/superray/gridmap2D_cullingregion)
 
 # Install catkin package.xml
-install(FILES package.xml DESTINATION share/gridmap2D)
+install(FILES package.xml DESTINATION share/superray_gridmap2d)
 
 # uninstall target
 #configure_file(
@@ -78,31 +82,29 @@ install(FILES package.xml DESTINATION share/gridmap2D)
 
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)
-export(PACKAGE gridmap2D)
+export(PACKAGE superray_gridmap2d)
  
-# Create a gridmap2D-config.cmake file for the use from the build tree
+# Create a gridmap2d-config.cmake file for the use from the build tree
 set(GRIDMAP2D_INCLUDE_DIRS "${INCLUDE_DIRS}")
 set(GRIDMAP2D_LIB_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 # Set library names as absolute paths
 # Windows, spec. MSVC requires the .lib suffix for imported libs
 IF(WIN32)
   set(GRIDMAP2D_LIBRARY
-    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmap2d${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmap2D${CMAKE_IMPORT_LIBRARY_SUFFIX}"
   )
   set(GRIDMATH2D_LIBRARY
-    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmath2d${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmath2D${CMAKE_IMPORT_LIBRARY_SUFFIX}"
   )
 ELSE()
   set(GRIDMAP2D_LIBRARY
-    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmap2d${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmap2D${CMAKE_SHARED_LIBRARY_SUFFIX}"
   )
   set(GRIDMATH2D_LIBRARY
-    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmath2d${CMAKE_SHARED_LIBRARY_SUFFIX}"
+    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmath2D${CMAKE_SHARED_LIBRARY_SUFFIX}"
   )
 ENDIF()
 
-# not used right now (export depends?)
-#set(GRIDMAP2D_CMAKE_DIR "${PROJECT_BINARY_DIR}")
 include(CMakePackageConfigHelpers)
 
 CONFIGURE_PACKAGE_CONFIG_FILE(
@@ -116,27 +118,25 @@ WRITE_BASIC_PACKAGE_VERSION_FILE(
   VERSION ${GRIDMAP2D_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
-# Create a gridmap2D-config.cmake file for the use from the install tree
+# Create a superray_gridmap2D-config.cmake file for the use from the install tree
 # and install it
-set(GRIDMAP2D_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
-set(GRIDMAP2D_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
-#set(GRIDMAP2D_CMAKE_DIR "${INSTALL_DATA_DIR}/FooBar/CMake")
+set(GRIDMAP2D_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/superray")
+set(GRIDMAP2D_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib/superray")
 
-CONFIGURE_PACKAGE_CONFIG_FILE(
-  gridmap2D-config.cmake.in
-  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap2d-config.cmake"
+CONFIGURE_PACKAGE_CONFIG_FILE( gridmap2D-config.cmake.in
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray_gridmap2d-config.cmake"
   PATH_VARS GRIDMAP2D_INCLUDE_DIRS GRIDMAP2D_LIB_DIR
-  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/gridmap2D)
+  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/superray_gridmap2d)
 
 WRITE_BASIC_PACKAGE_VERSION_FILE(
-  ${PROJECT_BINARY_DIR}/InstallFiles/gridmap2d-config-version.cmake
+  ${PROJECT_BINARY_DIR}/InstallFiles/superray_gridmap2d-config-version.cmake
   VERSION ${GRIDMAP2D_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
 install(FILES
-  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap2d-config.cmake"
-  "${PROJECT_BINARY_DIR}/InstallFiles/gridmap2d-config-version.cmake"
-  DESTINATION share/gridmap2D/)
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray_gridmap2d-config.cmake"
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray_gridmap2d-config-version.cmake"
+  DESTINATION share/superray_gridmap2d/)
 
 # Write pkgconfig-file:
 include(InstallPkgConfigFile)

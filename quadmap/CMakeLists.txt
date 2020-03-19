@@ -56,20 +56,24 @@ LINK_DIRECTORIES(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 set(INSTALL_TARGETS_DEFAULT_ARGS
 	RUNTIME DESTINATION bin
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib/superray
+    ARCHIVE DESTINATION lib/superray
 )
 
 ADD_SUBDIRECTORY( src/math )
 ADD_SUBDIRECTORY( src )
 
 file(GLOB quadmap_HDRS ${PROJECT_SOURCE_DIR}/include/quadmap/*.h ${PROJECT_SOURCE_DIR}/include/quadmap/*.hxx)
-install(FILES ${quadmap_HDRS}	DESTINATION include/quadmap)
+install(FILES ${quadmap_HDRS}	DESTINATION include/superray/quadmap)
 file(GLOB quadmap_math_HDRS ${PROJECT_SOURCE_DIR}/include/quadmap/math/*.h)
-install(FILES ${quadmap_math_HDRS}	DESTINATION include/quadmap/math)
+install(FILES ${quadmap_math_HDRS}	DESTINATION include/superray/quadmap/math)
+file(GLOB quadmap_superray_HDRS ${PROJECT_SOURCE_DIR}/include/quadmap_superray/*.h)
+install(FILES ${quadmap_superray_HDRS}	DESTINATION include/superray/quadmap_superray)
+file(GLOB quadmap_cullingregion_HDRS ${PROJECT_SOURCE_DIR}/include/quadmap_cullingregion/*.h)
+install(FILES ${quadmap_cullingregion_HDRS}	DESTINATION include/superray/quadmap_cullingregion)
 
 # Install catkin package.xml
-install(FILES package.xml DESTINATION share/quadmap)
+install(FILES package.xml DESTINATION share/superray_quadmap)
 
 # uninstall target
 #configure_file(
@@ -82,7 +86,7 @@ install(FILES package.xml DESTINATION share/quadmap)
 
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)
-export(PACKAGE quadmap)
+export(PACKAGE superray_quadmap)
  
 # Create a quadmap-config.cmake file for the use from the build tree
 set(QUADMAP_INCLUDE_DIRS "${INCLUDE_DIRS}")
@@ -105,15 +109,13 @@ ELSE()
   )
 ENDIF()
 
-# not used right now (export depends?)
-#set(QUADMAP_CMAKE_DIR "${PROJECT_BINARY_DIR}")
 include(CMakePackageConfigHelpers)
 
-CONFIGURE_PACKAGE_CONFIG_FILE(
-  quadmap-config.cmake.in
+CONFIGURE_PACKAGE_CONFIG_FILE( quadmap-config.cmake.in
   "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/quadmap/quadmap-config.cmake"
   PATH_VARS QUADMAP_INCLUDE_DIRS QUADMAP_LIB_DIR
-  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/quadmap)
+  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/quadmap
+)
 
 WRITE_BASIC_PACKAGE_VERSION_FILE(
   "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/quadmap/quadmap-config-version.cmake"
@@ -122,25 +124,23 @@ WRITE_BASIC_PACKAGE_VERSION_FILE(
 
 # Create a quadmap-config.cmake file for the use from the install tree
 # and install it
-set(QUADMAP_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
-set(QUADMAP_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
-#set(QUADMAP_CMAKE_DIR "${INSTALL_DATA_DIR}/FooBar/CMake")
+set(QUADMAP_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/superray")
+set(QUADMAP_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib/superray")
 
-CONFIGURE_PACKAGE_CONFIG_FILE(
-  quadmap-config.cmake.in
-  "${PROJECT_BINARY_DIR}/InstallFiles/quadmap-config.cmake"
+CONFIGURE_PACKAGE_CONFIG_FILE( quadmap-config.cmake.in
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray_quadmap-config.cmake"
   PATH_VARS QUADMAP_INCLUDE_DIRS QUADMAP_LIB_DIR
-  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/quadmap)
+  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/superray_quadmap)
 
 WRITE_BASIC_PACKAGE_VERSION_FILE(
-  ${PROJECT_BINARY_DIR}/InstallFiles/quadmap-config-version.cmake
+  ${PROJECT_BINARY_DIR}/InstallFiles/superray_quadmap-config-version.cmake
   VERSION ${QUADMAP_VERSION}
   COMPATIBILITY AnyNewerVersion)
 
 install(FILES
-  "${PROJECT_BINARY_DIR}/InstallFiles/quadmap-config.cmake"
-  "${PROJECT_BINARY_DIR}/InstallFiles/quadmap-config-version.cmake" 
-  DESTINATION share/quadmap/)
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray_quadmap-config.cmake"
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray_quadmap-config-version.cmake"
+  DESTINATION share/superray_quadmap/)
 
 # Write pkgconfig-file:
 include(InstallPkgConfigFile)
