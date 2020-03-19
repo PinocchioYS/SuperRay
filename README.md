@@ -7,7 +7,7 @@ Our library provides four different types of the occupancy maps - octree, quadtr
 are based on [OctoMap library](https://github.com/Octomap/octomap).
 You can see the technical details of super rays and culling region based updates at [here](http://sgvr.kaist.ac.kr/~yskwon/papers/tro19-superray-cullingregion/).
 
-BUILD
+BUILD & INSTALL
 -----
 You can build the SuperRay library by using the CMake in the top-level directory.
 (The implementation of recent SuperRay library depends on OctoMap 1.9.0.)
