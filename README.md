@@ -41,6 +41,11 @@ Then you can link each type of occupancy map through the command of CMake, for e
 See [octomap README](octomap/README.md) for further details and hints on compiling.
 Authors of OctoMap library describe how to compile the libraries on various platforms and IDEs.
 
+VISUALIZATION
+-------------
+You can visualize the occupancy maps in RViz on ROS.
+Refer the [occupancy_map_visualizer](https://github.com/PinocchioYS/occupancy_map_visualizer) project.
+
 If you have any problem or issue, notice it at [here](https://github.com/PinocchioYS/SuperRay/issues).
 
 License
