@@ -41,6 +41,11 @@ Then you can link each type of occupancy map through the command of CMake, for e
 See [octomap README](octomap/README.md) for further details and hints on compiling.
 Authors of OctoMap library describe how to compile the libraries on various platforms and IDEs.
 
+EXAMPLE USING THIS LIBRARY IN ROS
+--------------------------------
+We provide a ROS package that subscribes a pointcloud and updates an occupancy map in real time.
+Refer the [realtime_occupancy_mapping](https://github.com/PinocchioYS/realtime_occupancy_mapping) project.
+
 VISUALIZATION
 -------------
 You can visualize the occupancy maps in RViz on ROS.
