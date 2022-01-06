@@ -36,6 +36,9 @@
 namespace octomap{
     class CullingRegionOcTree : public OccupancyOcTreeBase<OcTreeNode> {
     public:
+        typedef unordered_ns::unordered_map<OcTreeKey, int, OcTreeKey::KeyHash> KeyIntMap;
+
+    public:
         /// Default constructor, sets resolution of leafs
         CullingRegionOcTree(double resolution);
 

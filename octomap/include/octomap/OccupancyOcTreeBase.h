@@ -1,6 +1,6 @@
 /*
  * OctoMap - An Efficient Probabilistic 3D Mapping Framework Based on Octrees
- * http://octomap.github.com/
+ * https://octomap.github.io/
  *
  * Copyright (c) 2009-2013, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved.
@@ -77,58 +77,58 @@ namespace octomap {
         OccupancyOcTreeBase(const OccupancyOcTreeBase<NODE>& rhs);
 
         /**
-        * Integrate a Pointcloud (in global reference frame), parallelized with OpenMP.
-        * Special care is taken that each voxel
-        * in the map is updated only once, and occupied nodes have a preference over free ones.
-        * This avoids holes in the floor from mutual deletion and is more efficient than the plain
-        * ray insertion in insertPointCloudRays().
-        *
-        * @note replaces insertScan()
-        *
-        * @param scan Pointcloud (measurement endpoints), in global reference frame
-        * @param sensor_origin measurement origin in global reference frame
-        * @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
-        * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-        *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
-        * @param discretize whether the scan is discretized first into octree key cells (default: false).
-        *   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.*
-        */
+         * Integrate a Pointcloud (in global reference frame), parallelized with OpenMP.
+         * Special care is taken that each voxel
+         * in the map is updated only once, and occupied nodes have a preference over free ones.
+         * This avoids holes in the floor from mutual deletion and is more efficient than the plain
+         * ray insertion in insertPointCloudRays().
+         *
+         * @note replaces insertScan()
+         *
+         * @param scan Pointcloud (measurement endpoints), in global reference frame
+         * @param sensor_origin measurement origin in global reference frame
+         * @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
+         * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
+         *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
+         * @param discretize whether the scan is discretized first into octree key cells (default: false).
+         *   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.*
+         */
         virtual void insertPointCloud(const Pointcloud& scan, const octomap::point3d& sensor_origin,
                                       double maxrange=-1., bool lazy_eval = false, bool discretize = false);
 
         /**
-        * Integrate a 3d scan (transform scan before tree update), parallelized with OpenMP.
-        * Special care is taken that each voxel
-        * in the map is updated only once, and occupied nodes have a preference over free ones.
-        * This avoids holes in the floor from mutual deletion and is more efficient than the plain
-        * ray insertion in insertPointCloudRays().
-        *
-        * @note replaces insertScan()
-        *
-        * @param scan Pointcloud (measurement endpoints) relative to frame origin
-        * @param sensor_origin origin of sensor relative to frame origin
-        * @param frame_origin origin of reference frame, determines transform to be applied to cloud and sensor origin
-        * @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
-        * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
-        *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
-        * @param discretize whether the scan is discretized first into octree key cells (default: false).
-        *   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.*
-        */
+         * Integrate a 3d scan (transform scan before tree update), parallelized with OpenMP.
+         * Special care is taken that each voxel
+         * in the map is updated only once, and occupied nodes have a preference over free ones.
+         * This avoids holes in the floor from mutual deletion and is more efficient than the plain
+         * ray insertion in insertPointCloudRays().
+         *
+         * @note replaces insertScan()
+         *
+         * @param scan Pointcloud (measurement endpoints) relative to frame origin
+         * @param sensor_origin origin of sensor relative to frame origin
+         * @param frame_origin origin of reference frame, determines transform to be applied to cloud and sensor origin
+         * @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
+         * @param lazy_eval whether update of inner nodes is omitted after the update (default: false).
+         *   This speeds up the insertion, but you need to call updateInnerOccupancy() when done.
+         * @param discretize whether the scan is discretized first into octree key cells (default: false).
+         *   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.*
+         */
         virtual void insertPointCloud(const Pointcloud& scan, const point3d& sensor_origin, const pose6d& frame_origin,
                                       double maxrange=-1., bool lazy_eval = false, bool discretize = false);
 
         /**
-        * Insert a 3d scan (given as a ScanNode) into the tree, parallelized with OpenMP.
-        *
-        * @note replaces insertScan
-        *
-        * @param scan ScanNode contains Pointcloud data and frame/sensor origin
-        * @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
-        * @param lazy_eval whether the tree is left 'dirty' after the update (default: false).
-        *   This speeds up the insertion by not updating inner nodes, but you need to call updateInnerOccupancy() when done.
-        * @param discretize whether the scan is discretized first into octree key cells (default: false).
-        *   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.
-        */
+         * Insert a 3d scan (given as a ScanNode) into the tree, parallelized with OpenMP.
+         *
+         * @note replaces insertScan
+         *
+         * @param scan ScanNode contains Pointcloud data and frame/sensor origin
+         * @param maxrange maximum range for how long individual beams are inserted (default -1: complete beam)
+         * @param lazy_eval whether the tree is left 'dirty' after the update (default: false).
+         *   This speeds up the insertion by not updating inner nodes, but you need to call updateInnerOccupancy() when done.
+         * @param discretize whether the scan is discretized first into octree key cells (default: false).
+         *   This reduces the number of raycasts using computeDiscreteUpdate(), resulting in a potential speedup.
+         */
         virtual void insertPointCloud(const ScanNode& scan, double maxrange=-1., bool lazy_eval = false, bool discretize = false);
 
         /**
@@ -318,11 +318,11 @@ namespace octomap {
 
         /**
          * Performs a step of the marching cubes surface reconstruction algorithm
-         * to retreive the normal of the triangles that fall in the cube
+         * to retrieve the normal of the triangles that fall in the cube
          * formed by the voxels located at the vertex of a given voxel.
          *
-         * @param[in] voxel for which retreive the normals
-         * @param[out] triangles normals
+         * @param[in] point voxel for which retrieve the normals
+         * @param[out] normals normals of the triangles
          * @param[in] unknownStatus consider unknown cells as free (false) or occupied (default, true).
          * @return True if the input voxel is known in the occupancy grid, and false if it is unknown.
          */
@@ -334,9 +334,9 @@ namespace octomap {
         void useBBXLimit(bool enable) { use_bbx_limit = enable; }
         bool bbxSet() const { return use_bbx_limit; }
         /// sets the minimum for a query bounding box to use
-        void setBBXMin (point3d& min);
+        void setBBXMin (const point3d& min);
         /// sets the maximum for a query bounding box to use
-        void setBBXMax (point3d& max);
+        void setBBXMax (const point3d& max);
         /// @return the currently set minimum for bounding box queries, if set
         point3d getBBXMin () const { return bbx_min; }
         /// @return the currently set maximum for bounding box queries, if set

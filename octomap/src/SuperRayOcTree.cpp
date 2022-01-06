@@ -33,7 +33,7 @@ namespace octomap{
 	SuperRayOcTree::SuperRayOcTree(double in_resolution)
 	: OccupancyOcTreeBase<OcTreeNode>(in_resolution) {
 		superrayOcTreeMemberInit.ensureLinking();
-	};
+	}
 
 	SuperRayOcTree::SuperRayOcTree(std::string _filename)
 	: OccupancyOcTreeBase<OcTreeNode>(0.1)  { // resolution will be set according to tree file

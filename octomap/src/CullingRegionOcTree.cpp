@@ -33,7 +33,7 @@ namespace octomap{
     CullingRegionOcTree::CullingRegionOcTree(double in_resolution)
             : OccupancyOcTreeBase<OcTreeNode>(in_resolution) {
         cullingregionOcTreeMemberInit.ensureLinking();
-    };
+    }
 
     CullingRegionOcTree::CullingRegionOcTree(std::string _filename)
             : OccupancyOcTreeBase<OcTreeNode>(0.1)  { // resolution will be set according to tree file

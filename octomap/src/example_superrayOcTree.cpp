@@ -101,10 +101,12 @@ int main(int argc, char** argv) {
 	std::cout << "Time to insert scans: " << time_to_update << " [sec]" << std::endl;
 	std::cout << "Time to insert 100.000 points took: " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
 
-    if(file_extension == ".bt")
-	    tree->writeBinary(treeFilename);
-    else if(file_extension == ".ot")
-    	tree->write(treeFilename);
+    if(file_extension == ".bt") {
+        tree->writeBinary(treeFilename);
+    }
+    else if(file_extension == ".ot") {
+        tree->write(treeFilename);
+    }
 
 	delete graph;
 	delete tree;

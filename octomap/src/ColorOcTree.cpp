@@ -1,6 +1,6 @@
 /*
  * OctoMap - An Efficient Probabilistic 3D Mapping Framework Based on Octrees
- * http://octomap.github.com/
+ * https://octomap.github.io/
  *
  * Copyright (c) 2009-2013, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved.
@@ -91,7 +91,7 @@ namespace octomap {
     ColorOcTree::ColorOcTree(double in_resolution)
             : OccupancyOcTreeBase<ColorOcTreeNode>(in_resolution) {
       colorOcTreeMemberInit.ensureLinking();
-    };
+    }
 
     ColorOcTreeNode* ColorOcTree::setNodeColor(const OcTreeKey& key,
                                                uint8_t r,

@@ -1,6 +1,6 @@
 /*
  * OctoMap - An Efficient Probabilistic 3D Mapping Framework Based on Octrees
- * http://octomap.github.com/
+ * https://octomap.github.io/
  *
  * Copyright (c) 2009-2013, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved.
@@ -67,6 +67,8 @@ namespace octomath {
          * Tait-Bryan angles roll, pitch, and yaw
          */
         Pose6D(float x, float y, float z, double roll, double pitch, double yaw);
+
+        Pose6D(const Pose6D& other);
 
         Pose6D& operator= (const Pose6D& other);
         bool operator==(const Pose6D& other) const;

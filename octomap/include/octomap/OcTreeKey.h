@@ -1,6 +1,6 @@
 /*
  * OctoMap - An Efficient Probabilistic 3D Mapping Framework Based on Octrees
- * http://octomap.github.com/
+ * https://octomap.github.io/
  *
  * Copyright (c) 2009-2013, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved.
@@ -49,13 +49,13 @@
 #include <tr1/unordered_map>
 namespace octomap {
     namespace unordered_ns = std::tr1;
-};
+}
 #else
 #include <unordered_set>
-  #include <unordered_map>
-  namespace octomap {
+#include <unordered_map>
+namespace octomap {
     namespace unordered_ns = std;
-  }
+}
 #endif
 
 namespace octomap {
@@ -134,7 +134,6 @@ namespace octomap {
      *
      */
     typedef unordered_ns::unordered_map<OcTreeKey, bool, OcTreeKey::KeyHash> KeyBoolMap;
-    typedef unordered_ns::unordered_map<OcTreeKey, int, OcTreeKey::KeyHash> KeyIntMap;
 
 
     class KeyRay {

@@ -1,6 +1,6 @@
 /*
  * OctoMap - An Efficient Probabilistic 3D Mapping Framework Based on Octrees
- * http://octomap.github.com/
+ * https://octomap.github.io/
  *
  * Copyright (c) 2009-2013, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved.
@@ -312,7 +312,7 @@ namespace octomap {
     }
 
     template <class MAPNODE>
-    bool MapCollection<MAPNODE>::readTagValue(std::string tag, std::ifstream& infile, std::string* value) {
+    bool MapCollection<MAPNODE>::readTagValue(std::string /*tag*/, std::ifstream& infile, std::string* value) {
       std::string line;
       while( getline(infile, line) ){
         if(line.length() != 0 && line[0] != '#')

@@ -1,6 +1,6 @@
 /*
  * OctoMap - An Efficient Probabilistic 3D Mapping Framework Based on Octrees
- * http://octomap.github.com/
+ * https://octomap.github.io/
  *
  * Copyright (c) 2009-2013, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved.
@@ -54,6 +54,11 @@ namespace octomath {
 
     Pose6D::~Pose6D() {
     }
+
+    Pose6D::Pose6D(const Pose6D& other) :
+            translation(other.trans()),
+            rotation(other.rot())
+    { }
 
     Pose6D& Pose6D::operator= (const Pose6D& other) {
       translation = other.trans();

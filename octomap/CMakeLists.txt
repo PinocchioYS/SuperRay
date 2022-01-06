@@ -1,12 +1,13 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
 PROJECT( octomap )
 
 include(CTest)
+include(GNUInstallDirs)
 
 # version (e.g. for packaging)
 set(OCTOMAP_MAJOR_VERSION 1)
 set(OCTOMAP_MINOR_VERSION 9)
-set(OCTOMAP_PATCH_VERSION 0)
+set(OCTOMAP_PATCH_VERSION 7)
 set(OCTOMAP_VERSION ${OCTOMAP_MAJOR_VERSION}.${OCTOMAP_MINOR_VERSION}.${OCTOMAP_PATCH_VERSION})
 set(OCTOMAP_SOVERSION ${OCTOMAP_MAJOR_VERSION}.${OCTOMAP_MINOR_VERSION})
 if(COMMAND cmake_policy)
@@ -72,8 +73,12 @@ install(FILES ${octomap_superray_HDRS}	DESTINATION include/superray/octomap_supe
 file(GLOB octomap_cullingregion_HDRS ${PROJECT_SOURCE_DIR}/include/octomap_cullingregion/*.h)
 install(FILES ${octomap_cullingregion_HDRS}	DESTINATION include/superray/octomap_cullingregion)
 
-# Install catkin package.xml
+# Install package.xml (catkin/ament/rosdep)
 install(FILES package.xml DESTINATION share/superray_octomap)
+
+# Allows Colcon to find non-Ament packages when using workspace underlays
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/${PROJECT_NAME} "")
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/${PROJECT_NAME} DESTINATION share/ament_index/resource_index/packages)
 
 # uninstall target
 configure_file(

@@ -1,6 +1,6 @@
 /*
  * OctoMap - An Efficient Probabilistic 3D Mapping Framework Based on Octrees
- * http://octomap.github.com/
+ * https://octomap.github.io/
  *
  * Copyright (c) 2009-2013, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved.
@@ -113,7 +113,7 @@ namespace octomap {
 
 
     template <class NODE>
-    void OccupancyOcTreeBase<NODE>::insertPointCloudRays(const Pointcloud& pc, const point3d& origin, double maxrange, bool lazy_eval) {
+    void OccupancyOcTreeBase<NODE>::insertPointCloudRays(const Pointcloud& pc, const point3d& origin, double /* maxrange */, bool lazy_eval) {
       if (pc.size() < 1)
         return;
 
@@ -784,7 +784,7 @@ namespace octomap {
       // Line dot normal will be zero if they are parallel, in which case no intersection can be the entry one
       // if there is an intersection does it occur in the bounded plane of the voxel
       // if yes keep only the closest (smallest distance to sensor origin).
-      if((lineDotNormal = normalX.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
+      if((lineDotNormal = normalX.dot(direction)) != 0.0){   // Ensure lineDotNormal is non-zero (assign and test)
         d = (pointXNeg - origin).dot(normalX) / lineDotNormal;
         intersect = direction * float(d) + origin;
         if(!(intersect(1) < (pointYNeg(1) - 1e-6) || intersect(1) > (pointYPos(1) + 1e-6) ||
@@ -802,7 +802,7 @@ namespace octomap {
         }
       }
 
-      if((lineDotNormal = normalY.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
+      if((lineDotNormal = normalY.dot(direction)) != 0.0){   // Ensure lineDotNormal is non-zero (assign and test)
         d = (pointYNeg - origin).dot(normalY) / lineDotNormal;
         intersect = direction * float(d) + origin;
         if(!(intersect(0) < (pointXNeg(0) - 1e-6) || intersect(0) > (pointXPos(0) + 1e-6) ||
@@ -820,7 +820,7 @@ namespace octomap {
         }
       }
 
-      if((lineDotNormal = normalZ.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
+      if((lineDotNormal = normalZ.dot(direction)) != 0.0){   // Ensure lineDotNormal is non-zero (assign and test)
         d = (pointZNeg - origin).dot(normalZ) / lineDotNormal;
         intersect = direction * float(d) + origin;
         if(!(intersect(0) < (pointXNeg(0) - 1e-6) || intersect(0) > (pointXPos(0) + 1e-6) ||
@@ -839,7 +839,7 @@ namespace octomap {
       }
 
       // Substract (add) a fraction to ensure no ambiguity on the starting voxel
-      // Don't start on a bondary.
+      // Don't start on a boundary.
       if(found)
         intersection = direction * float(outD + delta) + origin;
 
@@ -882,7 +882,7 @@ namespace octomap {
     }
 
     template <class NODE>
-    void OccupancyOcTreeBase<NODE>::setBBXMin (point3d& min) {
+    void OccupancyOcTreeBase<NODE>::setBBXMin (const point3d& min) {
       bbx_min = min;
       if (!this->coordToKeyChecked(bbx_min, bbx_min_key)) {
         OCTOMAP_ERROR("ERROR while generating bbx min key.\n");
@@ -890,7 +890,7 @@ namespace octomap {
     }
 
     template <class NODE>
-    void OccupancyOcTreeBase<NODE>::setBBXMax (point3d& max) {
+    void OccupancyOcTreeBase<NODE>::setBBXMax (const point3d& max) {
       bbx_max = max;
       if (!this->coordToKeyChecked(bbx_max, bbx_max_key)) {
         OCTOMAP_ERROR("ERROR while generating bbx max key.\n");

@@ -1,6 +1,6 @@
 /*
  * OctoMap - An Efficient Probabilistic 3D Mapping Framework Based on Octrees
- * http://octomap.github.com/
+ * https://octomap.github.io/
  *
  * Copyright (c) 2009-2013, K.M. Wurm and A. Hornung, University of Freiburg
  * All rights reserved.
@@ -97,13 +97,13 @@ namespace octomap {
       // one buffer for each thread
 #ifdef _OPENMP
       #pragma omp parallel
-    #pragma omp critical
-    {
-      if (omp_get_thread_num() == 0){
-        this->keyrays.resize(omp_get_num_threads());
-      }
+      #pragma omp critical
+      {
+        if (omp_get_thread_num() == 0){
+          this->keyrays.resize(omp_get_num_threads());
+        }
 
-    }
+      }
 #else
       this->keyrays.resize(1);
 #endif
@@ -1057,7 +1057,7 @@ namespace octomap {
       float step_size = this->resolution * pow(2, tree_depth-depth);
       for (int i=0;i<3;++i) {
         diff[i] = pmax_clamped(i) - pmin_clamped(i);
-        steps[i] = floor(diff[i] / step_size);
+        steps[i] = static_cast<unsigned int>(floor(diff[i] / step_size));
         //      std::cout << "bbx " << i << " size: " << diff[i] << " " << steps[i] << " steps\n";
       }
 
