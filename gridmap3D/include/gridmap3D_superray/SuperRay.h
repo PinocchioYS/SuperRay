@@ -43,6 +43,12 @@ namespace gridmap3D{
 
 		point3d p;
 		int		w;
+
+        SuperRay& operator=(const SuperRay& _other) {
+            this->p = _other.p;
+            this->w = _other.w;
+            return *this;
+        }
 	};
 }
 
