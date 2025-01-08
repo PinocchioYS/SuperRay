@@ -30,7 +30,7 @@
 #include <algorithm>
 #include <fstream>
 
-#include <octomap_superray/SuperRayCloud.h>
+#include <superray_octomap/SuperRayCloud.h>
 
 namespace octomap{
 	SuperRayCloud::SuperRayCloud() {

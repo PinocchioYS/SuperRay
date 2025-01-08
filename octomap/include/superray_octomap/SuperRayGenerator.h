@@ -33,7 +33,7 @@
 #include <octomap/octomap_types.h>
 #include <octomap/OcTreeKey.h>
 #include <octomap/Pointcloud.h>
-#include <octomap_superray/SuperRayCloud.h>
+#include <superray_octomap/SuperRayCloud.h>
 
 #ifdef _OPENMP
 #include <omp.h>

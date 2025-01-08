@@ -27,12 +27,12 @@
 *
 */
 
-#ifndef OCTOMAP_SUPERRAY_SUPERRAY_CLOUD_H
-#define OCTOMAP_SUPERRAY_SUPERRAY_CLOUD_H
+#ifndef SUPERRAY_OCTOMAP_SUPERRAY_CLOUD_H
+#define SUPERRAY_OCTOMAP_SUPERRAY_CLOUD_H
 
 #include <vector>
 #include <list>
-#include <octomap_superray/SuperRay.h>
+#include <superray_octomap/SuperRay.h>
 
 /**
 * A collection of super rays with different weights

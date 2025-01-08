@@ -2,7 +2,7 @@
 #include <cstring>
 
 #include <octomap/octomap_timing.h>
-#include <octomap_cullingregion/CullingRegionOcTree.h>
+#include <cullingregion_octomap/CullingRegionOcTree.h>
 
 void printUsage(char* self){
 	std::cout << "USAGE: " << self << " [options]" << std::endl << std::endl;
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
-	std::cout << "Reading Graph file===========================" << std::endl;;
+	std::cout << "Reading Graph file===========================" << std::endl;
 	octomap::ScanGraph* graph = new octomap::ScanGraph();
 	if (!graph->readBinary(graphFilename)){
 		std::cout << "There is no graph file at " + graphFilename << std::endl;
@@ -80,13 +80,13 @@ int main(int argc, char** argv) {
 		(*scan_it)->pose = octomap::pose6d(transformed_sensor_origin, octomath::Quaternion());
 	}
 
-	std::cout << "\nCreating tree\n===========================\n";
+	std::cout << "Creating tree===========================";
 	octomap::CullingRegionOcTree* tree = new octomap::CullingRegionOcTree(res);
 
 	double time_to_update = 0.0;	// sec
 	size_t currentScan = 1;
 	for (octomap::ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++) {
-		std::cout << "(" << currentScan << "/" << graph->size() << ") " << std::endl;
+		std::cout << "  (" << currentScan << "/" << graph->size() << ") " << std::endl;
 
 		// Generate Super Ray
 		gettimeofday(&start, NULL);  // start timer
@@ -99,7 +99,7 @@ int main(int argc, char** argv) {
 
 	std::cout << "Done building tree." << std::endl;
 	std::cout << "Time to insert scans: " << time_to_update << " [sec]" << std::endl;
-	std::cout << "Time to insert 100.000 points took: " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
+	std::cout << "Time to insert 100K points took: " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
 
 	if(file_extension == ".bt") {
         tree->writeBinary(treeFilename);

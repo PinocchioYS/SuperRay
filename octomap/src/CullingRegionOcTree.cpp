@@ -27,7 +27,7 @@
 *
 */
 
-#include <octomap_cullingregion/CullingRegionOcTree.h>
+#include <cullingregion_octomap/CullingRegionOcTree.h>
 
 namespace octomap{
     CullingRegionOcTree::CullingRegionOcTree(double in_resolution)

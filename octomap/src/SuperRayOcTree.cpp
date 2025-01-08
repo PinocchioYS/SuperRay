@@ -27,7 +27,7 @@
 *
 */
 
-#include <octomap_superray/SuperRayOcTree.h>
+#include <superray_octomap/SuperRayOcTree.h>
 
 namespace octomap{
 	SuperRayOcTree::SuperRayOcTree(double in_resolution)

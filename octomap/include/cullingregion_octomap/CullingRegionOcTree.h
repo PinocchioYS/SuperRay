@@ -27,11 +27,11 @@
 *
 */
 
-#ifndef OCTOMAP_CULLINGREGION_OCTREE_H
-#define OCTOMAP_CULLINGREGION_OCTREE_H
+#ifndef CULLINGREGION_OCTOMAP_OCTREE_H
+#define CULLINGREGION_OCTOMAP_OCTREE_H
 
 #include <octomap/octomap.h>
-#include <octomap_superray/SuperRayGenerator.h>
+#include <superray_octomap/SuperRayGenerator.h>
 
 namespace octomap{
     class CullingRegionOcTree : public OccupancyOcTreeBase<OcTreeNode> {

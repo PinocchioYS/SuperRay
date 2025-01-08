@@ -1,0 +1,29 @@
+# ===================================================================================
+#  The SuperRay-OctoMap CMake configuration file
+#
+#             ** File generated automatically, do not modify **
+#
+#  Usage from an external project:
+#    In your CMakeLists.txt, add these lines:
+#
+#    FIND_PACKAGE(SUPERRAY_OCTOMAP REQUIRED)
+#    INCLUDE_DIRECTORIES(${SUPERRAY_OCTOMAP_INCLUDE_DIRS})
+#    TARGET_LINK_LIBRARIES(MY_TARGET_NAME ${SUPERRAY_OCTOMAP_LIBRARIES})
+#
+#
+#    This file will define the following variables:
+#      - SUPERRAY_OCTOMAP_LIBRARIES      : The list of libraries to links against.
+#      - SUPERRAY_OCTOMAP_LIBRARY_DIRS   : The directory where lib files are. Calling
+#                                          LINK_DIRECTORIES with this path is NOT needed.
+#      - SUPERRAY_OCTOMAP_INCLUDE_DIRS   : The SuperRay-OctoMap include directories.
+#
+# ===================================================================================
+
+@PACKAGE_INIT@
+
+SET_AND_CHECK(SUPERRAY_OCTOMAP_INCLUDE_DIRS "@PACKAGE_SUPERRAY_OCTOMAP_INCLUDE_DIRS@")
+SET_AND_CHECK(SUPERRAY_OCTOMAP_LIBRARY_DIRS "@PACKAGE_SUPERRAY_OCTOMAP_LIB_DIR@")
+
+SET(SUPERRAY_OCTOMAP_LIBRARIES
+  "@PACKAGE_SUPERRAY_OCTOMAP_LIB_DIR@/@SUPERRAY_OCTOMAP_LIBRARY@"
+)

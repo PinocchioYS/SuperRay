@@ -27,11 +27,11 @@
 *
 */
 
-#ifndef OCTOMAP_SUPERRAY_OCTREE_H
-#define OCTOMAP_SUPERRAY_OCTREE_H
+#ifndef SUPERRAY_OCTOMAP_SUPERRAY_OCTREE_H
+#define SUPERRAY_OCTOMAP_SUPERRAY_OCTREE_H
 
 #include <octomap/octomap.h>
-#include <octomap_superray/SuperRayGenerator.h>
+#include <superray_octomap/SuperRayGenerator.h>
 
 namespace octomap{
 	class SuperRayOcTree : public OccupancyOcTreeBase<OcTreeNode> {

@@ -27,8 +27,8 @@
 *
 */
 
-#ifndef OCTOMAP_SUPERRAY_SUPERRAY_H
-#define OCTOMAP_SUPERRAY_SUPERRAY_H
+#ifndef SUPERRAY_OCTOMAP_SUPERRAY_H
+#define SUPERRAY_OCTOMAP_SUPERRAY_H
 
 #include <octomap/octomap_types.h>
 

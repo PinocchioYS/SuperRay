@@ -27,7 +27,7 @@
  *
  */
 
-#include <octomap_superray/SuperRayGenerator.h>
+#include <superray_octomap/SuperRayGenerator.h>
 
 #include <algorithm>
 #include <cfloat>
