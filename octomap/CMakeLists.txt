@@ -10,17 +10,17 @@ FIND_PACKAGE(octomap REQUIRED)
 SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
 INCLUDE(CompilerSettings)
 
-# SUPERRAY_OMP = enable OpenMP parallelization (defaults to OFF)
-SET(SUPERRAY_OMP FALSE CACHE BOOL "Enable/disable OpenMP parallelization")
-IF(DEFINED ENV{SUPERRAY_OMP})
-  SET(SUPERRAY_OMP $ENV{SUPERRAY_OMP})
-ENDIF(DEFINED ENV{SUPERRAY_OMP})
-IF(SUPERRAY_OMP)
+# SUPERRAY_OCTOMAP_OMP = enable OpenMP parallelization (defaults to OFF)
+SET(SUPERRAY_OCTOMAP_OMP FALSE CACHE BOOL "Enable/disable OpenMP parallelization")
+IF(DEFINED ENV{SUPERRAY_OCTOMAP_OMP})
+  SET(SUPERRAY_OCTOMAP_OMP $ENV{SUPERRAY_OCTOMAP_OMP})
+ENDIF(DEFINED ENV{SUPERRAY_OCTOMAP_OMP})
+IF(SUPERRAY_OCTOMAP_OMP)
   FIND_PACKAGE(OpenMP REQUIRED)
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
   SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-ENDIF(SUPERRAY_OMP)
+ENDIF(SUPERRAY_OCTOMAP_OMP)
 
 # Set output directories for libraries and executables
 SET( BASE_DIR ${CMAKE_SOURCE_DIR} )
@@ -54,10 +54,8 @@ SET(INSTALL_TARGETS_DEFAULT_ARGS
 
 ADD_SUBDIRECTORY( src )
 
-FILE(GLOB superray_octomap_HDRS ${PROJECT_SOURCE_DIR}/include/superray_octomap/*.h)
-INSTALL(FILES ${superray_octomap_HDRS}	DESTINATION include/superray/superray_octomap)
-FILE(GLOB cullingregion_octomap_HDRS ${PROJECT_SOURCE_DIR}/include/cullingregion_octomap/*.h)
-INSTALL(FILES ${cullingregion_octomap_HDRS}	DESTINATION include/superray/cullingregion_octomap)
+FILE(GLOB SUPERRAY_OCTOMAP_HDEADERS ${PROJECT_SOURCE_DIR}/include/superray_octomap/*.h)
+INSTALL(FILES ${SUPERRAY_OCTOMAP_HDEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/superray_octomap")
 
 # Install package.xml (catkin/ament/rosdep)
 INSTALL(FILES package.xml DESTINATION "${CMAKE_INSTALL_DATADIR}/superray-octomap")
@@ -84,7 +82,7 @@ ENDIF()
 EXPORT(PACKAGE superray-octomap)
 
 # Create a superray-octomap-config.cmake file for the use from the build tree
-SET(SUPERRAY_OCTOMAP_INCLUDE_DIRS "${INCLUDE_DIRS}/superray")
+SET(SUPERRAY_OCTOMAP_INCLUDE_DIRS "${INCLUDE_DIRS}")
 SET(SUPERRAY_OCTOMAP_LIB_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 # Set library names as absolute paths
 # Windows, spec. MSVC requires the .lib suffix for imported libs
@@ -104,7 +102,7 @@ CONFIGURE_PACKAGE_CONFIG_FILE(
 )
 
 # Create a superray-octomap-config.cmake file for the use from the install tree and install it
-SET(SUPERRAY_OCTOMAP_INCLUDE_DIRS "${CMAKE_INSTALL_FULL_INCLUDEDIR}/superray")
+SET(SUPERRAY_OCTOMAP_INCLUDE_DIRS "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
 SET(SUPERRAY_OCTOMAP_LIB_DIR "${CMAKE_INSTALL_FULL_LIBDIR}")
 
 CONFIGURE_PACKAGE_CONFIG_FILE(

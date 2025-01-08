@@ -31,7 +31,7 @@
 #define CULLINGREGION_OCTOMAP_OCTREE_H
 
 #include <octomap/octomap.h>
-#include <superray_octomap/SuperRayGenerator.h>
+#include "SuperRayGenerator.h"
 
 namespace octomap{
     class CullingRegionOcTree : public OccupancyOcTreeBase<OcTreeNode> {

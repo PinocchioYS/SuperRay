@@ -2,7 +2,7 @@
 #include <cstring>
 
 #include <octomap/octomap_timing.h>
-#include <cullingregion_octomap/CullingRegionOcTree.h>
+#include <superray_octomap/CullingRegionOcTree.h>
 
 void printUsage(char* self){
 	std::cout << "USAGE: " << self << " [options]" << std::endl << std::endl;

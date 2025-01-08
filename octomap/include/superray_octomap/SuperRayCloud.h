@@ -32,7 +32,7 @@
 
 #include <vector>
 #include <list>
-#include <superray_octomap/SuperRay.h>
+#include "SuperRay.h"
 
 /**
 * A collection of super rays with different weights
