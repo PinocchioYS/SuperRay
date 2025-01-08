@@ -51,7 +51,7 @@ namespace quadmap {
 		friend class StaticMapInit;
 	public:
 		AbstractQuadTree();
-		virtual ~AbstractQuadTree() {};
+		virtual ~AbstractQuadTree() {}
 
 		/// virtual constructor: creates a new object of same type
 		virtual AbstractQuadTree* create() const = 0;

@@ -36,8 +36,8 @@
 #include <sstream>
 #include <stdlib.h>
 
-#include <quadmap/math/Pose3D.h>
-#include <quadmap/ScanGraph.h>
+#include <superray_quadmap/math/Pose3D.h>
+#include <superray_quadmap/ScanGraph.h>
 
 namespace quadmap {
 

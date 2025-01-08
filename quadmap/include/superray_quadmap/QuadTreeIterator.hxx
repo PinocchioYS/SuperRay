@@ -39,8 +39,15 @@
  * const with respect to the tree. This file is included within
  * QuadTreeBaseImpl.h, you should probably not include this directly.
  */
-class iterator_base : public std::iterator<std::forward_iterator_tag, NodeType>{
+template<class NodeType>
+class iterator_base {
 public:
+	using iterator_category = std::forward_iterator_tag;
+	using value_type = NodeType;
+	using difference_type = NodeType;
+	using pointer = NodeType*;
+	using reference = NodeType&;
+
 	struct StackElement;
 	/// Default constructor, only used for the end-iterator
 	iterator_base() : tree(NULL), maxDepth(0){}
@@ -49,7 +56,7 @@ public:
 	 * Constructor of the iterator. Initializes the iterator with the default
 	 * constructor (= end() iterator) if tree is empty or NULL.
 	 *
-	 * @param tree QuadTreeBaseImpl on which the iterator is used on
+	 * @param ptree QuadTreeBaseImpl on which the iterator is used on
 	 * @param depth Maximum depth to traverse the tree. 0 (default): unlimited
 	 */
 	iterator_base(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, uint8_t depth = 0)
@@ -200,16 +207,16 @@ protected:
  * }
  * @endcode
  */
-class tree_iterator : public iterator_base {
+class tree_iterator : public iterator_base<NodeType> {
 public:
-	tree_iterator() : iterator_base(){}
+	tree_iterator() : iterator_base<NodeType>(){}
 	/**
 	 * Constructor of the iterator.
 	 *
-	 * @param tree QuadTreeBaseImpl on which the iterator is used on
+	 * @param ptree QuadTreeBaseImpl on which the iterator is used on
 	 * @param depth Maximum depth to traverse the tree. 0 (default): unlimited
 	 */
-	tree_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, uint8_t depth = 0) : iterator_base(ptree, depth) {};
+	tree_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, uint8_t depth = 0) : iterator_base<NodeType>(ptree, depth) {};
 
 	/// postfix increment operator of iterator (it++)
 	tree_iterator operator++(int){
@@ -256,17 +263,17 @@ public:
  * @endcode
  *
  */
-class leaf_iterator : public iterator_base {
+class leaf_iterator : public iterator_base<NodeType> {
 public:
-	leaf_iterator() : iterator_base(){}
+	leaf_iterator() : iterator_base<NodeType>(){}
 
 	/**
 	* Constructor of the iterator.
 	*
-	* @param tree QuadTreeBaseImpl on which the iterator is used on
+	* @param ptree QuadTreeBaseImpl on which the iterator is used on
 	* @param depth Maximum depth to traverse the tree. 0 (default): unlimited
 	*/
-	leaf_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, uint8_t depth = 0) : iterator_base(ptree, depth) {
+	leaf_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, uint8_t depth = 0) : iterator_base<NodeType>(ptree, depth) {
 		// tree could be empty (= no stack)
 		if (this->stack.size() > 0){
 			// skip forward to next valid leaf node:
@@ -276,7 +283,7 @@ public:
 		}
 	}
 
-	leaf_iterator(const leaf_iterator& other) : iterator_base(other) {};
+	leaf_iterator(const leaf_iterator& other) : iterator_base<NodeType>(other) {};
 
 	/// postfix increment operator of iterator (it++)
 	leaf_iterator operator++(int){
@@ -329,9 +336,9 @@ public:
  * }
  * @endcode
  */
-class leaf_bbx_iterator : public iterator_base {
+class leaf_bbx_iterator : public iterator_base<NodeType> {
 public:
-	leaf_bbx_iterator() : iterator_base() {};
+	leaf_bbx_iterator() : iterator_base<NodeType>() {};
 	/**
 	* Constructor of the iterator. The bounding box corners min and max are
 	* converted into a QuadTreeKey first.
@@ -342,13 +349,13 @@ public:
 	* will include the bounding box coordinate. For a more exact control, use
 	* the constructor with QuadTreeKeys instead.
 	*
-	* @param tree QuadTreeBaseImpl on which the iterator is used on
+	* @param ptree QuadTreeBaseImpl on which the iterator is used on
 	* @param min Minimum point2d of the axis-aligned boundingbox
 	* @param max Maximum point2d of the axis-aligned boundingbox
 	* @param depth Maximum depth to traverse the tree. 0 (default): unlimited
 	*/
 	leaf_bbx_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, const point2d& min, const point2d& max, uint8_t depth = 0)
-		: iterator_base(ptree, depth)
+		: iterator_base<NodeType>(ptree, depth)
 	{
 		if (this->stack.size() > 0){
 			assert(ptree);
@@ -371,13 +378,13 @@ public:
 	* Constructor of the iterator. This version uses the exact keys as axis-aligned
 	* bounding box (including min and max).
 	*
-	* @param tree QuadTreeBaseImpl on which the iterator is used on
+	* @param ptree QuadTreeBaseImpl on which the iterator is used on
 	* @param min Minimum QuadTreeKey to be included in the axis-aligned boundingbox
 	* @param max Maximum QuadTreeKey to be included in the axis-aligned boundingbox
 	* @param depth Maximum depth to traverse the tree. 0 (default): unlimited
 	*/
 	leaf_bbx_iterator(QuadTreeBaseImpl<NodeType, INTERFACE> const* ptree, const QuadTreeKey& min, const QuadTreeKey& max, uint8_t depth = 0)
-		: iterator_base(ptree, depth), minKey(min), maxKey(max)
+		: iterator_base<NodeType>(ptree, depth), minKey(min), maxKey(max)
 	{
 		// tree could be empty (= no stack)
 		if (this->stack.size() > 0){
@@ -387,7 +394,7 @@ public:
 		}
 	}
 
-	leaf_bbx_iterator(const leaf_bbx_iterator& other) : iterator_base(other) {
+	leaf_bbx_iterator(const leaf_bbx_iterator& other) : iterator_base<NodeType>(other) {
 		minKey = other.minKey;
 		maxKey = other.maxKey;
 	}
@@ -429,10 +436,10 @@ public:
 protected:
 
 	void singleIncrement(){
-		typename iterator_base::StackElement top = this->stack.top();
+		typename iterator_base<NodeType>::StackElement top = this->stack.top();
 		this->stack.pop();
 
-		typename iterator_base::StackElement s;
+		typename iterator_base<NodeType>::StackElement s;
 		s.depth = top.depth + 1;
 		key_type center_offset_key = this->tree->tree_max_val >> s.depth;
 		// push on stack in reverse order

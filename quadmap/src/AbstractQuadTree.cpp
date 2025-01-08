@@ -32,8 +32,8 @@
  */
 
 
-#include <quadmap/AbstractQuadTree.h>
-#include <quadmap/QuadTree.h>
+#include <superray_quadmap/AbstractQuadTree.h>
+#include <superray_quadmap/QuadTree.h>
 
 
 namespace quadmap {

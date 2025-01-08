@@ -1,0 +1,32 @@
+# ===================================================================================
+#  The SuperRay-QuadMap CMake configuration file
+#
+#             ** File generated automatically, do not modify **
+#
+#  Usage from an external project:
+#    In your CMakeLists.txt, add these lines:
+#
+#    FIND_PACKAGE(superray-quadmap REQUIRED)
+#    INCLUDE_DIRECTORIES(${SUPERRAY_QUADMAP_INCLUDE_DIRS})
+#    TARGET_LINK_LIBRARIES(MY_TARGET_NAME ${SUPERRAY_QUADMAP_LIBRARIES})
+#
+#
+#    This file will define the following variables:
+#      - SUPERRAY_QUADMAP_LIBRARIES      : The list of libraries to links against.
+#      - SUPERRAY_QUADMAP_LIBRARY_DIRS   : The directory where lib files are. Calling
+#                                          LINK_DIRECTORIES with this path is NOT needed.
+#      - SUPERRAY_QUADMAP_INCLUDE_DIRS   : The QuadMap include directories.
+#
+# ===================================================================================
+
+@PACKAGE_INIT@
+
+SET_AND_CHECK(SUPERRAY_QUADMAP_INCLUDE_DIRS "@PACKAGE_SUPERRAY_QUADMAP_INCLUDE_DIRS@")
+SET_AND_CHECK(SUPERRAY_QUADMAP_LIBRARY_DIRS "@PACKAGE_SUPERRAY_QUADMAP_LIB_DIR@")
+
+SET(SUPERRAY_QUADMAP_LIBRARIES 
+  "@PACKAGE_SUPERRAY_QUADMAP_LIB_DIR@/@SUPERRAY_QUADMAP_LIBRARY@"
+  "@PACKAGE_SUPERRAY_QUADMAP_LIB_DIR@/@SUPERRAY_QUADMATH_LIBRARY@"
+)
+
+@QUADMAP_INCLUDE_TARGETS@

@@ -85,9 +85,9 @@ namespace quadmap {
 		// -- children  ----------------------------------
 
 		/// @return value stored in the node
-		T getValue() const{ return value; };
+		T getValue() const{ return value; }
 		/// sets value to be stored in the node
-		void setValue(T v) { value = v; };
+		void setValue(T v) { value = v; }
 
 		// file IO:
 
@@ -116,6 +116,6 @@ namespace quadmap {
 
 } // end namespace
 
-#include "quadmap/QuadTreeDataNode.hxx"
+#include "QuadTreeDataNode.hxx"
 
 #endif

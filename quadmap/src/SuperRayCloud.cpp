@@ -30,7 +30,7 @@
 #include <algorithm>
 #include <fstream>
 
-#include <quadmap_superray/SuperRayCloud.h>
+#include <superray_quadmap/SuperRayCloud.h>
 
 namespace quadmap{
 	SuperRayCloud::SuperRayCloud() {

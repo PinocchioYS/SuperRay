@@ -27,7 +27,7 @@
 *
 */
 
-#include <quadmap_superray/SuperRayQuadTree.h>
+#include <superray_quadmap/SuperRayQuadTree.h>
 
 namespace quadmap{
 	SuperRayQuadTree::SuperRayQuadTree(double in_resolution)

@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <quadmap/QuadTree.h>
+#include <superray_quadmap/QuadTree.h>
 
 
 namespace quadmap {
@@ -39,7 +39,7 @@ namespace quadmap {
 	QuadTree::QuadTree(double in_resolution)
 		: OccupancyQuadTreeBase<QuadTreeNode>(in_resolution) {
 			quadTreeMemberInit.ensureLinking();
-		};
+		}
 
 	QuadTree::QuadTree(std::string _filename)
 		: OccupancyQuadTreeBase<QuadTreeNode>(0.1)  { // resolution will be set according to tree file

@@ -30,7 +30,7 @@
 #ifndef QUADMAP_SUPERRAY_SUPERRAY_H
 #define QUADMAP_SUPERRAY_SUPERRAY_H
 
-#include <quadmap/quadmap_types.h>
+#include "quadmap_types.h"
 
 namespace quadmap{
 	class SuperRay{

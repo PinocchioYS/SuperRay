@@ -30,8 +30,8 @@
 #ifndef QUADMAP_CULLINGREGION_QUADTREE_H
 #define QUADMAP_CULLINGREGION_QUADTREE_H
 
-#include <quadmap/quadmap.h>
-#include <quadmap_superray/SuperRayGenerator.h>
+#include "quadmap.h"
+#include "SuperRayGenerator.h"
 
 namespace quadmap{
     class CullingRegionQuadTree : public OccupancyQuadTreeBase<QuadTreeNode> {

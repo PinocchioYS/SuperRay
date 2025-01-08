@@ -39,8 +39,8 @@
 #include <list>
 #include <inttypes.h>
 
-#include <quadmap/math/Vector2.h>
-#include <quadmap/math/Pose3D.h>
+#include "math/Vector2.h"
+#include "math/Pose3D.h"
 
 namespace quadmap {
 

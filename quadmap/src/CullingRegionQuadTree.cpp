@@ -27,7 +27,7 @@
 *
 */
 
-#include <quadmap_cullingregion/CullingRegionQuadTree.h>
+#include <superray_quadmap/CullingRegionQuadTree.h>
 
 namespace quadmap{
     CullingRegionQuadTree::CullingRegionQuadTree(double in_resolution)

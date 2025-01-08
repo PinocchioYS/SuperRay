@@ -32,8 +32,8 @@
  */
 
 
-#include <quadmap/AbstractOccupancyQuadTree.h>
-#include <quadmap/quadmap_types.h>
+#include <superray_quadmap/AbstractOccupancyQuadTree.h>
+#include <superray_quadmap/quadmap_types.h>
 
 namespace quadmap {
 	AbstractOccupancyQuadTree::AbstractOccupancyQuadTree(){

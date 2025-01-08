@@ -49,7 +49,7 @@
 #include <tr1/unordered_map>
 namespace quadmap {
 	namespace unordered_ns = std::tr1;
-};
+}
 #else
 #include <unordered_set>
 #include <unordered_map>

@@ -36,7 +36,7 @@
 
 #include <vector>
 #include <list>
-#include <quadmap/quadmap_types.h>
+#include "quadmap_types.h"
 
 namespace quadmap {
 

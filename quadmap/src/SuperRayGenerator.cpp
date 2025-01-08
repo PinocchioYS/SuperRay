@@ -27,7 +27,7 @@
  *
  */
 
-#include <quadmap_superray/SuperRayGenerator.h>
+#include <superray_quadmap/SuperRayGenerator.h>
 
 #include <algorithm>
 #include <cfloat>

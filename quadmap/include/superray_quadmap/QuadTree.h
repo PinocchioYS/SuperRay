@@ -21,7 +21,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OW NER OR CONTRIBUTORS BE
  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
@@ -31,27 +31,71 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef QUADMAP_QUADTREE_BASE_H
-#define QUADMAP_QUADTREE_BASE_H
+#ifndef QUADMAP_QUADTREE_H
+#define QUADMAP_QUADTREE_H
 
 
-#include "QuadTreeBaseImpl.h"
-#include "AbstractQuadTree.h"
-
+#include "OccupancyQuadTreeBase.h"
+#include "QuadTreeNode.h"
+#include "ScanGraph.h"
 
 namespace quadmap {
-	template <class NODE>
-	class QuadTreeBase : public QuadTreeBaseImpl<NODE, AbstractQuadTree> {
+
+	/**
+	 * quadmap main map data structure, stores 2D occupancy grid map in a QuadTree.
+	 * Basic functionality is implemented in QuadTreeBase.
+	 *
+	 */
+	class QuadTree : public OccupancyQuadTreeBase <QuadTreeNode> {
+
 	public:
-		QuadTreeBase<NODE>(double res) : QuadTreeBaseImpl<NODE, AbstractQuadTree>(res) {};
+		/// Default constructor, sets resolution of leafs
+		QuadTree(double resolution);
+
+		/**
+		 * Reads a QuadTree from a binary file
+		 * @param _filename
+		 *
+		 */
+		QuadTree(std::string _filename);
+
+		virtual ~QuadTree(){}
 
 		/// virtual constructor: creates a new object of same type
 		/// (Covariant return type requires an up-to-date compiler)
-		QuadTreeBase<NODE>* create() const { return new QuadTreeBase<NODE>(this->resolution); }
-		std::string getTreeType() const { return "QuadTreeBase"; }
+		QuadTree* create() const { return new QuadTree(resolution); }
+
+		std::string getTreeType() const { return "QuadTree"; }
+
+
+	protected:
+		/**
+		 * Static member object which ensures that this QuadTree's prototype
+		 * ends up in the classIDMapping only once. You need this as a
+		 * static member in any derived quadtree class in order to read .ot2
+		 * files through the AbstractQuadTree factory. You should also call
+		 * ensureLinking() once from the constructor.
+		 */
+		class StaticMemberInitializer{
+		public:
+			StaticMemberInitializer() {
+				QuadTree* tree = new QuadTree(0.1);
+				tree->clearKeyRays();
+				AbstractQuadTree::registerTreeType(tree);
+			}
+
+			/**
+			 * Dummy function to ensure that MSVC does not drop the
+			 * StaticMemberInitializer, causing this tree failing to register.
+			 * Needs to be called from the constructor of this quadtree.
+			 */
+			void ensureLinking() {}
+		};
+
+		/// to ensure static initialization (only once)
+		static StaticMemberInitializer quadTreeMemberInit;
 	};
 
-};
-
+} // end namespace
 
 #endif

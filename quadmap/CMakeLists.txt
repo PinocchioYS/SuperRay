@@ -1,38 +1,23 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
-PROJECT( quadmap )
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
+PROJECT( superray-quadmap )
 
-include(CTest)
-
-# version (e.g. for packaging)
-set(QUADMAP_MAJOR_VERSION 1)
-set(QUADMAP_MINOR_VERSION 0)
-set(QUADMAP_PATCH_VERSION 0)
-set(QUADMAP_VERSION ${QUADMAP_MAJOR_VERSION}.${QUADMAP_MINOR_VERSION}.${QUADMAP_PATCH_VERSION})
-set(QUADMAP_SOVERSION ${QUADMAP_MAJOR_VERSION}.${QUADMAP_MINOR_VERSION})
-if(COMMAND cmake_policy)
-  cmake_policy(SET CMP0003 NEW)
-  if(POLICY CMP0042)
-    # Enable MACOSX_RPATH by default.
-    cmake_policy(SET CMP0042 NEW)
-  endif(POLICY CMP0042)
-endif(COMMAND cmake_policy)
-
-SET (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
+include(GNUInstallDirs)
 
 # COMPILER SETTINGS (default: Release) and flags
+SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
 INCLUDE(CompilerSettings)
 
-# QUADMAP_OMP = enable OpenMP parallelization (experimental, defaults to OFF)
-SET(QUADMAP_OMP FALSE CACHE BOOL "Enable/disable OpenMP parallelization")
-IF(DEFINED ENV{QUADMAP_OMP})
-  SET(QUADMAP_OMP $ENV{QUADMAP_OMP})
-ENDIF(DEFINED ENV{QUADMAP_OMP})
-IF(QUADMAP_OMP)
+# SUPERRAY_QUADMAP_OMP = enable OpenMP parallelization (experimental, defaults to OFF)
+SET(SUPERRAY_QUADMAP_OMP FALSE CACHE BOOL "Enable/disable OpenMP parallelization")
+IF(DEFINED ENV{SUPERRAY_QUADMAP_OMP})
+  SET(SUPERRAY_QUADMAP_OMP $ENV{SUPERRAY_QUADMAP_OMP})
+ENDIF(DEFINED ENV{SUPERRAY_QUADMAP_OMP})
+IF(SUPERRAY_QUADMAP_OMP)
   FIND_PACKAGE( OpenMP REQUIRED)
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
   SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-ENDIF(QUADMAP_OMP)
+ENDIF(SUPERRAY_QUADMAP_OMP)
 
 # Set output directories for libraries and executables
 SET( BASE_DIR ${CMAKE_SOURCE_DIR} )
@@ -40,121 +25,98 @@ SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BASE_DIR}/lib )
 SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BASE_DIR}/lib )
 SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BASE_DIR}/bin )
 # output dirs for multi-config builds (MSVC)
-foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+FOREACH( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
   STRING( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
   SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${BASE_DIR}/lib )
   SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${BASE_DIR}/lib )
   SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${BASE_DIR}/bin )
-endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
+ENDFOREACH( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
-set(INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include")
+SET(INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include")
 INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
 
 LINK_DIRECTORIES(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 # Installation
 
-set(INSTALL_TARGETS_DEFAULT_ARGS
-	RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib/superray
-    ARCHIVE DESTINATION lib/superray
+SET(INSTALL_TARGETS_DEFAULT_ARGS
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
 
 ADD_SUBDIRECTORY( src/math )
 ADD_SUBDIRECTORY( src )
 
-file(GLOB quadmap_HDRS ${PROJECT_SOURCE_DIR}/include/quadmap/*.h ${PROJECT_SOURCE_DIR}/include/quadmap/*.hxx)
-install(FILES ${quadmap_HDRS}	DESTINATION include/superray/quadmap)
-file(GLOB quadmap_math_HDRS ${PROJECT_SOURCE_DIR}/include/quadmap/math/*.h)
-install(FILES ${quadmap_math_HDRS}	DESTINATION include/superray/quadmap/math)
-file(GLOB quadmap_superray_HDRS ${PROJECT_SOURCE_DIR}/include/quadmap_superray/*.h)
-install(FILES ${quadmap_superray_HDRS}	DESTINATION include/superray/quadmap_superray)
-file(GLOB quadmap_cullingregion_HDRS ${PROJECT_SOURCE_DIR}/include/quadmap_cullingregion/*.h)
-install(FILES ${quadmap_cullingregion_HDRS}	DESTINATION include/superray/quadmap_cullingregion)
+FILE(GLOB SUPERRAY_QUADMAP_HEADERS ${PROJECT_SOURCE_DIR}/include/superray_quadmap/*.h ${PROJECT_SOURCE_DIR}/include/superray_quadmap/*.hxx)
+INSTALL(FILES ${SUPERRAY_QUADMAP_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/superray_quadmap")
+FILE(GLOB SUPERRAY_QUADMATH_HEADERS ${PROJECT_SOURCE_DIR}/include/superray_quadmap/math/*.h)
+INSTALL(FILES ${SUPERRAY_QUADMATH_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/superray_quadmap/math")
 
-# Install catkin package.xml
-install(FILES package.xml DESTINATION share/superray_quadmap)
+# Install package.xml (catkin/ament/rosdep)
+INSTALL(FILES package.xml DESTINATION "${CMAKE_INSTALL_DATADIR}/superray-quadmap")
+
+# Allows Colcon to find non-Ament packages when using workspace underlays
+FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/${PROJECT_NAME} "")
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/${PROJECT_NAME} DESTINATION share/ament_index/resource_index/packages)
 
 # uninstall target
-#configure_file(
-#    "${PROJECT_SOURCE_DIR}/CMakeModules/CMakeUninstall.cmake.in"
-#    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-#    IMMEDIATE @ONLY)
+IF(NOT TARGET uninstall)
+  CONFIGURE_FILE(
+    "${PROJECT_SOURCE_DIR}/CMakeModules/CMakeUninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY
+  )
 
-#add_custom_target(uninstall
-#    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
-
-# Export the package for use from the build-tree
-# (this registers the build-tree with a global CMake-registry)
-export(PACKAGE superray_quadmap)
- 
-# Create a quadmap-config.cmake file for the use from the build tree
-set(QUADMAP_INCLUDE_DIRS "${INCLUDE_DIRS}")
-set(QUADMAP_LIB_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
-# Set library names as absolute paths
-# Windows, spec. MSVC requires the .lib suffix for imported libs
-IF(WIN32)
-  set(QUADMAP_LIBRARY
-    "${CMAKE_IMPORT_LIBRARY_PREFIX}quadmap${CMAKE_IMPORT_LIBRARY_SUFFIX}"
-  )
-  set(QUADMATH_LIBRARY
-    "${CMAKE_IMPORT_LIBRARY_PREFIX}quadmath${CMAKE_IMPORT_LIBRARY_SUFFIX}"
-  )
-ELSE()
-  set(QUADMAP_LIBRARY
-    "${CMAKE_SHARED_LIBRARY_PREFIX}quadmap${CMAKE_SHARED_LIBRARY_SUFFIX}"
-  )
-  set(QUADMATH_LIBRARY
-    "${CMAKE_SHARED_LIBRARY_PREFIX}quadmath${CMAKE_SHARED_LIBRARY_SUFFIX}"
+  ADD_CUSTOM_TARGET(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
   )
 ENDIF()
 
-include(CMakePackageConfigHelpers)
+# Export the package for use from the build-tree
+# (this registers the build-tree with a global CMake-registry)
+EXPORT(PACKAGE superray-quadmap)
+ 
+# Create a superray-quadmap-config.cmake file for the use from the build tree
+SET(SUPERRAY_QUADMAP_INCLUDE_DIRS "${INCLUDE_DIRS}")
+SET(SUPERRAY_QUADMAP_LIB_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+# Set library names as absolute paths
+# Windows, spec. MSVC requires the .lib suffix for imported libs
+IF(WIN32)
+  SET(SUPERRAY_QUADMAP_LIBRARY "${CMAKE_IMPORT_LIBRARY_PREFIX}superray-quadmap${CMAKE_IMPORT_LIBRARY_SUFFIX}")
+  SET(SUPERRAY_QUADMATH_LIBRARY "${CMAKE_IMPORT_LIBRARY_PREFIX}superray-quadmath${CMAKE_IMPORT_LIBRARY_SUFFIX}")
+ELSE()
+  SET(SUPERRAY_QUADMAP_LIBRARY "${CMAKE_SHARED_LIBRARY_PREFIX}superray-quadmap${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  SET(SUPERRAY_QUADMATH_LIBRARY "${CMAKE_SHARED_LIBRARY_PREFIX}superray-quadmath${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ENDIF()
 
-CONFIGURE_PACKAGE_CONFIG_FILE( quadmap-config.cmake.in
-  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/quadmap/quadmap-config.cmake"
-  PATH_VARS QUADMAP_INCLUDE_DIRS QUADMAP_LIB_DIR
-  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/quadmap
-)
+INCLUDE(CMakePackageConfigHelpers)
 
-WRITE_BASIC_PACKAGE_VERSION_FILE(
-  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/quadmap/quadmap-config-version.cmake"
-  VERSION ${QUADMAP_VERSION}
-  COMPATIBILITY AnyNewerVersion)
+CONFIGURE_PACKAGE_CONFIG_FILE(
+  superray-quadmap-config.cmake.in
+  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-quadmap/superray-quadmap-config.cmake"
+  PATH_VARS SUPERRAY_QUADMAP_INCLUDE_DIRS SUPERRAY_QUADMAP_LIB_DIR
+  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-quadmap")
 
-# Create a quadmap-config.cmake file for the use from the install tree
-# and install it
-set(QUADMAP_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/superray")
-set(QUADMAP_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib/superray")
+# Create a superray-quadmap-config.cmake file for the use from the install tree and install it
+SET(SUPERRAY_QUADMAP_INCLUDE_DIRS "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+SET(SUPERRAY_QUADMAP_LIB_DIR "${CMAKE_INSTALL_FULL_LIBDIR}")
 
-CONFIGURE_PACKAGE_CONFIG_FILE( quadmap-config.cmake.in
-  "${PROJECT_BINARY_DIR}/InstallFiles/superray_quadmap-config.cmake"
-  PATH_VARS QUADMAP_INCLUDE_DIRS QUADMAP_LIB_DIR
-  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/superray_quadmap)
+SET(SUPERRAY_QUADMAP_INCLUDE_TARGETS
+  "include(\${CMAKE_CURRENT_LIST_DIR}/superray-quadmap-targets.cmake)")
 
-WRITE_BASIC_PACKAGE_VERSION_FILE(
-  ${PROJECT_BINARY_DIR}/InstallFiles/superray_quadmap-config-version.cmake
-  VERSION ${QUADMAP_VERSION}
-  COMPATIBILITY AnyNewerVersion)
+CONFIGURE_PACKAGE_CONFIG_FILE(
+  superray-quadmap-config.cmake.in
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray-quadmap-config.cmake"
+  PATH_VARS SUPERRAY_QUADMAP_INCLUDE_DIRS SUPERRAY_QUADMAP_LIB_DIR
+  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-quadmap")
 
-install(FILES
-  "${PROJECT_BINARY_DIR}/InstallFiles/superray_quadmap-config.cmake"
-  "${PROJECT_BINARY_DIR}/InstallFiles/superray_quadmap-config-version.cmake"
-  DESTINATION share/superray_quadmap/)
-
-# Write pkgconfig-file:
-include(InstallPkgConfigFile)
-install_pkg_config_file(quadmap
-    CFLAGS
-    LIBS -lquadmap -lquadmath
-    REQUIRES
-    VERSION ${QUADMAP_VERSION})
-
-# Needs to be last statement:
-INCLUDE(CPackSettings)
+INSTALL(FILES
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray-quadmap-config.cmake"
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/superray-quadmap")
 
 # Finished:
-MESSAGE ("\n")
-MESSAGE (STATUS "Compile quadmap using: make")
-MESSAGE (STATUS "Install quadmap using: make install")
+MESSAGE (STATUS "\n")
+MESSAGE (STATUS "Compile superray-quadmap using: make")
+MESSAGE (STATUS "Install superray-quadmap using: make install")
 MESSAGE (STATUS "    (be sure to set the correct CMAKE_INSTALL_PREFIX before)")

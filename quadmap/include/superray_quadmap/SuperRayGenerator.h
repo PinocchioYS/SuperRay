@@ -30,10 +30,10 @@
 #ifndef QUADMAP_SUPERRAY_SUPERRAY_GENERATOR_H
 #define QUADMAP_SUPERRAY_SUPERRAY_GENERATOR_H
 
-#include <quadmap/quadmap_types.h>
-#include <quadmap/QuadTreeKey.h>
-#include <quadmap/Pointcloud.h>
-#include <quadmap_superray/SuperRayCloud.h>
+#include "quadmap_types.h"
+#include "QuadTreeKey.h"
+#include "Pointcloud.h"
+#include "SuperRayCloud.h"
 
 #ifdef _OPENMP
 #include <omp.h>

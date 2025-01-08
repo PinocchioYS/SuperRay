@@ -52,7 +52,7 @@ namespace quadmap {
 	class AbstractOccupancyQuadTree : public AbstractQuadTree {
 	public:
 		AbstractOccupancyQuadTree();
-		virtual ~AbstractOccupancyQuadTree() {};
+		virtual ~AbstractOccupancyQuadTree() {}
 
 		//-- IO
 
@@ -235,7 +235,7 @@ namespace quadmap {
 		static const std::string binaryFileHeader;
 	};
 
-}; // end namespace
+} // end namespace
 
 
 #endif

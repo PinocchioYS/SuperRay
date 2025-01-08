@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstring>
 
-#include <quadmap/quadmap_timing.h>
-#include <quadmap_superray/SuperRayQuadTree.h>
+#include <superray_quadmap/quadmap_timing.h>
+#include <superray_quadmap/SuperRayQuadTree.h>
 
 void printUsage(char* self){
 	std::cout << "USAGE: " << self << " [options]" << std::endl << std::endl;

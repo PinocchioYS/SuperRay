@@ -1,38 +1,46 @@
-SET (quadmap_SRCS
-    AbstractQuadTree.cpp
-    AbstractOccupancyQuadTree.cpp
-    Pointcloud.cpp
-    ScanGraph.cpp
-    QuadTree.cpp
-    QuadTreeNode.cpp
-    SuperRayCloud.cpp
-    SuperRayGenerator.cpp
-    SuperRayQuadTree.cpp
-    CullingRegionQuadTree.cpp
+##### Sources ##########################################################################################################
+SET(SUPERRAY_QUADMAP_SOURCES
+  AbstractQuadTree.cpp
+  AbstractOccupancyQuadTree.cpp
+  Pointcloud.cpp
+  ScanGraph.cpp
+  QuadTree.cpp
+  QuadTreeNode.cpp
+  SuperRayCloud.cpp
+  SuperRayGenerator.cpp
+  SuperRayQuadTree.cpp
+  CullingRegionQuadTree.cpp
 )
 
-# dynamic and static libs, see CMake FAQ:
-ADD_LIBRARY( quadmap SHARED ${quadmap_SRCS})
-set_target_properties( quadmap PROPERTIES
-  VERSION ${QUADMAP_VERSION}
-  SOVERSION ${QUADMAP_SOVERSION}
-)
-ADD_LIBRARY( quadmap-static STATIC ${quadmap_SRCS})
-SET_TARGET_PROPERTIES(quadmap-static PROPERTIES OUTPUT_NAME "quadmap")
+##### Library ##########################################################################################################
+ADD_LIBRARY(superray-quadmap SHARED ${SUPERRAY_QUADMAP_SOURCES})
 
-TARGET_LINK_LIBRARIES(quadmap quadmath)
+ADD_LIBRARY(superray-quadmap-static STATIC ${SUPERRAY_QUADMAP_SOURCES})
+SET_TARGET_PROPERTIES(superray-quadmap-static PROPERTIES OUTPUT_NAME "superray-quadmap")
+ADD_DEPENDENCIES(superray-quadmap-static superray-quadmath-static)
 
+TARGET_LINK_LIBRARIES(superray-quadmap superray-quadmath)
+
+##### Execution ########################################################################################################
 ADD_EXECUTABLE(example_superrayQuadTree example_superrayQuadTree.cpp)
-TARGET_LINK_LIBRARIES(example_superrayQuadTree quadmap)
+TARGET_LINK_LIBRARIES(example_superrayQuadTree superray-quadmap)
 
 ADD_EXECUTABLE(example_cullingregionQuadTree example_cullingregionQuadTree.cpp)
-TARGET_LINK_LIBRARIES(example_cullingregionQuadTree quadmap)
+TARGET_LINK_LIBRARIES(example_cullingregionQuadTree superray-quadmap)
 
-install(TARGETS 
-	quadmap
-	quadmap-static
+##### Install ##########################################################################################################
+IF(NOT EXISTS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-quadmap")
+  FILE(MAKE_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-quadmap")
+ENDIF()
+
+EXPORT(TARGETS superray-quadmap superray-quadmap-static
+  APPEND FILE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-quadmap/superray-quadmap-targets.cmake")
+
+INSTALL(TARGETS 
+	superray-quadmap
+	superray-quadmap-static
 	example_superrayQuadTree
-    example_cullingregionQuadTree
+  example_cullingregionQuadTree
 	${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 

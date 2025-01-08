@@ -111,7 +111,7 @@ namespace quadmap {
 
 
 	template <class NODE>
-	void OccupancyQuadTreeBase<NODE>::insertPointCloudRays(const Pointcloud& pc, const point2d& origin, double maxrange, bool lazy_eval) {
+	void OccupancyQuadTreeBase<NODE>::insertPointCloudRays(const Pointcloud& pc, const point2d& origin, double /* maxrange */, bool lazy_eval) {
 		if (pc.size() < 1)
 			return;
 
@@ -233,24 +233,30 @@ namespace quadmap {
 							occupied_cells.insert(key);
 						}
 					}
+				} // end if in BBX and not maxrange
 
-					// update freespace, break as soon as bbx limit is reached
-					if (this->computeRayKeys(origin, p, *keyray)){
-						for (KeyRay::reverse_iterator rit = keyray->rbegin(); rit != keyray->rend(); rit++) {
-							if (inBBX(*rit)) {
+				// truncate the end point to the max range if the max range is exceeded
+				point2d new_end = p;
+				if ((maxrange >= 0.0) && ((p - origin).norm() > maxrange)) {
+					const point2d direction = (p - origin).normalized();
+					new_end = origin + direction * (float) maxrange;
+				}
+
+				// update freespace, break as soon as bbx limit is reached
+				if (this->computeRayKeys(origin, new_end, *keyray)){
+					for (KeyRay::iterator it = keyray->begin(); it != keyray->end(); it++) {
+						if (inBBX(*it)) {
 #ifdef _OPENMP
 #pragma omp critical (free_insert)
 #endif
-								{
-									free_cells.insert(*rit);
-								}
+							{
+								free_cells.insert(*it);
 							}
-							else break;
 						}
-					} // end if compute ray
-				} // end if in BBX and not maxrange
+						else break;
+					}
+				} // end if compute ray
 			} // end bbx case
-
 		} // end for all points, end of parallel OMP loop
 
 		// prefer occupied cells over free ones (and make sets disjunct)
@@ -558,7 +564,7 @@ namespace quadmap {
 	bool OccupancyQuadTreeBase<NODE>::castRay(const point2d& origin, const point2d& directionP, point2d& end,
 											  bool ignoreUnknown, double maxRange) const {
 
-		/// ----------  see OcTreeBase::computeRayKeys  -----------
+		/// ----------  see QuadTreeBase::computeRayKeys  -----------
 
 		// Initialization phase -------------------------------------------------------
 		QuadTreeKey current_key;
@@ -700,7 +706,7 @@ namespace quadmap {
 		// Line dot normal will be zero if they are parallel, in which case no intersection can be the entry one
 		// if there is an intersection does it occur in the bounded plane of the voxel
 		// if yes keep only the closest (smallest distance to sensor origin).
-		if ((lineDotNormal = normalX.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
+		if ((lineDotNormal = normalX.dot(direction)) != 0.0){   // Ensure lineDotNormal is non-zero (assign and test)
 			d = (pointXNeg - origin).dot(normalX) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(1) < (pointYNeg(1) - 1e-6) || intersect(1) > (pointYPos(1) + 1e-6))){
@@ -716,7 +722,7 @@ namespace quadmap {
 			}
 		}
 
-		if ((lineDotNormal = normalY.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
+		if ((lineDotNormal = normalY.dot(direction)) != 0.0){   // Ensure lineDotNormal is non-zero (assign and test)
 			d = (pointYNeg - origin).dot(normalY) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(0) < (pointXNeg(0) - 1e-6) || intersect(0) > (pointXPos(0) + 1e-6))){
@@ -733,7 +739,7 @@ namespace quadmap {
 		}
 
 		// Substract (add) a fraction to ensure no ambiguity on the starting pixel
-		// Don't start on a bondary.
+		// Don't start on a boundary.
 		if (found)
 			intersection = direction * float(outD + delta) + origin;
 
@@ -776,7 +782,7 @@ namespace quadmap {
 	}
 
 	template <class NODE>
-	void OccupancyQuadTreeBase<NODE>::setBBXMin(point2d& min) {
+	void OccupancyQuadTreeBase<NODE>::setBBXMin(const point2d& min) {
 		bbx_min = min;
 		if (!this->coordToKeyChecked(bbx_min, bbx_min_key)) {
 			QUADMAP_ERROR("ERROR while generating bbx min key.\n");
@@ -784,7 +790,7 @@ namespace quadmap {
 	}
 
 	template <class NODE>
-	void OccupancyQuadTreeBase<NODE>::setBBXMax(point2d& max) {
+	void OccupancyQuadTreeBase<NODE>::setBBXMax(const point2d& max) {
 		bbx_max = max;
 		if (!this->coordToKeyChecked(bbx_max, bbx_max_key)) {
 			QUADMAP_ERROR("ERROR while generating bbx max key.\n");

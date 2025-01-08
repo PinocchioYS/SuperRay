@@ -40,6 +40,10 @@ namespace quadmath {
 
 	/*!
 	 * \brief This class represents a two-dimensional pose of an object
+	 * 
+	 * The two-dimensional pose is represented by a two-dimensional
+	 * translation vector representing the position of the object and
+	 * a rotation value representing the rotation angle of the object.
 	 */
 	class Pose3D {
 	public:
@@ -60,9 +64,16 @@ namespace quadmath {
 		 * Constructs a pose from a translation represented by
 		 * its x, y-values and a rotation
 		 */
-		Pose3D(float x, float y, double rot);
+		Pose3D(float x, float y, double r);
 
+		/*!
+		 * \brief Constructor
+		 *
+		 * Constructs a pose from another pose
+		 */
+		Pose3D(const Pose3D& other);
 		Pose3D& operator= (const Pose3D& other);
+
 		bool operator==(const Pose3D& other) const;
 		bool operator!=(const Pose3D& other) const;
 
@@ -95,8 +106,10 @@ namespace quadmath {
 
 		inline float& x() { return translation(0); }
 		inline float& y() { return translation(1); }
+		inline double& r() { return rotation; }
 		inline const float& x() const { return translation(0); }
 		inline const float& y() const { return translation(1); }
+		inline const double& r() const { return rotation; }
 
 		/*!
 		 * \brief Transformation of a vector

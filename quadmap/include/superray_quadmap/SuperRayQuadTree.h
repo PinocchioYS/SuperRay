@@ -30,8 +30,8 @@
 #ifndef QUADMAP_SUPERRAY_QUADTREE_H
 #define QUADMAP_SUPERRAY_QUADTREE_H
 
-#include <quadmap/quadmap.h>
-#include <quadmap_superray/SuperRayGenerator.h>
+#include "quadmap.h"
+#include "SuperRayGenerator.h"
 
 namespace quadmap{
 	class SuperRayQuadTree : public OccupancyQuadTreeBase<QuadTreeNode> {
@@ -40,7 +40,7 @@ namespace quadmap{
 		SuperRayQuadTree(double resolution);
 
 		/**
-		 * Reads an OcTree from a binary file
+		 * Reads an QuadTree from a binary file
 		 * @param _filename
 		 *
 		 */

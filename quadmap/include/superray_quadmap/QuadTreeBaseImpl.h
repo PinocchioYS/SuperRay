@@ -77,7 +77,7 @@ namespace quadmap {
 
 		// the actual iterator implementation is included here
 		// as a member from this file
-#include <quadmap/QuadTreeIterator.hxx>
+#include "QuadTreeIterator.hxx"
 
 		QuadTreeBaseImpl(double resolution);
 		virtual ~QuadTreeBaseImpl();
@@ -241,7 +241,7 @@ namespace quadmap {
 		virtual size_t memoryUsage() const;
 
 		/// \return Memory usage of a single quadtree node
-		virtual inline size_t memoryUsageNode() const { return sizeof(NODE); };
+		virtual inline size_t memoryUsageNode() const { return sizeof(NODE); }
 
 		/// \return Memory usage of a full grid of the same size as the QuadTree in bytes (for comparison)
 		/// \note this can be larger than the adressable memory - size_t may not be enough to hold it!
@@ -321,12 +321,12 @@ namespace quadmap {
 		typedef leaf_iterator iterator;
 
 		/// @return beginning of the tree as leaf iterator
-		iterator begin(unsigned char maxDepth = 0) const { return iterator(this, maxDepth); };
+		iterator begin(unsigned char maxDepth = 0) const { return iterator(this, maxDepth); }
 		/// @return end of the tree as leaf iterator
 		const iterator end() const { return leaf_iterator_end; }; // TODO: RVE?
 
 		/// @return beginning of the tree as leaf iterator
-		leaf_iterator begin_leafs(unsigned char maxDepth = 0) const { return leaf_iterator(this, maxDepth); };
+		leaf_iterator begin_leafs(unsigned char maxDepth = 0) const { return leaf_iterator(this, maxDepth); }
 		/// @return end of the tree as leaf iterator
 		const leaf_iterator end_leafs() const { return leaf_iterator_end; }
 
@@ -565,6 +565,6 @@ namespace quadmap {
 
 }
 
-#include <quadmap/QuadTreeBaseImpl.hxx>
+#include "QuadTreeBaseImpl.hxx"
 
 #endif

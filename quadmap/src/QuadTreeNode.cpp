@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-#include <quadmap/QuadTreeNode.h>
+#include <superray_quadmap/QuadTreeNode.h>
 
 namespace quadmap {
 

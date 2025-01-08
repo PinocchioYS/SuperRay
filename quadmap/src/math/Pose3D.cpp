@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <quadmap/math/Pose3D.h>
+#include <superray_quadmap/math/Pose3D.h>
 #include <math.h>
 
 namespace quadmath {
@@ -44,9 +44,14 @@ namespace quadmath {
 		rotation(rot)
 	{ }
 
-	Pose3D::Pose3D(float x, float y, double rot) :
+	Pose3D::Pose3D(float x, float y, double r) :
 		translation(x, y),
-		rotation(rot)
+		rotation(r)
+	{ }
+
+	Pose3D::Pose3D(const Pose3D& other) :
+		translation(other.trans()),
+		rotation(other.rot())
 	{ }
 
 	Pose3D::~Pose3D() {

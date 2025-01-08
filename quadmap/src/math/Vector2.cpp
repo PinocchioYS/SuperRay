@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <quadmap/math/Vector2.h>
+#include <superray_quadmap/math/Vector2.h>
 #include <cassert>
 #include <math.h>
 #include <string.h>
