@@ -35,14 +35,14 @@
 namespace octomap{
 	class SuperRay{
 	public:
-		SuperRay(void) : p(0, 0, 0), w(0) {}
+		SuperRay() : p(0, 0, 0), w(0) {}
 		SuperRay(float _x, float _y, float _z, int _w) : p(_x, _y, _z), w(_w) {}
-		SuperRay(point3d _p, int _w) : p(_p), w(_w) {}
+		SuperRay(const point3d& _p, int _w) : p(_p), w(_w) {}
 		SuperRay(const SuperRay& _other) : p(_other.p), w(_other.w) {}
-		~SuperRay(void) {}
+		~SuperRay() {}
 
-		point3d p;
-		int		w;
+		point3d p;	// point
+		int		w;	// weight
 
         SuperRay& operator=(const SuperRay& _other) {
             this->p = _other.p;

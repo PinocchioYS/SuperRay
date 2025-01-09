@@ -37,7 +37,7 @@ namespace quadmap{
 	public:
 		SuperRay(void) : p(0, 0), w(0) {}
 		SuperRay(float _x, float _y, int _w) : p(_x, _y), w(_w) {}
-		SuperRay(point2d _p, int _w) : p(_p), w(_w) {}
+		SuperRay(const point2d& _p, int _w) : p(_p), w(_w) {}
 		SuperRay(const SuperRay& _other) : p(_other.p), w(_other.w) {}
 		~SuperRay(void) {}
 
