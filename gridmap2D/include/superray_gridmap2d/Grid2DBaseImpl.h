@@ -165,7 +165,7 @@ namespace gridmap2D {
 		virtual size_t memoryUsage() const;     // TODO: add the memory usage of hash table
 
 		/// \return Memory usage of a single grid2D node
-		virtual inline size_t memoryUsageNode() const { return sizeof(NODE); };
+		virtual inline size_t memoryUsageNode() const { return sizeof(NODE); }
 
 		double volume();
 
@@ -328,6 +328,6 @@ namespace gridmap2D {
 
 }
 
-#include <gridmap2D/Grid2DBaseImpl.hxx>
+#include "Grid2DBaseImpl.hxx"
 
 #endif

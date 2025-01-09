@@ -41,8 +41,10 @@ namespace gridmath2D {
 
 	/*!
 	 * \brief This class represents a two-dimensional vector
+	 * 
+	 * The two-dimensional vector can be used to represent a
+	 * translation in two-dimensional space.
 	 */
-
 	class Vector2 {
 	public:
 
@@ -176,6 +178,17 @@ namespace gridmath2D {
 					return false;
 			}
 			return true;
+		}
+
+		inline bool operator< (const Vector2 &other) const {
+			for (unsigned int i = 0; i < 2; i++){
+				if (operator()(i) < other(i))
+					return true;
+				else if (operator()(i) == other(i))
+					continue;
+				else
+					return false;
+			}
 		}
 
 		/// @return length of the vector ("L2 norm")

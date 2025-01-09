@@ -1,39 +1,45 @@
-SET (gridmap2D_SRCS
-    AbstractGrid2D.cpp
-    AbstractOccupancyGrid2D.cpp
-    Pointcloud.cpp
-    ScanGraph.cpp
-    Grid2D.cpp
-    Grid2DNode.cpp
-    SuperRayCloud.cpp
-    SuperRayGenerator.cpp
-    SuperRayGrid2D.cpp
-    CullingRegionGrid2D.cpp
+##### Sources ##########################################################################################################
+SET (SUPERRAY_GRIDMAP2D_SOURCES
+  AbstractGrid2D.cpp
+  AbstractOccupancyGrid2D.cpp
+  Pointcloud.cpp
+  ScanGraph.cpp
+  Grid2D.cpp
+  Grid2DNode.cpp
+  SuperRayCloud.cpp
+  SuperRayGenerator.cpp
+  SuperRayGrid2D.cpp
+  CullingRegionGrid2D.cpp
 )
 
-# dynamic and static libs, see CMake FAQ:
-ADD_LIBRARY( gridmap2D SHARED ${gridmap2D_SRCS})
-set_target_properties( gridmap2D PROPERTIES
-    VERSION ${GRIDMAP2D_VERSION}
-    SOVERSION ${GRIDMAP2D_SOVERSION}
-)
+##### Library ##########################################################################################################
+ADD_LIBRARY(superray-gridmap2d SHARED ${SUPERRAY_GRIDMAP2D_SOURCES})
 
-ADD_LIBRARY( gridmap2D-static STATIC ${gridmap2D_SRCS})
-SET_TARGET_PROPERTIES(gridmap2D-static PROPERTIES OUTPUT_NAME "gridmap2D") 
+ADD_LIBRARY(superray-gridmap2d-static STATIC ${SUPERRAY_GRIDMAP2D_SOURCES})
+SET_TARGET_PROPERTIES(superray-gridmap2d-static PROPERTIES OUTPUT_NAME "superray-gridmap2d") 
+ADD_DEPENDENCIES(superray-gridmap2d-static superray-gridmath2d-static)
 
-TARGET_LINK_LIBRARIES(gridmap2D gridmath2D)
+TARGET_LINK_LIBRARIES(superray-gridmap2d superray-gridmath2d)
 
+##### Execution ########################################################################################################
 ADD_EXECUTABLE(example_superrayGrid2D example_superrayGrid2D.cpp)
-TARGET_LINK_LIBRARIES(example_superrayGrid2D gridmap2D)
+TARGET_LINK_LIBRARIES(example_superrayGrid2D superray-gridmap2d)
 
 ADD_EXECUTABLE(example_cullingregionGrid2D example_cullingregionGrid2D.cpp)
-TARGET_LINK_LIBRARIES(example_cullingregionGrid2D gridmap2D)
+TARGET_LINK_LIBRARIES(example_cullingregionGrid2D superray-gridmap2d)
 
-install(TARGETS 
-	gridmap2D
-	gridmap2D-static 
+##### Install ##########################################################################################################
+IF(NOT EXISTS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-gridmap2d")
+  FILE(MAKE_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-gridmap2d")
+ENDIF()
+
+EXPORT(TARGETS superray-gridmap2d superray-gridmap2d-static
+  APPEND FILE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-gridmap2d/superray-gridmap2d-targets.cmake")
+
+INSTALL(TARGETS 
+	superray-gridmap2d
+	superray-gridmap2d-static 
 	example_superrayGrid2D
-    example_cullingregionGrid2D
+  example_cullingregionGrid2D
 	${INSTALL_TARGETS_DEFAULT_ARGS}
 )
-

@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <gridmap2D/math/Pose3D.h>
+#include <superray_gridmap2d/math/Pose3D.h>
 #include <math.h>
 
 namespace gridmath2D {
@@ -47,6 +47,11 @@ namespace gridmath2D {
 	Pose3D::Pose3D(float x, float y, double rot) :
 		translation(x, y),
 		rotation(rot)
+	{ }
+
+	Pose3D::Pose3D(const Pose3D& other) :
+		translation(other.trans()),
+		rotation(other.rot())
 	{ }
 
 	Pose3D::~Pose3D() {

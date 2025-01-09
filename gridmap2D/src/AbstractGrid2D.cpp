@@ -32,8 +32,8 @@
  */
 
 
-#include <gridmap2D/AbstractGrid2D.h>
-#include <gridmap2D/Grid2D.h>
+#include <superray_gridmap2d/AbstractGrid2D.h>
+#include <superray_gridmap2d/Grid2D.h>
 
 
 namespace gridmap2D {

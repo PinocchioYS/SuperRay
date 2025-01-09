@@ -51,7 +51,7 @@ namespace gridmap2D {
 		friend class StaticMapInit;
 	public:
 		AbstractGrid2D();
-		virtual ~AbstractGrid2D() {};
+		virtual ~AbstractGrid2D() {}
 
 		/// virtual constructor: creates a new object of same type
 		virtual AbstractGrid2D* create() const = 0;

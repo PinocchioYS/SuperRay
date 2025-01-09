@@ -62,7 +62,14 @@ namespace gridmath2D {
 		 */
 		Pose3D(float x, float y, double rot);
 
+		/*!
+		 * \brief Constructor
+		 *
+		 * Constructs a pose from another pose
+		 */
+		Pose3D(const Pose3D& other);
 		Pose3D& operator= (const Pose3D& other);
+
 		bool operator==(const Pose3D& other) const;
 		bool operator!=(const Pose3D& other) const;
 
@@ -95,8 +102,10 @@ namespace gridmath2D {
 
 		inline float& x() { return translation(0); }
 		inline float& y() { return translation(1); }
+		inline double& r() { return rotation; }
 		inline const float& x() const { return translation(0); }
 		inline const float& y() const { return translation(1); }
+		inline const double& r() const { return rotation; }
 
 		/*!
 		 * \brief Transformation of a vector

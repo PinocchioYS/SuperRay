@@ -1,32 +1,26 @@
-SET (gridmath2D_SRCS
+##### Sources ##########################################################################################################
+SET (SUPERRAY_GRIDMATH2D_SOURCES
   Vector2.cpp
   Pose3D.cpp
- )
-
-
-ADD_LIBRARY( gridmath2D SHARED ${gridmath2D_SRCS})
-
-SET_TARGET_PROPERTIES( gridmath2D PROPERTIES
-  VERSION ${GRIDMAP2D_VERSION}
-  SOVERSION ${GRIDMAP2D_SOVERSION}
-  INSTALL_NAME_DIR ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}   # this seems to be necessary for MacOS X
-)
-# INSTALL_NAME_DIR seems to be necessary for MacOS X
-
-ADD_LIBRARY( gridmath2D-static STATIC ${gridmath2D_SRCS})
-SET_TARGET_PROPERTIES(gridmath2D-static PROPERTIES OUTPUT_NAME "gridmath2D")
-
-if(NOT EXISTS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap2D")
-    file(MAKE_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap2D")
-endif()
-
-export(TARGETS gridmath2D gridmath2D-static
-    APPEND FILE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap2D/gridmap2D-targets.cmake"
 )
 
-install(TARGETS gridmath2D gridmath2D-static
-    EXPORT gridmap2D-targets
-    INCLUDES DESTINATION include
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+##### Library ##########################################################################################################
+ADD_LIBRARY(superray-gridmath2d SHARED ${SUPERRAY_GRIDMATH2D_SOURCES})
+
+ADD_LIBRARY(superray-gridmath2d-static STATIC ${SUPERRAY_GRIDMATH2D_SOURCES})
+SET_TARGET_PROPERTIES(superray-gridmath2d-static PROPERTIES OUTPUT_NAME "superray-gridmath2d")
+
+IF(NOT EXISTS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-gridmap2d")
+  FILE(MAKE_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-gridmap2d")
+ENDIF()
+
+EXPORT(TARGETS superray-gridmath2d superray-gridmath2d-static
+  APPEND FILE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-gridmap2d/superray-gridmap2d-targets.cmake"
 )
- 
+
+##### Install ##########################################################################################################
+INSTALL(TARGETS superray-gridmath2d superray-gridmath2d-static
+  EXPORT superray-gridmap2d-targets
+  INCLUDES DESTINATION include
+  ${INSTALL_TARGETS_DEFAULT_ARGS}
+)

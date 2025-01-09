@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstring>
 
-#include <gridmap2D/gridmap2D_timing.h>
-#include <gridmap2D_cullingregion/CullingRegionGrid2D.h>
+#include <superray_gridmap2d/gridmap2D_timing.h>
+#include <superray_gridmap2d/CullingRegionGrid2D.h>
 
 void printUsage(char* self){
     std::cout << "USAGE: " << self << " [options]" << std::endl << std::endl;

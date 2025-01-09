@@ -31,76 +31,50 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef GRIDMAP2D_GRID2D_DATA_NODE_H
-#define GRIDMAP2D_GRID2D_DATA_NODE_H
+#ifndef GRIDMAP2D_TYPES_H
+#define GRIDMAP2D_TYPES_H
 
-#include "gridmap2D_types.h"
-#include "assert.h"
+#include <stdio.h>
+#include <vector>
+#include <list>
+#include <inttypes.h>
+
+#include "math/Vector2.h"
+#include "math/Pose3D.h"
 
 namespace gridmap2D {
 
-	class AbstractGrid2DNode {
+	/// Use Vector2 (float precision) as a point2d in gridmap2D
+	typedef gridmath2D::Vector2               point2d;
+	/// Use our Pose3D (float precision) as pose3d in gridmap2D
+	typedef gridmath2D::Pose3D                pose3d;
 
+	typedef std::vector<gridmath2D::Vector2>  point2d_collection;
+	typedef std::list<gridmath2D::Vector2>    point2d_list;
 
-	};
+	/// A voxel defined by its center point2d and its side length
+	typedef std::pair<point2d, double>		  Grid2DVolume;
 
-	// forward declaration for friend in Grid2DDataNode
-	template<typename NODE, typename I> class Grid2DBaseImpl;
+}
 
-	/**
-	 * Basic node in the Grid2D that can hold arbitrary data of type T in value.
-	 * This is the base class for nodes used in a Grid2D. The used implementation
-	 * for occupancy mapping is in Grid2DNode.#
-	 * \tparam T data to be stored in the node (e.g. a float for probabilities)
-	 */
-	template<typename T> class Grid2DDataNode : public AbstractGrid2DNode {
-		template<typename NODE, typename I>
-		friend class Grid2DBaseImpl;
+// no debug output if not in debug mode:
+#ifdef NDEBUG
+#ifndef GRIDMAP2D_NODEBUGOUT
+#define GRIDMAP2D_NODEBUGOUT
+#endif
+#endif
 
-	public:
+#ifdef GRIDMAP2D_NODEBUGOUT
+#define GRIDMAP2D_DEBUG(...)       (void)0
+#define GRIDMAP2D_DEBUG_STR(...)   (void)0
+#else
+#define GRIDMAP2D_DEBUG(...)        fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP2D_DEBUG_STR(args)   std::cerr << args << std::endl
+#endif
 
-		Grid2DDataNode();
-		Grid2DDataNode(T initVal);
-
-		/// Copy constructor
-		Grid2DDataNode(const Grid2DDataNode& rhs);
-
-		/// Delete only own members.
-		~Grid2DDataNode();
-
-		/// Copy the payload (data in "value") from rhs into this node
-		void copyData(const Grid2DDataNode& from);
-
-		/// Equals operator, compares if the stored value is identical
-		bool operator==(const Grid2DDataNode& rhs) const;
-
-		/// @return value stored in the node
-		T getValue() const{ return value; };
-		/// sets value to be stored in the node
-		void setValue(T v) { value = v; };
-
-		// file IO:
-
-		/// Read node payload (data only) from binary stream
-		std::istream& readData(std::istream &s);
-
-		/// Write node payload (data only) to binary stream
-		std::ostream& writeData(std::ostream &s) const;
-
-
-		/// Make the templated data type available from the outside
-		typedef T DataType;
-
-
-	protected:
-		/// stored data (payload)
-		T value;
-
-	};
-
-
-} // end namespace
-
-#include "gridmap2D/Grid2DDataNode.hxx"
+#define GRIDMAP2D_WARNING(...)      fprintf(stderr, "WARNING: "), fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP2D_WARNING_STR(args) std::cerr << "WARNING: " << args << std::endl
+#define GRIDMAP2D_ERROR(...)        fprintf(stderr, "ERROR: "), fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP2D_ERROR_STR(args)   std::cerr << "ERROR: " << args << std::endl
 
 #endif

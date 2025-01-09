@@ -114,7 +114,7 @@ namespace gridmap2D {
 	}
 
 	/*template <class NODE, class I>
-	bool Grid3DBaseImpl<NODE, I>::operator== (const Grid3DBaseImpl<NODE, I>& other) const{
+	bool Grid2DBaseImpl<NODE, I>::operator== (const Grid2DBaseImpl<NODE, I>& other) const{
 		if (grid_max_val != other.grid_max_val || resolution != other.resolution || this->size() != other.size()){
 			return false;
 		}
@@ -128,7 +128,16 @@ namespace gridmap2D {
 		for (; it != end; ++it, ++other_it){
 			if (other_it == other_end)
 				return false;
+
+			if (it->first != other_it->first
+				|| !(*(it->second) == *(other_it->second)))
+			{
+				return false;
+			}
 		}
+
+		if(other_it != other_end)
+			return false;
 
 		return true;
 	}*/
@@ -576,7 +585,7 @@ namespace gridmap2D {
       float step_size = this->resolution * pow(2, tree_depth-depth);
       for (int i=0;i<3;++i) {
         diff[i] = pmax_clamped(i) - pmin_clamped(i);
-        steps[i] = floor(diff[i] / step_size);
+        steps[i] = static_cast<unsigned int>(floor(diff[i] / step_size));
         //      std::cout << "bbx " << i << " size: " << diff[i] << " " << steps[i] << " steps\n";
       }
 

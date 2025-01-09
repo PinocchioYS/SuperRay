@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <gridmap2D/math/Vector2.h>
+#include <superray_gridmap2d/math/Vector2.h>
 #include <cassert>
 #include <math.h>
 #include <string.h>

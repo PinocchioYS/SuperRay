@@ -36,8 +36,8 @@
 #include <sstream>
 #include <stdlib.h>
 
-#include <gridmap2D/math/Pose3D.h>
-#include <gridmap2D/ScanGraph.h>
+#include <superray_gridmap2d/math/Pose3D.h>
+#include <superray_gridmap2d/ScanGraph.h>
 
 namespace gridmap2D {
 

@@ -32,7 +32,7 @@
 
 #include <vector>
 #include <list>
-#include <gridmap2D_superray/SuperRay.h>
+#include "SuperRay.h"
 
 /**
 * A collection of super rays with different weights

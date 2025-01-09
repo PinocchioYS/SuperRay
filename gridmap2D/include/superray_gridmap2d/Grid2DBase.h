@@ -49,7 +49,7 @@ namespace gridmap2D {
 		std::string getGridType() const { return "Grid2DBase"; }
 	};
 
-};
+}
 
 
 #endif

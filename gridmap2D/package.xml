@@ -1,20 +1,18 @@
 <package>
-  <name>gridmap2D</name>
-  <version>1.0.0</version>
-  <description> To do. </description>
+  <name>superray-gridmap2d</name>
+  <version>0.0.0</version>
+  <description>The SuperRay-GridMap2D library implements a 2D occupancy grid mapping approach, providing data structures and mapping algorithms in C++. The uniform grid-map implementation is based on OctoMap library. See
+  http://octomap.github.io for details. </description>
 
   <author email="youngsun.kwon@kaist.ac.kr">Youngsun Kwon</author>
   <maintainer email="youngsun.kwon@kaist.ac.kr">Youngsun Kwon</maintainer>
   <license>BSD</license>
+  
+  <!-- The following tags are recommended by REP-136 -->
+  <exec_depend condition="$ROS_VERSION == 1">catkin</exec_depend>
 
-  <url type="website">http://sglab.kaist.ac.kr</url>
-  <url type="bugtracker">https://github.com/PinocchioYS/SuperRay/issues</url>
-  
-  <run_depend>catkin</run_depend>
   <buildtool_depend>cmake</buildtool_depend>
-  
   <export>
     <build_type>cmake</build_type>
   </export>
-  
 </package>

@@ -58,7 +58,7 @@ namespace gridmap2D {
          */
 		Grid2D(std::string _filename);
 
-		virtual ~Grid2D(){};
+		virtual ~Grid2D(){}
 
 		/// virtual constructor: creates a new object of same type
 		/// (Covariant return type requires an up-to-date compiler)
@@ -88,7 +88,7 @@ namespace gridmap2D {
 			 * StaticMemberInitializer, causing this grid failing to register.
 			 * Needs to be called from the constructor of this grid2D.
 			 */
-			void ensureLinking() {};
+			void ensureLinking() {}
 		};
 
 		/// to ensure static initialization (only once)

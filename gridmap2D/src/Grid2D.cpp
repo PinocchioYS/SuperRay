@@ -31,13 +31,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <gridmap2D/gridmap2D.h>
+#include <superray_gridmap2d/gridmap2D.h>
 
 namespace gridmap2D {
 
 	Grid2D::Grid2D(double in_resolution) : OccupancyGrid2DBase<Grid2DNode>(in_resolution) {
 		grid2DMemberInit.ensureLinking();
-	};
+	}
 
 	Grid2D::Grid2D(std::string _filename) : OccupancyGrid2DBase<Grid2DNode>(0.1)  {
 		readBinary(_filename);

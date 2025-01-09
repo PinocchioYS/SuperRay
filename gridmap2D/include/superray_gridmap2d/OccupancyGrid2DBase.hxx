@@ -338,12 +338,12 @@ namespace gridmap2D {
 
 	template <class NODE>
 	bool OccupancyGrid2DBase<NODE>::getRayIntersection(const point2d& origin, const point2d& direction, const point2d& center,
-		point2d& intersection, double delta) const {
-		// We only need three normals for the six planes
+													   point2d& intersection, double delta) const {
+		// We only need two normals for the four edges
 		gridmap2D::point2d normalX(1, 0);
 		gridmap2D::point2d normalY(0, 1);
 
-		// One point on each plane, let them be the center for simplicity
+		// One point on each edge, let them be the center for simplicity
 		gridmap2D::point2d pointXNeg(center(0) - float(this->resolution / 2.0), center(1));
 		gridmap2D::point2d pointXPos(center(0) + float(this->resolution / 2.0), center(1));
 		gridmap2D::point2d pointYNeg(center(0), center(1) - float(this->resolution / 2.0));
@@ -359,7 +359,7 @@ namespace gridmap2D {
 		// Line dot normal will be zero if they are parallel, in which case no intersection can be the entry one
 		// if there is an intersection does it occur in the bounded plane of the voxel
 		// if yes keep only the closest (smallest distance to sensor origin).
-		if ((lineDotNormal = normalX.dot(direction))){
+		if ((lineDotNormal = normalX.dot(direction)) != 0.0){
 			d = (pointXNeg - origin).dot(normalX) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(1) < (pointYNeg(1) - 1e-6) || intersect(1) > (pointYPos(1) + 1e-6))){
@@ -375,7 +375,7 @@ namespace gridmap2D {
 			}
 		}
 
-		if ((lineDotNormal = normalY.dot(direction))){
+		if ((lineDotNormal = normalY.dot(direction)) != 0.0){
 			d = (pointYNeg - origin).dot(normalY) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(0) < (pointXNeg(0) - 1e-6) || intersect(0) > (pointXPos(0) + 1e-6))){
@@ -392,7 +392,7 @@ namespace gridmap2D {
 		}
 
 		// Substract (add) a fraction to ensure no ambiguity on the starting pixel
-		// Don't start on a bondary.
+		// Don't start on a boundary.
 		if (found)
 			intersection = direction * float(outD + delta) + origin;
 
@@ -434,7 +434,7 @@ namespace gridmap2D {
 	}
 
 	template <class NODE>
-	void OccupancyGrid2DBase<NODE>::setBBXMin(point2d& min) {
+	void OccupancyGrid2DBase<NODE>::setBBXMin(const point2d& min) {
 		bbx_min = min;
 		if (!this->coordToKeyChecked(bbx_min, bbx_min_key)) {
 			GRIDMAP2D_ERROR("ERROR while generating bbx min key.\n");
@@ -442,7 +442,7 @@ namespace gridmap2D {
 	}
 
 	template <class NODE>
-	void OccupancyGrid2DBase<NODE>::setBBXMax(point2d& max) {
+	void OccupancyGrid2DBase<NODE>::setBBXMax(const point2d& max) {
 		bbx_max = max;
 		if (!this->coordToKeyChecked(bbx_max, bbx_max_key)) {
 			GRIDMAP2D_ERROR("ERROR while generating bbx max key.\n");

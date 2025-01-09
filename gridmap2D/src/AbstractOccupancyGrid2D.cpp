@@ -32,8 +32,8 @@
  */
 
 
-#include <gridmap2D/AbstractOccupancyGrid2D.h>
-#include <gridmap2D/gridmap2D_types.h>
+#include <superray_gridmap2d/AbstractOccupancyGrid2D.h>
+#include <superray_gridmap2d/gridmap2D_types.h>
 
 namespace gridmap2D {
 	AbstractOccupancyGrid2D::AbstractOccupancyGrid2D(){

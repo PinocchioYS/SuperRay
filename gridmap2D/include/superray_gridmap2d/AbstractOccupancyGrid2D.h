@@ -50,7 +50,7 @@ namespace gridmap2D {
 	class AbstractOccupancyGrid2D : public AbstractGrid2D {
 	public:
 		AbstractOccupancyGrid2D();
-		virtual ~AbstractOccupancyGrid2D() {};
+		virtual ~AbstractOccupancyGrid2D() {}
 
 		//-- IO
 
@@ -213,7 +213,7 @@ namespace gridmap2D {
 		static const std::string binaryFileHeader;
 	};
 
-}; // end namespace
+} // end namespace
 
 
 #endif

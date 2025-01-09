@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-#include <gridmap2D/Grid2DNode.h>
+#include <superray_gridmap2d/Grid2DNode.h>
 
 namespace gridmap2D {
 

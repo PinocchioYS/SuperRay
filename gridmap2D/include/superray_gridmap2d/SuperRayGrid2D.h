@@ -30,8 +30,8 @@
 #ifndef GRIDMAP2D_SUPERRAY_GRID2D_H
 #define GRIDMAP2D_SUPERRAY_GRID2D_H
 
-#include <gridmap2D/gridmap2D.h>
-#include <gridmap2D_superray/SuperRayGenerator.h>
+#include "gridmap2D.h"
+#include "SuperRayGenerator.h"
 
 namespace gridmap2D{
 	class SuperRayGrid2D : public OccupancyGrid2DBase<Grid2DNode> {

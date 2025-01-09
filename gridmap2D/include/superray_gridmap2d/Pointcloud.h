@@ -36,7 +36,7 @@
 
 #include <vector>
 #include <list>
-#include <gridmap2D/gridmap2D_types.h>
+#include "gridmap2D_types.h"
 
 namespace gridmap2D {
 

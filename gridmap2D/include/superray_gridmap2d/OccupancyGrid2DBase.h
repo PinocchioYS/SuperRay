@@ -234,9 +234,9 @@ namespace gridmap2D {
 		void useBBXLimit(bool enable) { use_bbx_limit = enable; }
 		bool bbxSet() const { return use_bbx_limit; }
 		/// sets the minimum for a query bounding box to use
-		void setBBXMin(point2d& min);
+		void setBBXMin(const point2d& min);
 		/// sets the maximum for a query bounding box to use
-		void setBBXMax(point2d& max);
+		void setBBXMax(const point2d& max);
 		/// @return the currently set minimum for bounding box queries, if set
 		point2d getBBXMin() const { return bbx_min; }
 		/// @return the currently set maximum for bounding box queries, if set
@@ -318,6 +318,6 @@ namespace gridmap2D {
 
 } // namespace
 
-#include "gridmap2D/OccupancyGrid2DBase.hxx"
+#include "OccupancyGrid2DBase.hxx"
 
 #endif
