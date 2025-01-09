@@ -15,7 +15,7 @@
 #      - SUPERRAY_QUADMAP_LIBRARIES      : The list of libraries to links against.
 #      - SUPERRAY_QUADMAP_LIBRARY_DIRS   : The directory where lib files are. Calling
 #                                          LINK_DIRECTORIES with this path is NOT needed.
-#      - SUPERRAY_QUADMAP_INCLUDE_DIRS   : The QuadMap include directories.
+#      - SUPERRAY_QUADMAP_INCLUDE_DIRS   : The SuperRay-QuadMap include directories.
 #
 # ===================================================================================
 
@@ -28,5 +28,3 @@ SET(SUPERRAY_QUADMAP_LIBRARIES
   "@PACKAGE_SUPERRAY_QUADMAP_LIB_DIR@/@SUPERRAY_QUADMAP_LIBRARY@"
   "@PACKAGE_SUPERRAY_QUADMAP_LIB_DIR@/@SUPERRAY_QUADMATH_LIBRARY@"
 )
-
-@QUADMAP_INCLUDE_TARGETS@

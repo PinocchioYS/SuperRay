@@ -96,7 +96,8 @@ CONFIGURE_PACKAGE_CONFIG_FILE(
   superray-gridmap3d-config.cmake.in
   "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-gridmap3d/superray-gridmap3d-config.cmake"
   PATH_VARS SUPERRAY_GRIDMAP3D_INCLUDE_DIRS SUPERRAY_GRIDMAP3D_LIB_DIR
-  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-gridmap3d")
+  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-gridmap3d"
+)
 
 # Create a superray-gridmap3d-config.cmake file for the use from the install tree and install it
 SET(SUPERRAY_GRIDMAP3D_INCLUDE_DIRS "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
@@ -109,11 +110,13 @@ CONFIGURE_PACKAGE_CONFIG_FILE(
   superray-gridmap3d-config.cmake.in
   "${PROJECT_BINARY_DIR}/InstallFiles/superray-gridmap3d-config.cmake"
   PATH_VARS SUPERRAY_GRIDMAP3D_INCLUDE_DIRS SUPERRAY_GRIDMAP3D_LIB_DIR
-  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-gridmap3d")
+  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-gridmap3d"
+)
 
 INSTALL(FILES
   "${PROJECT_BINARY_DIR}/InstallFiles/superray-gridmap3d-config.cmake"
-  DESTINATION "${CMAKE_INSTALL_DATADIR}/superray-gridmap3d")
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/superray-gridmap3d"
+)
 
 # Finished:
 MESSAGE (STATUS "\n")

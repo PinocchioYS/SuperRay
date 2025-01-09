@@ -104,7 +104,8 @@ SET(SUPERRAY_GRIDMAP2D_INCLUDE_DIRS "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
 SET(SUPERRAY_GRIDMAP2D_LIB_DIR "${CMAKE_INSTALL_FULL_LIBDIR}")
 
 SET(SUPERRAY_GRIDMAP2D_INCLUDE_TARGETS
-  "include(\${CMAKE_CURRENT_LIST_DIR}/superray-gridmap2d-targets.cmake)")
+  "include(\${CMAKE_CURRENT_LIST_DIR}/superray-gridmap2d-targets.cmake)"
+)
 
 CONFIGURE_PACKAGE_CONFIG_FILE(
   superray-gridmap2d-config.cmake.in
@@ -115,7 +116,8 @@ CONFIGURE_PACKAGE_CONFIG_FILE(
 
 INSTALL(FILES
   "${PROJECT_BINARY_DIR}/InstallFiles/superray-gridmap2d-config.cmake"
-  DESTINATION "${CMAKE_INSTALL_DATADIR}/superray-gridmap2d")
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/superray-gridmap2d"
+)
 
 # Finished:
 MESSAGE (STATUS "\n")

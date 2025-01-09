@@ -34,7 +34,8 @@ IF(NOT EXISTS "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-gridmap3d")
 ENDIF()
 
 EXPORT(TARGETS superray-gridmap3d superray-gridmap3d-static
-  APPEND FILE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-gridmap3d/superray-gridmap3d-targets.cmake")
+  APPEND FILE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-gridmap3d/superray-gridmap3d-targets.cmake"
+)
 
 INSTALL(TARGETS 
   superray-gridmap3d
