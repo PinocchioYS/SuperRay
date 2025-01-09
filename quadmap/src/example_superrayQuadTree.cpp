@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
-	std::cout << "Reading Graph file===========================" << std::endl;;
+	std::cout << "Reading Graph file ===========================" << std::endl;
 	quadmap::ScanGraph* graph = new quadmap::ScanGraph();
 	if (!graph->readBinary(graphFilename)){
 		std::cout << "There is no graph file at " + graphFilename << std::endl;
@@ -80,26 +80,26 @@ int main(int argc, char** argv) {
 		(*scan_it)->pose = quadmap::pose3d(transformed_sensor_origin, 0);
 	}
 
-	std::cout << "\nCreating tree\n===========================\n";
+	std::cout << "Creating tree ================================" << std::endl;
 	quadmap::SuperRayQuadTree* tree = new quadmap::SuperRayQuadTree(res);
 
 	double time_to_update = 0.0;	// sec
 	size_t currentScan = 1;
 	for (quadmap::ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++) {
-		std::cout << "(" << currentScan << "/" << graph->size() << ") " << std::endl;
+		std::cout << "\r(" << currentScan << "/" << graph->size() << ")" << std::flush;
 
 		// Generate Super Ray
 		gettimeofday(&start, NULL);  // start timer
 		tree->insertSuperRayCloudRays((*scan_it)->scan, (*scan_it)->pose.trans(), threshold);
 		gettimeofday(&stop, NULL);  // stop timer
-		time_to_update += (stop.tv_sec - start.tv_sec) + 1.0e-6 * (stop.tv_usec - start.tv_usec);;
+		time_to_update += (stop.tv_sec - start.tv_sec) + 1.0e-6 * (stop.tv_usec - start.tv_usec);
 
 		currentScan++;
 	}
 
-	std::cout << "Done building tree." << std::endl;
+	std::cout << "\rDone building tree: (" << (currentScan - 1) << "/" << graph->size() << ")" << std::endl;
 	std::cout << "Time to insert scans: " << time_to_update << " [sec]" << std::endl;
-	std::cout << "Time to insert 100.000 points took: " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
+	std::cout << "Time to insert 100K points took: " << time_to_update / ((double)graph->getNumPoints() / 100000) << " [sec] (avg)" << std::endl << std::endl;
 
 	if(file_extension == ".bt2")
 		tree->writeBinary(treeFilename);

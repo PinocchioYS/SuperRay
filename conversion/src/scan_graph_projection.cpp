@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
     if (interval <= 0.0)
         printUsage(argv[0]);
 
-    std::cout << "Converting the scan graph file (3D --> 2D) ===========================" << std::endl;;
+    std::cout << "Converting the scan graph file (3D --> 2D) ===========================" << std::endl;
     octomap::ScanGraph* graph3d = new octomap::ScanGraph();
     quadmap::ScanGraph* graph2d = new quadmap::ScanGraph();
 
@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
     }
 
     // Convert the 3-D scan nodes into the 2-D nodes
-    std::cout << "Converting scan nodes" << std::endl;
+    std::cout << "Converting scan nodes ================================================" << std::endl;
     for (octomap::ScanGraph::iterator scan_it = graph3d->begin(); scan_it != graph3d->end(); scan_it++) {
         // Read a node of 3-D scan graph
         const octomap::pose6d frame_origin = (*scan_it)->pose;
@@ -81,21 +81,27 @@ int main(int argc, char** argv) {
         // Add the new node into the 2-D scan graph
         graph2d->addNode(scan_2d, frame_origin_2d);
 
-        std::cout << "(" << graph2d->size() << "/" << graph3d->size() << ") " << std::endl;
+        std::cout << "\r(" << graph2d->size() << "/" << graph3d->size() << ") " << std::flush;
     }
 
     // Generate edges of 2-D scan graph
     size_t graph3d_edge_size = std::distance(graph3d->edges_begin(), graph3d->edges_end());
-    std::cout << "Generating edges of 2-D scan graph" << std::endl;
+    std::cout << "\rGenerating edges of 2D scan graph ====================================" << std::endl;
     for(octomap::ScanGraph::edge_iterator edge_it = graph3d->edges_begin(); edge_it != graph3d->edges_end(); edge_it++) {
         graph2d->addEdge((*edge_it)->first->id, (*edge_it)->second->id);
-        std::cout << "(" << graph2d->edge_size() << " / " << graph3d_edge_size << ")" << std::endl;
+        std::cout << "\r(" << graph2d->edge_size() << " / " << graph3d_edge_size << ")" << std::flush;
     }
 
     graph2d->writeBinary(graph2DFilename);
 
+    std::cout << "\rDone converting." << std::endl;
+	std::cout << "Input graph file : " << graph3DFilename << std::endl;
+	std::cout << "Output graph file: " << graph2DFilename << std::endl;
+
     delete graph3d;
     delete graph2d;
+
+
 
     return 0;
 }

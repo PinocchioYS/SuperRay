@@ -96,7 +96,8 @@ CONFIGURE_PACKAGE_CONFIG_FILE(
   superray-quadmap-config.cmake.in
   "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-quadmap/superray-quadmap-config.cmake"
   PATH_VARS SUPERRAY_QUADMAP_INCLUDE_DIRS SUPERRAY_QUADMAP_LIB_DIR
-  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-quadmap")
+  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-quadmap"
+)
 
 # Create a superray-quadmap-config.cmake file for the use from the install tree and install it
 SET(SUPERRAY_QUADMAP_INCLUDE_DIRS "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
@@ -109,11 +110,13 @@ CONFIGURE_PACKAGE_CONFIG_FILE(
   superray-quadmap-config.cmake.in
   "${PROJECT_BINARY_DIR}/InstallFiles/superray-quadmap-config.cmake"
   PATH_VARS SUPERRAY_QUADMAP_INCLUDE_DIRS SUPERRAY_QUADMAP_LIB_DIR
-  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-quadmap")
+  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-quadmap"
+)
 
 INSTALL(FILES
   "${PROJECT_BINARY_DIR}/InstallFiles/superray-quadmap-config.cmake"
-  DESTINATION "${CMAKE_INSTALL_DATADIR}/superray-quadmap")
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/superray-quadmap"
+)
 
 # Finished:
 MESSAGE (STATUS "\n")
