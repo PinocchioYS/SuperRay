@@ -434,7 +434,7 @@ namespace gridmap3D {
 
 	template <class NODE>
 	bool OccupancyGrid3DBase<NODE>::getRayIntersection(const point3d& origin, const point3d& direction, const point3d& center,
-		point3d& intersection, double delta) const {
+													   point3d& intersection, double delta) const {
 		// We only need three normals for the six planes
 		gridmap3D::point3d normalX(1, 0, 0);
 		gridmap3D::point3d normalY(0, 1, 0);
@@ -458,7 +458,7 @@ namespace gridmap3D {
 		// Line dot normal will be zero if they are parallel, in which case no intersection can be the entry one
 		// if there is an intersection does it occur in the bounded plane of the voxel
 		// if yes keep only the closest (smallest distance to sensor origin).
-		if ((lineDotNormal = normalX.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
+		if ((lineDotNormal = normalX.dot(direction)) != 0.0){   // Ensure lineDotNormal is non-zero (assign and test)
 			d = (pointXNeg - origin).dot(normalX) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(1) < (pointYNeg(1) - 1e-6) || intersect(1) > (pointYPos(1) + 1e-6) ||
@@ -476,7 +476,7 @@ namespace gridmap3D {
 			}
 		}
 
-		if ((lineDotNormal = normalY.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
+		if ((lineDotNormal = normalY.dot(direction)) != 0.0){   // Ensure lineDotNormal is non-zero (assign and test)
 			d = (pointYNeg - origin).dot(normalY) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(0) < (pointXNeg(0) - 1e-6) || intersect(0) > (pointXPos(0) + 1e-6) ||
@@ -494,7 +494,7 @@ namespace gridmap3D {
 			}
 		}
 
-		if ((lineDotNormal = normalZ.dot(direction))){   // Ensure lineDotNormal is non-zero (assign and test)
+		if ((lineDotNormal = normalZ.dot(direction)) != 0.0){   // Ensure lineDotNormal is non-zero (assign and test)
 			d = (pointZNeg - origin).dot(normalZ) / lineDotNormal;
 			intersect = direction * float(d) + origin;
 			if (!(intersect(0) < (pointXNeg(0) - 1e-6) || intersect(0) > (pointXPos(0) + 1e-6) ||
@@ -513,7 +513,7 @@ namespace gridmap3D {
 		}
 
 		// Substract (add) a fraction to ensure no ambiguity on the starting voxel
-		// Don't start on a bondary.
+		// Don't start on a boundary.
 		if (found)
 			intersection = direction * float(outD + delta) + origin;
 
@@ -555,7 +555,7 @@ namespace gridmap3D {
 	}
 
 	template <class NODE>
-	void OccupancyGrid3DBase<NODE>::setBBXMin(point3d& min) {
+	void OccupancyGrid3DBase<NODE>::setBBXMin(const point3d& min) {
 		bbx_min = min;
 		if (!this->coordToKeyChecked(bbx_min, bbx_min_key)) {
 			GRIDMAP3D_ERROR("ERROR while generating bbx min key.\n");
@@ -563,7 +563,7 @@ namespace gridmap3D {
 	}
 
 	template <class NODE>
-	void OccupancyGrid3DBase<NODE>::setBBXMax(point3d& max) {
+	void OccupancyGrid3DBase<NODE>::setBBXMax(const point3d& max) {
 		bbx_max = max;
 		if (!this->coordToKeyChecked(bbx_max, bbx_max_key)) {
 			GRIDMAP3D_ERROR("ERROR while generating bbx max key.\n");

@@ -1,34 +1,23 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.8)
-PROJECT( gridmap3D )
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
+PROJECT( superray-gridmap3d )
 
-ENABLE_TESTING()
-
-# version (e.g. for packaging)
-set(GRIDMAP3D_MAJOR_VERSION 1)
-set(GRIDMAP3D_MINOR_VERSION 0)
-set(GRIDMAP3D_PATCH_VERSION 0)
-set(GRIDMAP3D_VERSION ${GRIDMAP3D_MAJOR_VERSION}.${GRIDMAP3D_MINOR_VERSION}.${GRIDMAP3D_PATCH_VERSION})
-set(GRIDMAP3D_SOVERSION ${GRIDMAP3D_MAJOR_VERSION}.${GRIDMAP3D_MINOR_VERSION})
-if(COMMAND cmake_policy)
-  cmake_policy(SET CMP0003 NEW)
-endif(COMMAND cmake_policy)
-
-SET (CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
+INCLUDE(GNUInstallDirs)
 
 # COMPILER SETTINGS (default: Release) and flags
+SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules")
 INCLUDE(CompilerSettings)
 
-# GRIDMAP3D_OMP = enable OpenMP parallelization (experimental, defaults to OFF)
-SET(GRIDMAP3D_OMP FALSE CACHE BOOL "Enable/disable OpenMP parallelization")
-IF(DEFINED ENV{GRIDMAP3D_OMP})
-  SET(GRIDMAP3D_OMP $ENV{GRIDMAP3D_OMP})
-ENDIF(DEFINED ENV{GRIDMAP3D_OMP})
-IF(GRIDMAP3D_OMP)
-  FIND_PACKAGE( OpenMP REQUIRED)
+# SUPERRAY_GRIDMAP3D_OMP = enable OpenMP parallelization (experimental, defaults to OFF)
+SET(SUPERRAY_GRIDMAP3D_OMP FALSE CACHE BOOL "Enable/disable OpenMP parallelization")
+IF(DEFINED ENV{SUPERRAY_GRIDMAP3D_OMP})
+  SET(SUPERRAY_GRIDMAP3D_OMP $ENV{SUPERRAY_GRIDMAP3D_OMP})
+ENDIF(DEFINED ENV{SUPERRAY_GRIDMAP3D_OMP})
+IF(SUPERRAY_GRIDMAP3D_OMP)
+  FIND_PACKAGE(OpenMP REQUIRED)
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
   SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-ENDIF(GRIDMAP3D_OMP)
+ENDIF(SUPERRAY_GRIDMAP3D_OMP)
 
 # Set output directories for libraries and executables
 SET( BASE_DIR ${CMAKE_SOURCE_DIR} )
@@ -36,121 +25,98 @@ SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${BASE_DIR}/lib )
 SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${BASE_DIR}/lib )
 SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BASE_DIR}/bin )
 # output dirs for multi-config builds (MSVC)
-foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+FOREACH( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
   STRING( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
   SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${BASE_DIR}/lib )
   SET( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${BASE_DIR}/lib )
   SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${BASE_DIR}/bin )
-endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
+ENDFOREACH( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
-set(INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include")
+SET(INCLUDE_DIRS "${PROJECT_SOURCE_DIR}/include")
 INCLUDE_DIRECTORIES(${INCLUDE_DIRS})
 
 LINK_DIRECTORIES(${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 # Installation
 
-set(INSTALL_TARGETS_DEFAULT_ARGS
-	RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib/superray
-    ARCHIVE DESTINATION lib/superray
+SET(INSTALL_TARGETS_DEFAULT_ARGS
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
 
 ADD_SUBDIRECTORY( src/math )
 ADD_SUBDIRECTORY( src )
 
-file(GLOB gridmap3D_HDRS ${PROJECT_SOURCE_DIR}/include/gridmap3D/*.h ${PROJECT_SOURCE_DIR}/include/gridmap3D/*.hxx)
-install(FILES ${gridmap3D_HDRS}	DESTINATION include/superray/gridmap3D)
-file(GLOB gridmap3D_math_HDRS ${PROJECT_SOURCE_DIR}/include/gridmap3D/math/*.h)
-install(FILES ${gridmap3D_math_HDRS}	DESTINATION include/superray/gridmap3D/math)
-file(GLOB gridmap3D_superray_HDRS ${PROJECT_SOURCE_DIR}/include/gridmap3D_superray/*.h)
-install(FILES ${gridmap3D_superray_HDRS}	DESTINATION include/superray/gridmap3D_superray)
-file(GLOB gridmap3D_cullingregion_HDRS ${PROJECT_SOURCE_DIR}/include/gridmap3D_cullingregion/*.h)
-install(FILES ${gridmap3D_cullingregion_HDRS}	DESTINATION include/superray/gridmap3D_cullingregion)
+FILE(GLOB SUPERRAY_GRIDMAP3D_HEADERS ${PROJECT_SOURCE_DIR}/include/superray_gridmap3d/*.h ${PROJECT_SOURCE_DIR}/include/superray_gridmap3d/*.hxx)
+INSTALL(FILES ${SUPERRAY_GRIDMAP3D_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/superray_gridmap3d")
+FILE(GLOB SUPERRAY_GRIDMATH3D_HEADERS ${PROJECT_SOURCE_DIR}/include/superray_gridmap3d/math/*.h)
+INSTALL(FILES ${SUPERRAY_GRIDMATH3D_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/superray_gridmap3d/math")
 
-# Install catkin package.xml
-install(FILES package.xml DESTINATION share/superray_gridmap3d)
+# Install package.xml (catkin/ament/rosdep)
+INSTALL(FILES package.xml DESTINATION "${CMAKE_INSTALL_DATADIR}/superray-gridmap3d")
+
+# Allows Colcon to find non-Ament packages when using workspace underlays
+FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/${PROJECT_NAME} "")
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/share/ament_index/resource_index/packages/${PROJECT_NAME} DESTINATION share/ament_index/resource_index/packages)
 
 # uninstall target
-#configure_file(
-#    "${PROJECT_SOURCE_DIR}/CMakeModules/CMakeUninstall.cmake.in"
-#    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-#    IMMEDIATE @ONLY)
+IF(NOT TARGET uninstall)
+  CONFIGURE_FILE(
+    "${PROJECT_SOURCE_DIR}/CMakeModules/CMakeUninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY
+  )
 
-#add_custom_target(uninstall
-#    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
-
-# Export the package for use from the build-tree
-# (this registers the build-tree with a global CMake-registry)
-export(PACKAGE superray_gridmap3d)
- 
-# Create a superray_gridmap3d-config.cmake file for the use from the build tree
-set(GRIDMAP3D_INCLUDE_DIRS "${INCLUDE_DIRS}")
-set(GRIDMAP3D_LIB_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
-# Set library names as absolute paths
-# Windows, spec. MSVC requires the .lib suffix for imported libs
-IF(WIN32)
-  set(GRIDMAP3D_LIBRARY
-    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmap3D${CMAKE_IMPORT_LIBRARY_SUFFIX}"
-  )
-  set(GRIDMATH3D_LIBRARY
-    "${CMAKE_IMPORT_LIBRARY_PREFIX}gridmath3D${CMAKE_IMPORT_LIBRARY_SUFFIX}"
-  )
-ELSE()
-  set(GRIDMAP3D_LIBRARY
-    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmap3D${CMAKE_SHARED_LIBRARY_SUFFIX}"
-  )
-  set(GRIDMATH3D_LIBRARY
-    "${CMAKE_SHARED_LIBRARY_PREFIX}gridmath3D${CMAKE_SHARED_LIBRARY_SUFFIX}"
+  ADD_CUSTOM_TARGET(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake
   )
 ENDIF()
 
-include(CMakePackageConfigHelpers)
+# Export the package for use from the build-tree
+# (this registers the build-tree with a global CMake-registry)
+EXPORT(PACKAGE superray-gridmap3d)
+ 
+# Create a superray-gridmap3d-config.cmake file for the use from the build tree
+SET(SUPERRAY_GRIDMAP3D_INCLUDE_DIRS "${INCLUDE_DIRS}")
+SET(SUPERRAY_GRIDMAP3D_LIB_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+# Set library names as absolute paths
+# Windows, spec. MSVC requires the .lib suffix for imported libs
+IF(WIN32)
+  SET(SUPERRAY_GRIDMAP3D_LIBRARY "${CMAKE_IMPORT_LIBRARY_PREFIX}superray-gridmap3d${CMAKE_IMPORT_LIBRARY_SUFFIX}")
+  SET(SUPERRAY_GRIDMATH3D_LIBRARY "${CMAKE_IMPORT_LIBRARY_PREFIX}superray-gridmath3d${CMAKE_IMPORT_LIBRARY_SUFFIX}")
+ELSE()
+  SET(SUPERRAY_GRIDMAP3D_LIBRARY "${CMAKE_SHARED_LIBRARY_PREFIX}superray-gridmap3d${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  SET(SUPERRAY_GRIDMATH3D_LIBRARY "${CMAKE_SHARED_LIBRARY_PREFIX}superray-gridmath3d${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ENDIF()
+
+INCLUDE(CMakePackageConfigHelpers)
 
 CONFIGURE_PACKAGE_CONFIG_FILE(
-  gridmap3D-config.cmake.in
-  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap3D/gridmap3d-config.cmake"
-  PATH_VARS GRIDMAP3D_INCLUDE_DIRS GRIDMAP3D_LIB_DIR
-  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/gridmap3D)
+  superray-gridmap3d-config.cmake.in
+  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/superray-gridmap3d/superray-gridmap3d-config.cmake"
+  PATH_VARS SUPERRAY_GRIDMAP3D_INCLUDE_DIRS SUPERRAY_GRIDMAP3D_LIB_DIR
+  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-gridmap3d")
 
-WRITE_BASIC_PACKAGE_VERSION_FILE(
-  "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cmake/gridmap3D/gridmap3d-config-version.cmake"
-  VERSION ${GRIDMAP3D_VERSION}
-  COMPATIBILITY AnyNewerVersion)
+# Create a superray-gridmap3d-config.cmake file for the use from the install tree and install it
+SET(SUPERRAY_GRIDMAP3D_INCLUDE_DIRS "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+SET(SUPERRAY_GRIDMAP3D_LIB_DIR "${CMAKE_INSTALL_FULL_LIBDIR}")
 
-# Create a gridmap3D-config.cmake file for the use from the install tree
-# and install it
-set(GRIDMAP3D_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include/superray")
-set(GRIDMAP3D_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib/superray")
+SET(SUPERRAY_GRIDMAP3D_INCLUDE_TARGETS
+  "include(\${CMAKE_CURRENT_LIST_DIR}/superray-gridmap3d-targets.cmake)")
 
-CONFIGURE_PACKAGE_CONFIG_FILE( gridmap3D-config.cmake.in
-  "${PROJECT_BINARY_DIR}/InstallFiles/superray_gridmap3d-config.cmake"
-  PATH_VARS GRIDMAP3D_INCLUDE_DIRS GRIDMAP3D_LIB_DIR
-  INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/share/superray_gridmap3d)
+CONFIGURE_PACKAGE_CONFIG_FILE(
+  superray-gridmap3d-config.cmake.in
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray-gridmap3d-config.cmake"
+  PATH_VARS SUPERRAY_GRIDMAP3D_INCLUDE_DIRS SUPERRAY_GRIDMAP3D_LIB_DIR
+  INSTALL_DESTINATION "${CMAKE_INSTALL_FULL_DATADIR}/superray-gridmap3d")
 
-WRITE_BASIC_PACKAGE_VERSION_FILE(
-  ${PROJECT_BINARY_DIR}/InstallFiles/superray_gridmap3d-config-version.cmake
-  VERSION ${GRIDMAP3D_VERSION}
-  COMPATIBILITY AnyNewerVersion)
-
-install(FILES
-  "${PROJECT_BINARY_DIR}/InstallFiles/superray_gridmap3d-config.cmake"
-  "${PROJECT_BINARY_DIR}/InstallFiles/superray_gridmap3d-config-version.cmake"
-  DESTINATION share/superray_gridmap3d/)
-
-# Write pkgconfig-file:
-include(InstallPkgConfigFile)
-install_pkg_config_file(gridmap3D
-    CFLAGS
-    LIBS -lgridmap3D -lgridmath3D
-    REQUIRES
-    VERSION ${GRIDMAP3D_VERSION})
-
-# Needs to be last statement:
-INCLUDE(CPackSettings)
+INSTALL(FILES
+  "${PROJECT_BINARY_DIR}/InstallFiles/superray-gridmap3d-config.cmake"
+  DESTINATION "${CMAKE_INSTALL_DATADIR}/superray-gridmap3d")
 
 # Finished:
-MESSAGE ("\n")
-MESSAGE (STATUS "Compile gridmap3D using: make")
-MESSAGE (STATUS "Install gridmap3D using: make install")
+MESSAGE (STATUS "\n")
+MESSAGE (STATUS "Compile superray-gridmap3d using: make")
+MESSAGE (STATUS "Install superray-gridmap3d using: make install")
 MESSAGE (STATUS "    (be sure to set the correct CMAKE_INSTALL_PREFIX before)")

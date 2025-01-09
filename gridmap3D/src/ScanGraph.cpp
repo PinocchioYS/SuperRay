@@ -36,8 +36,8 @@
 #include <sstream>
 #include <stdlib.h>
 
-#include <gridmap3D/math/Pose6D.h>
-#include <gridmap3D/ScanGraph.h>
+#include <superray_gridmap3d/math/Pose6D.h>
+#include <superray_gridmap3d/ScanGraph.h>
 
 namespace gridmap3D {
 

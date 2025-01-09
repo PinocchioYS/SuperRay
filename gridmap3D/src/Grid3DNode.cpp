@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 
-#include <gridmap3D/Grid3DNode.h>
+#include <superray_gridmap3d/Grid3DNode.h>
 
 namespace gridmap3D {
 

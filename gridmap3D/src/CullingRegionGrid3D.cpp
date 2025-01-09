@@ -27,7 +27,7 @@
 *
 */
 
-#include <gridmap3D_cullingregion/CullingRegionGrid3D.h>
+#include <superray_gridmap3d/CullingRegionGrid3D.h>
 
 namespace gridmap3D{
     CullingRegionGrid3D::CullingRegionGrid3D(double in_resolution)

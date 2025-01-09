@@ -31,70 +31,76 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef GRIDMAP3D_GRID3D_H
-#define GRIDMAP3D_GRID3D_H
+#ifndef GRIDMAP3D_GRID3D_DATA_NODE_H
+#define GRIDMAP3D_GRID3D_DATA_NODE_H
 
-#include "OccupancyGrid3DBase.h"
-#include "Grid3DNode.h"
-#include "ScanGraph.h"
+#include "gridmap3D_types.h"
+#include "assert.h"
 
 namespace gridmap3D {
 
+	class AbstractGrid3DNode {
+
+
+	};
+
+	// forward declaration for friend in Grid3DDataNode
+	template<typename NODE, typename I> class Grid3DBaseImpl;
+
 	/**
-	 * gridmap3D main map data structure, stores 3D occupancy grid map.
-	 * Basic functionality is implemented in Grid3DBase.
-	 *
+	 * Basic node in the Grid3D that can hold arbitrary data of type T in value.
+	 * This is the base class for nodes used in a Grid3D. The used implementation
+	 * for occupancy mapping is in Grid3DNode.#
+	 * \tparam T data to be stored in the node (e.g. a float for probabilities)
 	 */
-	class Grid3D : public OccupancyGrid3DBase <Grid3DNode> {
+	template<typename T> class Grid3DDataNode : public AbstractGrid3DNode {
+		template<typename NODE, typename I>
+		friend class Grid3DBaseImpl;
 
 	public:
-		/// Default constructor, sets resolution of leafs
-		Grid3D(double resolution);
 
-		/**
-         * Reads a Grid3D from a binary file
-         * @param _filename
-         *
-         */
-		Grid3D(std::string _filename);
+		Grid3DDataNode();
+		Grid3DDataNode(T initVal);
 
-		virtual ~Grid3D(){};
+		/// Copy constructor
+		Grid3DDataNode(const Grid3DDataNode& rhs);
 
-		/// virtual constructor: creates a new object of same type
-		/// (Covariant return type requires an up-to-date compiler)
-		Grid3D* create() const { return new Grid3D(resolution); }
+		/// Delete only own members. 
+		~Grid3DDataNode();
 
-		std::string getGridType() const { return "Grid3D"; }
+		/// Copy the payload (data in "value") from rhs into this node
+		void copyData(const Grid3DDataNode& from);
+
+		/// Equals operator, compares if the stored value is identical
+		bool operator==(const Grid3DDataNode& rhs) const;
+
+		/// @return value stored in the node
+		T getValue() const{ return value; }
+		/// sets value to be stored in the node
+		void setValue(T v) { value = v; }
+
+		// file IO:
+
+		/// Read node payload (data only) from binary stream
+		std::istream& readData(std::istream &s);
+
+		/// Write node payload (data only) to binary stream
+		std::ostream& writeData(std::ostream &s) const;
+
+
+		/// Make the templated data type available from the outside
+		typedef T DataType;
 
 
 	protected:
-		/**
-		 * Static member object which ensures that this Grid3D's prototype
-		 * ends up in the classIDMapping only once. You need this as a
-		 * static member in any derived grid3D class in order to read .og3
-		 * files through the AbstractGrid3D factory. You should also call
-		 * ensureLinking() once from the constructor.
-		 */
-		class StaticMemberInitializer{
-		public:
-			StaticMemberInitializer() {
-				Grid3D* grid = new Grid3D(0.1);
-				grid->clearKeyRays();
-				AbstractGrid3D::registerGridType(grid);
-			}
+		/// stored data (payload)
+		T value;
 
-			/**
-			 * Dummy function to ensure that MSVC does not drop the
-			 * StaticMemberInitializer, causing this grid failing to register.
-			 * Needs to be called from the constructor of this grid3D.
-			 */
-			void ensureLinking() {};
-		};
-
-		/// to ensure static initialization (only once)
-		static StaticMemberInitializer grid3DMemberInit;
 	};
 
+
 } // end namespace
+
+#include "Grid3DDataNode.hxx"
 
 #endif

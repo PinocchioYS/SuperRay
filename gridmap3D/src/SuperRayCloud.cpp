@@ -30,7 +30,7 @@
 #include <algorithm>
 #include <fstream>
 
-#include <gridmap3D_superray/SuperRayCloud.h>
+#include <superray_gridmap3d/SuperRayCloud.h>
 
 namespace gridmap3D{
 	SuperRayCloud::SuperRayCloud() {

@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <gridmap3D/math/Pose6D.h>
+#include <superray_gridmap3d/math/Pose6D.h>
 #include <math.h>
 
 namespace gridmath3D {
@@ -39,17 +39,19 @@ namespace gridmath3D {
 	Pose6D::Pose6D() {
 	}
 
-
 	Pose6D::Pose6D(const Vector3 &trans, const Quaternion &rot) :
 		translation(trans),
 		rotation(rot)
 	{ }
 
-
-
 	Pose6D::Pose6D(float x, float y, float z, double roll, double pitch, double yaw) :
 		translation(x, y, z),
 		rotation(roll, pitch, yaw)
+	{ }
+
+	Pose6D::Pose6D(const Pose6D& other) :
+		translation(other.trans()),
+		rotation(other.rot())
 	{ }
 
 	Pose6D::~Pose6D() {
@@ -61,7 +63,6 @@ namespace gridmath3D {
 		return *this;
 	}
 
-
 	Pose6D Pose6D::inv() const {
 		Pose6D result(*this);
 		result.rot() = rot().inv().normalized();
@@ -69,13 +70,11 @@ namespace gridmath3D {
 		return result;
 	}
 
-
 	Pose6D& Pose6D::inv_IP() {
 		rot() = rot().inv().normalized();
 		trans() = rot().rotate(-trans());
 		return *this;
 	}
-
 
 	Vector3 Pose6D::transform(const Vector3 &v) const {
 		Vector3 res = this->rot().rotate(v);
@@ -106,7 +105,6 @@ namespace gridmath3D {
 		return sqrt(x()*x() + y()*y() + z()*z());
 	}
 
-
 	bool Pose6D::operator==(const Pose6D& other) const {
 		return translation == other.translation
 			&& rotation == other.rotation;
@@ -122,7 +120,6 @@ namespace gridmath3D {
 		return s;
 	}
 
-
 	std::ostream& Pose6D::write(std::ostream &s) const {
 		translation.write(s);
 		s << " ";
@@ -130,13 +127,11 @@ namespace gridmath3D {
 		return s;
 	}
 
-
 	std::istream& Pose6D::readBinary(std::istream &s) {
 		translation.readBinary(s);
 		rotation.readBinary(s);
 		return s;
 	}
-
 
 	std::ostream& Pose6D::writeBinary(std::ostream &s) const {
 		translation.writeBinary(s);

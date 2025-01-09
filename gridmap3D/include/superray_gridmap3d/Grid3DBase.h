@@ -49,7 +49,7 @@ namespace gridmap3D {
 		std::string getGridType() const { return "Grid3DBase"; }
 	};
 
-};
+}
 
 
 #endif

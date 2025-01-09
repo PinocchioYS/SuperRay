@@ -31,9 +31,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <gridmap3D/math/Vector3.h>
-#include <gridmap3D/math/Quaternion.h>
-#include <gridmap3D/math/Utils.h>
+#include <superray_gridmap3d/math/Vector3.h>
+#include <superray_gridmap3d/math/Quaternion.h>
+#include <superray_gridmap3d/math/Utils.h>
 
 #include <cassert>
 #include <math.h>

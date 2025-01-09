@@ -30,8 +30,8 @@
 #ifndef GRIDMAP3D_SUPERRAY_GRID3D_H
 #define GRIDMAP3D_SUPERRAY_GRID3D_H
 
-#include <gridmap3D/gridmap3D.h>
-#include <gridmap3D_superray/SuperRayGenerator.h>
+#include "gridmap3D.h"
+#include "SuperRayGenerator.h"
 
 namespace gridmap3D{
 	class SuperRayGrid3D : public OccupancyGrid3DBase<Grid3DNode> {

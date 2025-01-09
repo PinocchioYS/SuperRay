@@ -243,6 +243,17 @@ namespace gridmath3D {
 			data[2] *= x;
 		}
 
+		inline bool operator< (const Vector3 &other) const {
+			for (unsigned int i = 0; i < 3; i++){
+				if (operator()(i) < other(i))
+					return true;
+				else if (operator()(i) == other(i))
+					continue;
+				else
+					return false;
+			}
+		}
+
 		inline bool operator== (const Vector3 &other) const {
 			for (unsigned int i = 0; i < 3; i++) {
 				if (operator()(i) != other(i))

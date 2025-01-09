@@ -32,8 +32,8 @@
  */
 
 
-#include <gridmap3D/AbstractGrid3D.h>
-#include <gridmap3D/Grid3D.h>
+#include <superray_gridmap3d/AbstractGrid3D.h>
+#include <superray_gridmap3d/Grid3D.h>
 
 
 namespace gridmap3D {

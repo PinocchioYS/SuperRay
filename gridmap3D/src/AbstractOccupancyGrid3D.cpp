@@ -32,8 +32,8 @@
  */
 
 
-#include <gridmap3D/AbstractOccupancyGrid3D.h>
-#include <gridmap3D/gridmap3D_types.h>
+#include <superray_gridmap3d/AbstractOccupancyGrid3D.h>
+#include <superray_gridmap3d/gridmap3D_types.h>
 
 namespace gridmap3D {
 	AbstractOccupancyGrid3D::AbstractOccupancyGrid3D(){

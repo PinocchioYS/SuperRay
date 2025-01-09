@@ -27,7 +27,7 @@
 *
 */
 
-#include <gridmap3D_superray/SuperRayGrid3D.h>
+#include <superray_gridmap3d/SuperRayGrid3D.h>
 
 namespace gridmap3D{
 	SuperRayGrid3D::SuperRayGrid3D(double in_resolution)

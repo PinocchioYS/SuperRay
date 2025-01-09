@@ -128,7 +128,16 @@ namespace gridmap3D {
 		for (; it != end; ++it, ++other_it){
 			if (other_it == other_end)
 				return false;
+
+			if (it->first != other_it->first
+				|| !(*(it->second) == *(other_it->second)))
+			{
+				return false;
+			}
 		}
+
+		if(other_it != other_end)
+			return false;
 
 		return true;
 	}*/
@@ -598,7 +607,7 @@ namespace gridmap3D {
       float step_size = this->resolution * pow(2, tree_depth-depth);
       for (int i=0;i<3;++i) {
         diff[i] = pmax_clamped(i) - pmin_clamped(i);
-        steps[i] = floor(diff[i] / step_size);
+        steps[i] = static_cast<unsigned int>(floor(diff[i] / step_size));
         //      std::cout << "bbx " << i << " size: " << diff[i] << " " << steps[i] << " steps\n";
       }
 

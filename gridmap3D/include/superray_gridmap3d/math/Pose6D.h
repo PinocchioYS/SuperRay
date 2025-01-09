@@ -68,7 +68,14 @@ namespace gridmath3D {
 		 */
 		Pose6D(float x, float y, float z, double roll, double pitch, double yaw);
 
+		/*!
+		 * \brief Constructor
+		 *
+		 * Constructs a pose from another pose
+		 */
+		Pose6D(const Pose6D& other);
 		Pose6D& operator= (const Pose6D& other);
+
 		bool operator==(const Pose6D& other) const;
 		bool operator!=(const Pose6D& other) const;
 

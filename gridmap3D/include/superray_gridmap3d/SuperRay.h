@@ -30,7 +30,7 @@
 #ifndef GRIDMAP3D_SUPERRAY_SUPERRAY_H
 #define GRIDMAP3D_SUPERRAY_SUPERRAY_H
 
-#include <gridmap3D/gridmap3D_types.h>
+#include "gridmap3D_types.h"
 
 namespace gridmap3D{
 	class SuperRay{

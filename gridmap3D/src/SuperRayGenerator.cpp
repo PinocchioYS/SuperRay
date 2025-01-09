@@ -27,7 +27,7 @@
  *
  */
 
-#include <gridmap3D_superray/SuperRayGenerator.h>
+#include <superray_gridmap3d/SuperRayGenerator.h>
 
 #include <algorithm>
 #include <cfloat>

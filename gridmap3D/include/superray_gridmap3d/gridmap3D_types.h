@@ -31,76 +31,50 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef GRIDMAP3D_GRID3D_DATA_NODE_H
-#define GRIDMAP3D_GRID3D_DATA_NODE_H
+#ifndef GRIDMAP3D_TYPES_H
+#define GRIDMAP3D_TYPES_H
 
-#include "gridmap3D_types.h"
-#include "assert.h"
+#include <stdio.h>
+#include <vector>
+#include <list>
+#include <inttypes.h>
+
+#include "math/Vector3.h"
+#include "math/Pose6D.h"
 
 namespace gridmap3D {
 
-	class AbstractGrid3DNode {
+	/// Use Vector3 (float precision) as a point3d in gridmap3D
+	typedef gridmath3D::Vector3               point3d;
+	/// Use our Pose6D (float precision) as pose3d in gridmap3D
+	typedef gridmath3D::Pose6D                pose6d;
 
+	typedef std::vector<gridmath3D::Vector3>  point3d_collection;
+	typedef std::list<gridmath3D::Vector3>    point3d_list;
 
-	};
+	/// A voxel defined by its center point3d and its side length
+	typedef std::pair<point3d, double>		  Grid3DVolume;
 
-	// forward declaration for friend in Grid3DDataNode
-	template<typename NODE, typename I> class Grid3DBaseImpl;
+}
 
-	/**
-	 * Basic node in the Grid3D that can hold arbitrary data of type T in value.
-	 * This is the base class for nodes used in a Grid3D. The used implementation
-	 * for occupancy mapping is in Grid3DNode.#
-	 * \tparam T data to be stored in the node (e.g. a float for probabilities)
-	 */
-	template<typename T> class Grid3DDataNode : public AbstractGrid3DNode {
-		template<typename NODE, typename I>
-		friend class Grid3DBaseImpl;
+// no debug output if not in debug mode:
+#ifdef NDEBUG
+#ifndef GRIDMAP3D_NODEBUGOUT
+#define GRIDMAP3D_NODEBUGOUT
+#endif
+#endif
 
-	public:
+#ifdef GRIDMAP3D_NODEBUGOUT
+#define GRIDMAP3D_DEBUG(...)       (void)0
+#define GRIDMAP3D_DEBUG_STR(...)   (void)0
+#else
+#define GRIDMAP3D_DEBUG(...)        fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP3D_DEBUG_STR(args)   std::cerr << args << std::endl
+#endif
 
-		Grid3DDataNode();
-		Grid3DDataNode(T initVal);
-
-		/// Copy constructor
-		Grid3DDataNode(const Grid3DDataNode& rhs);
-
-		/// Delete only own members. 
-		~Grid3DDataNode();
-
-		/// Copy the payload (data in "value") from rhs into this node
-		void copyData(const Grid3DDataNode& from);
-
-		/// Equals operator, compares if the stored value is identical
-		bool operator==(const Grid3DDataNode& rhs) const;
-
-		/// @return value stored in the node
-		T getValue() const{ return value; };
-		/// sets value to be stored in the node
-		void setValue(T v) { value = v; };
-
-		// file IO:
-
-		/// Read node payload (data only) from binary stream
-		std::istream& readData(std::istream &s);
-
-		/// Write node payload (data only) to binary stream
-		std::ostream& writeData(std::ostream &s) const;
-
-
-		/// Make the templated data type available from the outside
-		typedef T DataType;
-
-
-	protected:
-		/// stored data (payload)
-		T value;
-
-	};
-
-
-} // end namespace
-
-#include "gridmap3D/Grid3DDataNode.hxx"
+#define GRIDMAP3D_WARNING(...)      fprintf(stderr, "WARNING: "), fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP3D_WARNING_STR(args) std::cerr << "WARNING: " << args << std::endl
+#define GRIDMAP3D_ERROR(...)        fprintf(stderr, "ERROR: "), fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP3D_ERROR_STR(args)   std::cerr << "ERROR: " << args << std::endl
 
 #endif

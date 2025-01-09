@@ -31,13 +31,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <gridmap3D/gridmap3D.h>
+#include <superray_gridmap3d/gridmap3D.h>
 
 namespace gridmap3D {
 
 	Grid3D::Grid3D(double in_resolution) : OccupancyGrid3DBase<Grid3DNode>(in_resolution) {
 		grid3DMemberInit.ensureLinking();
-	};
+	}
 
 	Grid3D::Grid3D(std::string _filename) : OccupancyGrid3DBase<Grid3DNode>(0.1)  {
 		readBinary(_filename);

@@ -51,7 +51,7 @@ namespace gridmap3D {
 		friend class StaticMapInit;
 	public:
 		AbstractGrid3D();
-		virtual ~AbstractGrid3D() {};
+		virtual ~AbstractGrid3D() {}
 
 		/// virtual constructor: creates a new object of same type
 		virtual AbstractGrid3D* create() const = 0;

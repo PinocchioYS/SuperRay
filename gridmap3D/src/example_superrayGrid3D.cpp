@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstring>
 
-#include <gridmap3D/gridmap3D_timing.h>
-#include <gridmap3D_superray/SuperRayGrid3D.h>
+#include <superray_gridmap3d/gridmap3D_timing.h>
+#include <superray_gridmap3d/SuperRayGrid3D.h>
 
 void printUsage(char* self){
 	std::cout << "USAGE: " << self << " [options]" << std::endl << std::endl;

@@ -31,50 +31,70 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef GRIDMAP3D_TYPES_H
-#define GRIDMAP3D_TYPES_H
+#ifndef GRIDMAP3D_GRID3D_H
+#define GRIDMAP3D_GRID3D_H
 
-#include <stdio.h>
-#include <vector>
-#include <list>
-#include <inttypes.h>
-
-#include <gridmap3D/math/Vector3.h>
-#include <gridmap3D/math/Pose6D.h>
+#include "OccupancyGrid3DBase.h"
+#include "Grid3DNode.h"
+#include "ScanGraph.h"
 
 namespace gridmap3D {
 
-	/// Use Vector3 (float precision) as a point3d in gridmap3D
-	typedef gridmath3D::Vector3               point3d;
-	/// Use our Pose6D (float precision) as pose3d in gridmap3D
-	typedef gridmath3D::Pose6D                pose6d;
+	/**
+	 * gridmap3D main map data structure, stores 3D occupancy grid map.
+	 * Basic functionality is implemented in Grid3DBase.
+	 *
+	 */
+	class Grid3D : public OccupancyGrid3DBase <Grid3DNode> {
 
-	typedef std::vector<gridmath3D::Vector3>  point3d_collection;
-	typedef std::list<gridmath3D::Vector3>    point3d_list;
+	public:
+		/// Default constructor, sets resolution of leafs
+		Grid3D(double resolution);
 
-	/// A voxel defined by its center point3d and its side length
-	typedef std::pair<point3d, double>		  Grid3DVolume;
+		/**
+         * Reads a Grid3D from a binary file
+         * @param _filename
+         *
+         */
+		Grid3D(std::string _filename);
 
-}
+		virtual ~Grid3D(){}
 
-// no debug output if not in debug mode:
-#ifdef NDEBUG
-#ifndef GRIDMAP3D_NODEBUGOUT
-#define GRIDMAP3D_NODEBUGOUT
-#endif
-#endif
+		/// virtual constructor: creates a new object of same type
+		/// (Covariant return type requires an up-to-date compiler)
+		Grid3D* create() const { return new Grid3D(resolution); }
 
-#ifdef GRIDMAP3D_NODEBUGOUT
-#define GRIDMAP3D_DEBUG(...)       (void)0
-#define GRIDMAP3D_DEBUG_STR(...)   (void)0
-#else
-#define GRIDMAP3D_DEBUG(...)        fprintf(stderr, __VA_ARGS__), fflush(stderr)
-#define GRIDMAP3D_DEBUG_STR(args)   std::cerr << args << std::endl
-#endif
+		std::string getGridType() const { return "Grid3D"; }
 
-#define GRIDMAP3D_WARNING(...)      fprintf(stderr, "WARNING: "), fprintf(stderr, __VA_ARGS__), fflush(stderr)
-#define GRIDMAP3D_WARNING_STR(args) std::cerr << "WARNING: " << args << std::endl
-#define GRIDMAP3D_ERROR(...)        fprintf(stderr, "ERROR: "), fprintf(stderr, __VA_ARGS__), fflush(stderr)
-#define GRIDMAP3D_ERROR_STR(args)   std::cerr << "ERROR: " << args << std::endl
+
+	protected:
+		/**
+		 * Static member object which ensures that this Grid3D's prototype
+		 * ends up in the classIDMapping only once. You need this as a
+		 * static member in any derived grid3D class in order to read .og3
+		 * files through the AbstractGrid3D factory. You should also call
+		 * ensureLinking() once from the constructor.
+		 */
+		class StaticMemberInitializer{
+		public:
+			StaticMemberInitializer() {
+				Grid3D* grid = new Grid3D(0.1);
+				grid->clearKeyRays();
+				AbstractGrid3D::registerGridType(grid);
+			}
+
+			/**
+			 * Dummy function to ensure that MSVC does not drop the
+			 * StaticMemberInitializer, causing this grid failing to register.
+			 * Needs to be called from the constructor of this grid3D.
+			 */
+			void ensureLinking() {}
+		};
+
+		/// to ensure static initialization (only once)
+		static StaticMemberInitializer grid3DMemberInit;
+	};
+
+} // end namespace
 
 #endif

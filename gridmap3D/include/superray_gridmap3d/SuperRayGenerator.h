@@ -30,10 +30,10 @@
 #ifndef GRIDMAP3D_SUPERRAY_SUPERRAY_GENERATOR_H
 #define GRIDMAP3D_SUPERRAY_SUPERRAY_GENERATOR_H
 
-#include <gridmap3D/gridmap3D_types.h>
-#include <gridmap3D/Grid3DKey.h>
-#include <gridmap3D/Pointcloud.h>
-#include <gridmap3D_superray/SuperRayCloud.h>
+#include "gridmap3D_types.h"
+#include "Grid3DKey.h"
+#include "Pointcloud.h"
+#include "SuperRayCloud.h"
 
 #ifdef _OPENMP
 #include <omp.h>

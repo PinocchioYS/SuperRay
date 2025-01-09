@@ -237,9 +237,9 @@ namespace gridmap3D {
 		void useBBXLimit(bool enable) { use_bbx_limit = enable; }
 		bool bbxSet() const { return use_bbx_limit; }
 		/// sets the minimum for a query bounding box to use
-		void setBBXMin(point3d& min);
+		void setBBXMin(const point3d& min);
 		/// sets the maximum for a query bounding box to use
-		void setBBXMax(point3d& max);
+		void setBBXMax(const point3d& max);
 		/// @return the currently set minimum for bounding box queries, if set
 		point3d getBBXMin() const { return bbx_min; }
 		/// @return the currently set maximum for bounding box queries, if set
@@ -321,6 +321,6 @@ namespace gridmap3D {
 
 } // namespace
 
-#include "gridmap3D/OccupancyGrid3DBase.hxx"
+#include "OccupancyGrid3DBase.hxx"
 
 #endif

@@ -165,7 +165,7 @@ namespace gridmap3D {
 		virtual size_t memoryUsage() const;     // TODO: add the memory usage of hash table
 
 		/// \return Memory usage of a single grid3D node
-		virtual inline size_t memoryUsageNode() const { return sizeof(NODE); };
+		virtual inline size_t memoryUsageNode() const { return sizeof(NODE); }
 
 		double volume();
 
@@ -329,6 +329,6 @@ namespace gridmap3D {
 
 }
 
-#include <gridmap3D/Grid3DBaseImpl.hxx>
+#include "Grid3DBaseImpl.hxx"
 
 #endif
