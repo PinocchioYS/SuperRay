@@ -29,7 +29,7 @@
 
 #include <superray_gridmap3d/CullingRegionGrid3D.h>
 
-namespace gridmap3D{
+namespace gridmap3d {
     CullingRegionGrid3D::CullingRegionGrid3D(double in_resolution)
             : OccupancyGrid3DBase<Grid3DNode>(in_resolution) {
         cullingregionGrid3DMemberInit.ensureLinking();

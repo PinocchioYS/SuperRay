@@ -38,13 +38,13 @@
 #include <stdlib.h>
 #include <vector>
 
-#include "gridmap3D_types.h"
-#include "gridmap3D_utils.h"
+#include "gridmap3d_types.h"
+#include "gridmap3d_utils.h"
 #include "Grid3DBaseImpl.h"
 #include "AbstractOccupancyGrid3D.h"
 
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	/**
 	 * Base implementation for Occupancy Grid3Ds (e.g. for mapping).

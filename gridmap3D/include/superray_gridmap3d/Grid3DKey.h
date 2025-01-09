@@ -47,18 +47,18 @@
 #if defined(__GNUC__) && ! defined(_LIBCPP_VERSION)
 #include <tr1/unordered_set>
 #include <tr1/unordered_map>
-namespace gridmap3D {
+namespace gridmap3d {
 	namespace unordered_ns = std::tr1;
 }
 #else
 #include <unordered_set>
 #include <unordered_map>
-namespace gridmap3D {
+namespace gridmap3d {
 	namespace unordered_ns = std;
 }
 #endif
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	typedef uint16_t key_type;
 

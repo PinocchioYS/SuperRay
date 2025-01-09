@@ -35,13 +35,13 @@
 #define GRIDMAP3D_ABSTRACT_OCCUPANCY_GRID3D_H
 
 #include "AbstractGrid3D.h"
-#include "gridmap3D_utils.h"
+#include "gridmap3d_utils.h"
 #include "Grid3DNode.h"
 #include "Grid3DKey.h"
 #include <cassert>
 #include <fstream>
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	/**
 	 * Interface class for all grid types that store occupancy. This serves

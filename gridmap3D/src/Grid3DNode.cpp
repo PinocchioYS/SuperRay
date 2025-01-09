@@ -40,7 +40,7 @@
 
 #include <superray_gridmap3d/Grid3DNode.h>
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	Grid3DNode::Grid3DNode()
 		: Grid3DDataNode<float>(0.0)

@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	template <typename T>
 	Grid3DDataNode<T>::Grid3DDataNode()

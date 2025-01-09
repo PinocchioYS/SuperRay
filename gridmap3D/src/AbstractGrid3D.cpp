@@ -36,7 +36,7 @@
 #include <superray_gridmap3d/Grid3D.h>
 
 
-namespace gridmap3D {
+namespace gridmap3d {
 	AbstractGrid3D::AbstractGrid3D(){
 
 	}

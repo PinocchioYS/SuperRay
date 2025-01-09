@@ -30,10 +30,10 @@
 #ifndef GRIDMAP3D_SUPERRAY_GRID3D_H
 #define GRIDMAP3D_SUPERRAY_GRID3D_H
 
-#include "gridmap3D.h"
+#include "gridmap3d.h"
 #include "SuperRayGenerator.h"
 
-namespace gridmap3D{
+namespace gridmap3d {
 	class SuperRayGrid3D : public OccupancyGrid3DBase<Grid3DNode> {
 	public:
 		/// Default constructor, sets resolution of grid
@@ -58,7 +58,7 @@ namespace gridmap3D{
 
 		/**
 		 * Integrate a Pointcloud (in global reference frame), parallelized with OpenMP.
-		 * This function simply inserts all rays of the point clouds, similar to insertPointCloudRays of gridmap3D::Grid3D.
+		 * This function simply inserts all rays of the point clouds, similar to insertPointCloudRays of gridmap3d::Grid3D.
 		 * Occupied nodes have a preference over free ones.
 		 *
 		 * @param scan Pointcloud (measurement endpoints), in global reference frame

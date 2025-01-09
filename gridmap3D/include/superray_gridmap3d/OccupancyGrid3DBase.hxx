@@ -34,7 +34,7 @@
 #include <bitset>
 #include <algorithm>
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	template <class NODE>
 	OccupancyGrid3DBase<NODE>::OccupancyGrid3DBase(double in_resolution)
@@ -436,22 +436,22 @@ namespace gridmap3D {
 	bool OccupancyGrid3DBase<NODE>::getRayIntersection(const point3d& origin, const point3d& direction, const point3d& center,
 													   point3d& intersection, double delta) const {
 		// We only need three normals for the six planes
-		gridmap3D::point3d normalX(1, 0, 0);
-		gridmap3D::point3d normalY(0, 1, 0);
-		gridmap3D::point3d normalZ(0, 0, 1);
+		gridmap3d::point3d normalX(1, 0, 0);
+		gridmap3d::point3d normalY(0, 1, 0);
+		gridmap3d::point3d normalZ(0, 0, 1);
 
 		// One point on each plane, let them be the center for simplicity
-		gridmap3D::point3d pointXNeg(center(0) - float(this->resolution / 2.0), center(1), center(2));
-		gridmap3D::point3d pointXPos(center(0) + float(this->resolution / 2.0), center(1), center(2));
-		gridmap3D::point3d pointYNeg(center(0), center(1) - float(this->resolution / 2.0), center(2));
-		gridmap3D::point3d pointYPos(center(0), center(1) + float(this->resolution / 2.0), center(2));
-		gridmap3D::point3d pointZNeg(center(0), center(1), center(2) - float(this->resolution / 2.0));
-		gridmap3D::point3d pointZPos(center(0), center(1), center(2) + float(this->resolution / 2.0));
+		gridmap3d::point3d pointXNeg(center(0) - float(this->resolution / 2.0), center(1), center(2));
+		gridmap3d::point3d pointXPos(center(0) + float(this->resolution / 2.0), center(1), center(2));
+		gridmap3d::point3d pointYNeg(center(0), center(1) - float(this->resolution / 2.0), center(2));
+		gridmap3d::point3d pointYPos(center(0), center(1) + float(this->resolution / 2.0), center(2));
+		gridmap3d::point3d pointZNeg(center(0), center(1), center(2) - float(this->resolution / 2.0));
+		gridmap3d::point3d pointZPos(center(0), center(1), center(2) + float(this->resolution / 2.0));
 
 		double lineDotNormal = 0.0;
 		double d = 0.0;
 		double outD = std::numeric_limits<double>::max();
-		gridmap3D::point3d intersect;
+		gridmap3d::point3d intersect;
 		bool found = false;
 
 		// Find the intersection (if any) with each place
@@ -584,14 +584,14 @@ namespace gridmap3D {
 
 	template <class NODE>
 	point3d OccupancyGrid3DBase<NODE>::getBBXBounds() const {
-		gridmap3D::point3d obj_bounds = (bbx_max - bbx_min);
+		gridmap3d::point3d obj_bounds = (bbx_max - bbx_min);
 		obj_bounds /= 2.;
 		return obj_bounds;
 	}
 
 	template <class NODE>
 	point3d OccupancyGrid3DBase<NODE>::getBBXCenter() const {
-		gridmap3D::point3d obj_bounds = (bbx_max - bbx_min);
+		gridmap3d::point3d obj_bounds = (bbx_max - bbx_min);
 		obj_bounds /= 2.;
 		return bbx_min + obj_bounds;
 	}

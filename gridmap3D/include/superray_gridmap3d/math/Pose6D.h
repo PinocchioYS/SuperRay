@@ -37,7 +37,7 @@
 #include "Vector3.h"
 #include "Quaternion.h"
 
-namespace gridmath3D {
+namespace gridmath3d {
 
 	/*!
 	 * \brief This class represents a tree-dimensional pose of an object

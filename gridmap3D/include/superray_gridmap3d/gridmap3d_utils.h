@@ -36,7 +36,7 @@
 
 #include <math.h>
 
-namespace gridmap3D{
+namespace gridmap3d {
 
 	/// compute log-odds from probability:
 	inline float logodds(double probability){

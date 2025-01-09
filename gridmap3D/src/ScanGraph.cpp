@@ -39,7 +39,7 @@
 #include <superray_gridmap3d/math/Pose6D.h>
 #include <superray_gridmap3d/ScanGraph.h>
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 
 	ScanNode::~ScanNode(){
@@ -98,7 +98,7 @@ namespace gridmap3D {
 		// read rotation from euler angles
 		point3d rot;
 		rot.read(s);
-		this->pose.rot() = gridmath3D::Quaternion(rot);
+		this->pose.rot() = gridmath3d::Quaternion(rot);
 		return s;
 	}
 

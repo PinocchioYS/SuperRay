@@ -31,9 +31,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <superray_gridmap3d/gridmap3D.h>
+#include <superray_gridmap3d/gridmap3d.h>
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	Grid3D::Grid3D(double in_resolution) : OccupancyGrid3DBase<Grid3DNode>(in_resolution) {
 		grid3DMemberInit.ensureLinking();

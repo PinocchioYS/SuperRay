@@ -34,12 +34,12 @@
 #ifndef GRIDMAP3D_GRID3D_NODE_H
 #define GRIDMAP3D_GRID3D_NODE_H
 
-#include "gridmap3D_types.h"
-#include "gridmap3D_utils.h"
+#include "gridmap3d_types.h"
+#include "gridmap3d_utils.h"
 #include "Grid3DDataNode.h"
 #include <limits>
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	/**
 	 * Nodes to be used in Grid3D. They represent 3d occupancy grid cells.

@@ -30,17 +30,17 @@
 #ifndef GRIDMAP3D_SUPERRAY_SUPERRAY_GENERATOR_H
 #define GRIDMAP3D_SUPERRAY_SUPERRAY_GENERATOR_H
 
-#include "gridmap3D_types.h"
+#include "gridmap3d_types.h"
 #include "Grid3DKey.h"
 #include "Pointcloud.h"
 #include "SuperRayCloud.h"
 
 #ifdef _OPENMP
 #include <omp.h>
-#pragma omp declare reduction (merge : std::vector<gridmap3D::SuperRay> : omp_out.insert(omp_out.end(), omp_in.begin(), omp_in.end()))
+#pragma omp declare reduction (merge : std::vector<gridmap3d::SuperRay> : omp_out.insert(omp_out.end(), omp_in.begin(), omp_in.end()))
 #endif
 
-namespace gridmap3D{
+namespace gridmap3d {
 	class SuperRayGenerator{
 	public:
 		SuperRayGenerator(const double _resolution, const unsigned int _grid_max_val, const int _threshold = 0);

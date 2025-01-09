@@ -36,9 +36,9 @@
 
 #include <vector>
 #include <list>
-#include "gridmap3D_types.h"
+#include "gridmap3d_types.h"
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	/**
 	 * A collection of 3D coordinates (point3d), which are regarded as endpoints of a

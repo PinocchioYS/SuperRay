@@ -33,7 +33,7 @@
 #include <cfloat>
 #include <map>
 
-namespace gridmap3D{
+namespace gridmap3d {
 	SuperRayGenerator::SuperRayGenerator(const double _resolution, const unsigned int _tree_max_val, const int _threshold) {
 		// Initialize constants
 		RESOLUTION = _resolution;

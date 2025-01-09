@@ -42,7 +42,7 @@
 
 // used from Vector: norm2, unit, *
 
-namespace gridmath3D {
+namespace gridmath3d {
 
 
 	Quaternion::Quaternion(const Quaternion &other) {

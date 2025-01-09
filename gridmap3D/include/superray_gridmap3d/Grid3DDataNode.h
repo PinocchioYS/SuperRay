@@ -34,10 +34,10 @@
 #ifndef GRIDMAP3D_GRID3D_DATA_NODE_H
 #define GRIDMAP3D_GRID3D_DATA_NODE_H
 
-#include "gridmap3D_types.h"
+#include "gridmap3d_types.h"
 #include "assert.h"
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	class AbstractGrid3DNode {
 

@@ -31,8 +31,50 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "gridmap3D_types.h"
-#include "Pointcloud.h"
-#include "ScanGraph.h"
-#include "Grid3D.h"
+#ifndef GRIDMAP3D_TYPES_H
+#define GRIDMAP3D_TYPES_H
 
+#include <stdio.h>
+#include <vector>
+#include <list>
+#include <inttypes.h>
+
+#include "math/Vector3.h"
+#include "math/Pose6D.h"
+
+namespace gridmap3d {
+
+	/// Use Vector3 (float precision) as a point3d in gridmap3D
+	typedef gridmath3d::Vector3               point3d;
+	/// Use our Pose6D (float precision) as pose3d in gridmap3D
+	typedef gridmath3d::Pose6D                pose6d;
+
+	typedef std::vector<gridmath3d::Vector3>  point3d_collection;
+	typedef std::list<gridmath3d::Vector3>    point3d_list;
+
+	/// A voxel defined by its center point3d and its side length
+	typedef std::pair<point3d, double>		  Grid3DVolume;
+
+}
+
+// no debug output if not in debug mode:
+#ifdef NDEBUG
+#ifndef GRIDMAP3D_NODEBUGOUT
+#define GRIDMAP3D_NODEBUGOUT
+#endif
+#endif
+
+#ifdef GRIDMAP3D_NODEBUGOUT
+#define GRIDMAP3D_DEBUG(...)       (void)0
+#define GRIDMAP3D_DEBUG_STR(...)   (void)0
+#else
+#define GRIDMAP3D_DEBUG(...)        fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP3D_DEBUG_STR(args)   std::cerr << args << std::endl
+#endif
+
+#define GRIDMAP3D_WARNING(...)      fprintf(stderr, "WARNING: "), fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP3D_WARNING_STR(args) std::cerr << "WARNING: " << args << std::endl
+#define GRIDMAP3D_ERROR(...)        fprintf(stderr, "ERROR: "), fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP3D_ERROR_STR(args)   std::cerr << "ERROR: " << args << std::endl
+
+#endif

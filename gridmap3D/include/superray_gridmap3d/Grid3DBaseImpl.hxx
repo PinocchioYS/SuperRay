@@ -39,7 +39,7 @@
 #include <omp.h>
 #endif
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	template <class NODE, class I>
 	Grid3DBaseImpl<NODE, I>::Grid3DBaseImpl(double in_resolution) :

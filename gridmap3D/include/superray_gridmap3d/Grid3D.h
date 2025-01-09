@@ -38,7 +38,7 @@
 #include "Grid3DNode.h"
 #include "ScanGraph.h"
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	/**
 	 * gridmap3D main map data structure, stores 3D occupancy grid map.

@@ -40,11 +40,11 @@
 #include <stack>
 #include <bitset>
 
-#include "gridmap3D_types.h"
+#include "gridmap3d_types.h"
 #include "Grid3DKey.h"
 #include "ScanGraph.h"
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	// forward declaration for NODE
 	class AbstractGrid3DNode;

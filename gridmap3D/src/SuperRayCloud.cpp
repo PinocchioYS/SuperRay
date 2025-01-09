@@ -32,7 +32,7 @@
 
 #include <superray_gridmap3d/SuperRayCloud.h>
 
-namespace gridmap3D{
+namespace gridmap3d {
 	SuperRayCloud::SuperRayCloud() {
 	}
 

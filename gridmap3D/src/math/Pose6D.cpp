@@ -34,7 +34,7 @@
 #include <superray_gridmap3d/math/Pose6D.h>
 #include <math.h>
 
-namespace gridmath3D {
+namespace gridmath3d {
 
 	Pose6D::Pose6D() {
 	}

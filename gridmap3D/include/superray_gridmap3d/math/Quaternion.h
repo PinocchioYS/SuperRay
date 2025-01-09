@@ -40,7 +40,7 @@
 #include <vector>
 
 
-namespace gridmath3D {
+namespace gridmath3d {
 
 	/*!
 	 * \brief This class represents a Quaternion.

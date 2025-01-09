@@ -36,7 +36,7 @@
 #include <math.h>
 #include <string.h>
 
-namespace gridmath3D {
+namespace gridmath3d {
 
 	Vector3& Vector3::rotate_IP(double roll, double pitch, double yaw) {
 		double x, y, z;
@@ -101,7 +101,7 @@ namespace gridmath3D {
 	}
 
 
-	std::ostream& operator<<(std::ostream& out, gridmath3D::Vector3 const& v) {
+	std::ostream& operator<<(std::ostream& out, gridmath3d::Vector3 const& v) {
 		return out << '(' << v.x() << ' ' << v.y() << ' ' << v.z() << ')';
 	}
 

@@ -37,7 +37,7 @@
 #include "Grid3DBaseImpl.h"
 #include "AbstractGrid3D.h"
 
-namespace gridmap3D {
+namespace gridmap3d {
 	template <class NODE>
 	class Grid3DBase : public Grid3DBaseImpl<NODE, AbstractGrid3D> {
 	public:

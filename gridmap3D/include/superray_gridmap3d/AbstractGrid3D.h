@@ -40,7 +40,7 @@
 #include <iostream>
 #include <map>
 
-namespace gridmap3D {
+namespace gridmap3d {
 
 	/**
 	 * This abstract class is an interface to all gridmap3Ds and provides a

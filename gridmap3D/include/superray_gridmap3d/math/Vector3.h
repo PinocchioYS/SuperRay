@@ -38,7 +38,7 @@
 #include <math.h>
 
 
-namespace gridmath3D {
+namespace gridmath3d {
 
 	/*!
 	 * \brief This class represents a three-dimensional vector
@@ -324,7 +324,7 @@ namespace gridmath3D {
 
 
 	//! user friendly output in format (x y z)
-	std::ostream& operator<<(std::ostream& out, gridmath3D::Vector3 const& v);
+	std::ostream& operator<<(std::ostream& out, gridmath3d::Vector3 const& v);
 
 }
 
