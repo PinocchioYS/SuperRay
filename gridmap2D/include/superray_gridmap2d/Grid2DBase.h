@@ -37,7 +37,7 @@
 #include "Grid2DBaseImpl.h"
 #include "AbstractGrid2D.h"
 
-namespace gridmap2D {
+namespace gridmap2d {
 	template <class NODE>
 	class Grid2DBase : public Grid2DBaseImpl<NODE, AbstractGrid2D> {
 	public:

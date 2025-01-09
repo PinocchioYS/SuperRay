@@ -35,13 +35,13 @@
 #define GRIDMAP2D_ABSTRACT_OCCUPANCY_GRID2D_H
 
 #include "AbstractGrid2D.h"
-#include "gridmap2D_utils.h"
+#include "gridmap2d_utils.h"
 #include "Grid2DNode.h"
 #include "Grid2DKey.h"
 #include <cassert>
 #include <fstream>
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	/**
 	 * Interface class for all grid types that store occupancy. This serves

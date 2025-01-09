@@ -39,9 +39,9 @@
 #include <math.h>
 
 #include "Pointcloud.h"
-#include "gridmap2D_types.h"
+#include "gridmap2d_types.h"
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	class ScanGraph;
 

@@ -40,11 +40,11 @@
 #include <stack>
 #include <bitset>
 
-#include "gridmap2D_types.h"
+#include "gridmap2d_types.h"
 #include "Grid2DKey.h"
 #include "ScanGraph.h"
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	// forward declaration for NODE
 	class AbstractGrid2DNode;

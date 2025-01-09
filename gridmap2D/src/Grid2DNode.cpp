@@ -40,7 +40,7 @@
 
 #include <superray_gridmap2d/Grid2DNode.h>
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	Grid2DNode::Grid2DNode()
 		: Grid2DDataNode<float>(0.0)

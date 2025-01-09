@@ -37,7 +37,7 @@
 #include <iostream>
 #include <math.h>
 
-namespace gridmath2D {
+namespace gridmath2d {
 
 	/*!
 	 * \brief This class represents a two-dimensional vector

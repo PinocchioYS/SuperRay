@@ -31,25 +31,50 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef GRIDMAP2D_UTILS_H_
-#define GRIDMAP2D_UTILS_H_
+#ifndef GRIDMAP2D_TYPES_H
+#define GRIDMAP2D_TYPES_H
 
-#include <math.h>
+#include <stdio.h>
+#include <vector>
+#include <list>
+#include <inttypes.h>
 
-namespace gridmap2D{
+#include "math/Vector2.h"
+#include "math/Pose3D.h"
 
-	/// compute log-odds from probability:
-	inline float logodds(double probability){
-		return (float)log(probability / (1 - probability));
-	}
+namespace gridmap2d {
 
-	/// compute probability from logodds:
-	inline double probability(double logodds){
-		return 1. - (1. / (1. + exp(logodds)));
+	/// Use Vector2 (float precision) as a point2d in gridmap2D
+	typedef gridmath2d::Vector2               point2d;
+	/// Use our Pose3D (float precision) as pose3d in gridmap2D
+	typedef gridmath2d::Pose3D                pose3d;
 
-	}
+	typedef std::vector<gridmath2d::Vector2>  point2d_collection;
+	typedef std::list<gridmath2d::Vector2>    point2d_list;
+
+	/// A voxel defined by its center point2d and its side length
+	typedef std::pair<point2d, double>		  Grid2DVolume;
+
 }
 
+// no debug output if not in debug mode:
+#ifdef NDEBUG
+#ifndef GRIDMAP2D_NODEBUGOUT
+#define GRIDMAP2D_NODEBUGOUT
+#endif
+#endif
 
+#ifdef GRIDMAP2D_NODEBUGOUT
+#define GRIDMAP2D_DEBUG(...)       (void)0
+#define GRIDMAP2D_DEBUG_STR(...)   (void)0
+#else
+#define GRIDMAP2D_DEBUG(...)        fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP2D_DEBUG_STR(args)   std::cerr << args << std::endl
+#endif
 
-#endif /* GRIDMAP2D_UTILS_H_ */
+#define GRIDMAP2D_WARNING(...)      fprintf(stderr, "WARNING: "), fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP2D_WARNING_STR(args) std::cerr << "WARNING: " << args << std::endl
+#define GRIDMAP2D_ERROR(...)        fprintf(stderr, "ERROR: "), fprintf(stderr, __VA_ARGS__), fflush(stderr)
+#define GRIDMAP2D_ERROR_STR(args)   std::cerr << "ERROR: " << args << std::endl
+
+#endif

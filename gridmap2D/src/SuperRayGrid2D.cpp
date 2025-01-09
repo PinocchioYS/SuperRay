@@ -29,7 +29,7 @@
 
 #include <superray_gridmap2d/SuperRayGrid2D.h>
 
-namespace gridmap2D{
+namespace gridmap2d {
 	SuperRayGrid2D::SuperRayGrid2D(double in_resolution)
 	: OccupancyGrid2DBase<Grid2DNode>(in_resolution) {
 		superrayGrid2DMemberInit.ensureLinking();

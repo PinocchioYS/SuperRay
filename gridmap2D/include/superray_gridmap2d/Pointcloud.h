@@ -36,9 +36,9 @@
 
 #include <vector>
 #include <list>
-#include "gridmap2D_types.h"
+#include "gridmap2d_types.h"
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	/**
 	 * A collection of 2D coordinates (point2d), which are regarded as endpoints of a

@@ -33,9 +33,9 @@
 
 
 #include <superray_gridmap2d/AbstractOccupancyGrid2D.h>
-#include <superray_gridmap2d/gridmap2D_types.h>
+#include <superray_gridmap2d/gridmap2d_types.h>
 
-namespace gridmap2D {
+namespace gridmap2d {
 	AbstractOccupancyGrid2D::AbstractOccupancyGrid2D(){
 		// some sane default values:
 		setOccupancyThres(0.5);   // = 0.0 in logodds

@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "gridmap2D_types.h"
+#include "gridmap2d_types.h"
 #include "Pointcloud.h"
 #include "ScanGraph.h"
 #include "Grid2D.h"

@@ -36,7 +36,7 @@
 #include <math.h>
 #include <string.h>
 
-namespace gridmath2D {
+namespace gridmath2d {
 
 	Vector2& Vector2::rotate_IP(double rot) {
 		double x, y;

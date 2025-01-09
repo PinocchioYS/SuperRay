@@ -30,10 +30,10 @@
 #ifndef GRIDMAP2D_CULLINGREGION_GRID2D_H
 #define GRIDMAP2D_CULLINGREGION_GRID2D_H
 
-#include "gridmap2D.h"
+#include "gridmap2d.h"
 #include "SuperRayGenerator.h"
 
-namespace gridmap2D{
+namespace gridmap2d {
     class CullingRegionGrid2D : public OccupancyGrid2DBase<Grid2DNode> {
     public:
         /// Default constructor, sets resolution of grid
@@ -58,7 +58,7 @@ namespace gridmap2D{
 
         /**
 		 * Integrate a Pointcloud (in global reference frame), parallelized with OpenMP.
-		 * This function simply inserts all rays of the point clouds, similar to insertPointCloudRays of gridmap2D::Grid2D.
+		 * This function simply inserts all rays of the point clouds, similar to insertPointCloudRays of gridmap2d::Grid2D.
 		 * Occupied nodes have a preference over free ones.
 		 *
 		 * @param scan Pointcloud (measurement endpoints), in global reference frame

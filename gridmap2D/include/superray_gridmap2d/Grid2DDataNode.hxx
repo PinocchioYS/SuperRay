@@ -31,7 +31,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	template <typename T>
 	Grid2DDataNode<T>::Grid2DDataNode()

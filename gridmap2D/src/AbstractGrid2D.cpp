@@ -36,7 +36,7 @@
 #include <superray_gridmap2d/Grid2D.h>
 
 
-namespace gridmap2D {
+namespace gridmap2d {
 	AbstractGrid2D::AbstractGrid2D(){
 
 	}

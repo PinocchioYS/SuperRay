@@ -39,7 +39,7 @@
 #include <omp.h>
 #endif
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	template <class NODE, class I>
 	Grid2DBaseImpl<NODE, I>::Grid2DBaseImpl(double in_resolution) :

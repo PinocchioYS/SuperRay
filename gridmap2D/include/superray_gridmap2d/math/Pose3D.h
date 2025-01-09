@@ -36,7 +36,7 @@
 
 #include "Vector2.h"
 
-namespace gridmath2D {
+namespace gridmath2d {
 
 	/*!
 	 * \brief This class represents a two-dimensional pose of an object

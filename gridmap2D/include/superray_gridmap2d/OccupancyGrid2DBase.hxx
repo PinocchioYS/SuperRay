@@ -34,7 +34,7 @@
 #include <bitset>
 #include <algorithm>
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	template <class NODE>
 	OccupancyGrid2DBase<NODE>::OccupancyGrid2DBase(double in_resolution)
@@ -340,19 +340,19 @@ namespace gridmap2D {
 	bool OccupancyGrid2DBase<NODE>::getRayIntersection(const point2d& origin, const point2d& direction, const point2d& center,
 													   point2d& intersection, double delta) const {
 		// We only need two normals for the four edges
-		gridmap2D::point2d normalX(1, 0);
-		gridmap2D::point2d normalY(0, 1);
+		gridmap2d::point2d normalX(1, 0);
+		gridmap2d::point2d normalY(0, 1);
 
 		// One point on each edge, let them be the center for simplicity
-		gridmap2D::point2d pointXNeg(center(0) - float(this->resolution / 2.0), center(1));
-		gridmap2D::point2d pointXPos(center(0) + float(this->resolution / 2.0), center(1));
-		gridmap2D::point2d pointYNeg(center(0), center(1) - float(this->resolution / 2.0));
-		gridmap2D::point2d pointYPos(center(0), center(1) + float(this->resolution / 2.0));
+		gridmap2d::point2d pointXNeg(center(0) - float(this->resolution / 2.0), center(1));
+		gridmap2d::point2d pointXPos(center(0) + float(this->resolution / 2.0), center(1));
+		gridmap2d::point2d pointYNeg(center(0), center(1) - float(this->resolution / 2.0));
+		gridmap2d::point2d pointYPos(center(0), center(1) + float(this->resolution / 2.0));
 
 		double lineDotNormal = 0.0;
 		double d = 0.0;
 		double outD = std::numeric_limits<double>::max();
-		gridmap2D::point2d intersect;
+		gridmap2d::point2d intersect;
 		bool found = false;
 
 		// Find the intersection (if any) with each place
@@ -461,14 +461,14 @@ namespace gridmap2D {
 
 	template <class NODE>
 	point2d OccupancyGrid2DBase<NODE>::getBBXBounds() const {
-		gridmap2D::point2d obj_bounds = (bbx_max - bbx_min);
+		gridmap2d::point2d obj_bounds = (bbx_max - bbx_min);
 		obj_bounds /= 2.;
 		return obj_bounds;
 	}
 
 	template <class NODE>
 	point2d OccupancyGrid2DBase<NODE>::getBBXCenter() const {
-		gridmap2D::point2d obj_bounds = (bbx_max - bbx_min);
+		gridmap2d::point2d obj_bounds = (bbx_max - bbx_min);
 		obj_bounds /= 2.;
 		return bbx_min + obj_bounds;
 	}

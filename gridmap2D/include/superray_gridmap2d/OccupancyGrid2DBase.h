@@ -38,13 +38,13 @@
 #include <stdlib.h>
 #include <vector>
 
-#include "gridmap2D_types.h"
-#include "gridmap2D_utils.h"
+#include "gridmap2d_types.h"
+#include "gridmap2d_utils.h"
 #include "Grid2DBaseImpl.h"
 #include "AbstractOccupancyGrid2D.h"
 
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	/**
 	 * Base implementation for Occupancy Grid2Ds (e.g. for mapping).

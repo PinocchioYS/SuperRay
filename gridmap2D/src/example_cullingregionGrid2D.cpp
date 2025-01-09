@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
 
-#include <superray_gridmap2d/gridmap2D_timing.h>
+#include <superray_gridmap2d/gridmap2d_timing.h>
 #include <superray_gridmap2d/CullingRegionGrid2D.h>
 
 void printUsage(char* self){
@@ -64,28 +64,28 @@ int main(int argc, char** argv) {
     }
 
     std::cout << "Reading Graph file===========================" << std::endl;
-    gridmap2D::ScanGraph* graph = new gridmap2D::ScanGraph();
+    gridmap2d::ScanGraph* graph = new gridmap2d::ScanGraph();
     if (!graph->readBinary(graphFilename)){
         std::cout << "There is no graph file at " + graphFilename << std::endl;
         exit(1);
     }
 
     // transform pointclouds first, so we can directly operate on them later
-    for (gridmap2D::ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++) {
-        gridmap2D::pose3d frame_origin = (*scan_it)->pose;
-        gridmap2D::point2d sensor_origin = frame_origin.inv().transform((*scan_it)->pose.trans());
+    for (gridmap2d::ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++) {
+        gridmap2d::pose3d frame_origin = (*scan_it)->pose;
+        gridmap2d::point2d sensor_origin = frame_origin.inv().transform((*scan_it)->pose.trans());
 
         (*scan_it)->scan->transform(frame_origin);
-        gridmap2D::point2d transformed_sensor_origin = frame_origin.transform(sensor_origin);
-        (*scan_it)->pose = gridmap2D::pose3d(transformed_sensor_origin, 0);
+        gridmap2d::point2d transformed_sensor_origin = frame_origin.transform(sensor_origin);
+        (*scan_it)->pose = gridmap2d::pose3d(transformed_sensor_origin, 0);
     }
 
     std::cout << "\nCreating grid\n===========================\n";
-    gridmap2D::CullingRegionGrid2D* grid = new gridmap2D::CullingRegionGrid2D(res);
+    gridmap2d::CullingRegionGrid2D* grid = new gridmap2d::CullingRegionGrid2D(res);
 
     double time_to_update = 0.0;	// sec
     size_t currentScan = 1;
-    for (gridmap2D::ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++) {
+    for (gridmap2d::ScanGraph::iterator scan_it = graph->begin(); scan_it != graph->end(); scan_it++) {
         std::cout << "(" << currentScan << "/" << graph->size() << ") " << std::endl;
 
         // Generate Super Ray

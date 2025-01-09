@@ -39,7 +39,7 @@
 #include <superray_gridmap2d/math/Pose3D.h>
 #include <superray_gridmap2d/ScanGraph.h>
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 
 	ScanNode::~ScanNode(){

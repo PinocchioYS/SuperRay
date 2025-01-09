@@ -37,7 +37,7 @@
 /**
 * A collection of super rays with different weights
 */
-namespace gridmap2D{
+namespace gridmap2d {
 	class SuperRayCloud {
 	public:
 		SuperRayCloud();

@@ -47,20 +47,20 @@
 #if defined(__GNUC__) && ! defined(_LIBCPP_VERSION)
 #include <tr1/unordered_set>
 #include <tr1/unordered_map>
-namespace gridmap2D {
+namespace gridmap2d {
 	namespace unordered_ns = std::tr1;
 }
 #else
 #include <unordered_set>
 #include <unordered_map>
-namespace gridmap2D {
+namespace gridmap2d {
 	namespace unordered_ns = std;
 }
 #endif
 
 #include <vector>
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	typedef uint16_t key_type;
 

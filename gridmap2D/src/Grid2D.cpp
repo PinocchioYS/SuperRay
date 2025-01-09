@@ -31,9 +31,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <superray_gridmap2d/gridmap2D.h>
+#include <superray_gridmap2d/gridmap2d.h>
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	Grid2D::Grid2D(double in_resolution) : OccupancyGrid2DBase<Grid2DNode>(in_resolution) {
 		grid2DMemberInit.ensureLinking();

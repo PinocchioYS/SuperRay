@@ -34,12 +34,12 @@
 #ifndef GRIDMAP2D_GRID2D_NODE_H
 #define GRIDMAP2D_GRID2D_NODE_H
 
-#include "gridmap2D_types.h"
-#include "gridmap2D_utils.h"
+#include "gridmap2d_types.h"
+#include "gridmap2d_utils.h"
 #include "Grid2DDataNode.h"
 #include <limits>
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	/**
 	 * Nodes to be used in Grid2D. They represent 2d occupancy grid cells.

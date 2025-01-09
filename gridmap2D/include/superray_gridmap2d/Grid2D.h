@@ -38,7 +38,7 @@
 #include "Grid2DNode.h"
 #include "ScanGraph.h"
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	/**
 	 * gridmap2D main map data structure, stores 2D occupancy grid map.

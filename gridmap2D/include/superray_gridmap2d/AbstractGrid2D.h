@@ -40,10 +40,10 @@
 #include <iostream>
 #include <map>
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	/**
-	 * This abstract class is an interface to all gridmap2Ds and provides a
+	 * This abstract class is an interface to all gridmap2ds and provides a
 	 * factory design pattern for readin and writing all kinds of Grid2Ds
 	 * to files (see read()).
 	 */

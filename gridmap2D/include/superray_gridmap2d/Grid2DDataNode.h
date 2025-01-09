@@ -34,10 +34,10 @@
 #ifndef GRIDMAP2D_GRID2D_DATA_NODE_H
 #define GRIDMAP2D_GRID2D_DATA_NODE_H
 
-#include "gridmap2D_types.h"
+#include "gridmap2d_types.h"
 #include "assert.h"
 
-namespace gridmap2D {
+namespace gridmap2d {
 
 	class AbstractGrid2DNode {
 

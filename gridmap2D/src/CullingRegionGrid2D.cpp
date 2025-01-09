@@ -29,7 +29,7 @@
 
 #include <superray_gridmap2d/CullingRegionGrid2D.h>
 
-namespace gridmap2D{
+namespace gridmap2d {
     CullingRegionGrid2D::CullingRegionGrid2D(double in_resolution)
             : OccupancyGrid2DBase<Grid2DNode>(in_resolution) {
         cullingregionGrid2DMemberInit.ensureLinking();

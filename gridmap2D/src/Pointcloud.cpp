@@ -51,7 +51,7 @@
 
 #include <superray_gridmap2d/Pointcloud.h>
 
-namespace gridmap2D {
+namespace gridmap2d {
 	Pointcloud::Pointcloud() {
 
 	}
@@ -95,7 +95,7 @@ namespace gridmap2D {
 		}
 	}
 
-	void Pointcloud::transform(gridmath2D::Pose3D transform) {
+	void Pointcloud::transform(gridmath2d::Pose3D transform) {
 		for (unsigned int i = 0; i < points.size(); i++) {
 			points[i] = transform.transform(points[i]);
 		}
